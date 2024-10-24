@@ -1,0 +1,32 @@
+.footer {
+    height:auto;
+    z-index: 1;
+    background: white;
+    color: black;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    align-items: center;
+    padding: 10px 10px;
+}
+
+
+.footer_text_right {
+    grid-area: 1 / 2 / 2 / 3;
+    text-align: right;
+    white-space: normal;
+}
+
+.footer_text_left {
+    grid-area: 1 / 1 / 2 / 2;
+    white-space: normal;
+}
+
+@media screen and (max-width: 520px) {
+    .footer_text_left {
+        font-size: px;
+    }
+
+}

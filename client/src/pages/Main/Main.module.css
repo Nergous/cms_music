@@ -1,0 +1,8 @@
+.text {
+    color: white;
+    max-width: 800px;
+    text-align: center;
+    margin: 80px auto 50px;
+    font-size: 24px;
+    white-space: pre-wrap;
+}

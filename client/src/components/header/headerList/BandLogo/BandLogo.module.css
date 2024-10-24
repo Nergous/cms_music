@@ -1,0 +1,17 @@
+.logo__outer__main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo__main {
+    max-height: 100px;
+}
+
+
+@media screen and (max-width: 980px) {
+    .logo__main {
+        max-height: 80px;
+    }
+    
+}

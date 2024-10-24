@@ -1,0 +1,273 @@
+.parent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    color: black;
+    height: 80vh;
+    overflow: auto;
+}
+
+.div1 {
+    grid-area: 1 / 1 / 2 / 3;
+    font-style: italic;
+    font-size: 50px;
+    text-align: center;
+}
+
+@media screen and (max-height: 800px) {
+    .img {
+        max-height: 500px !important;
+    }
+}
+
+@media screen and (max-height: 700px) {
+    .img {
+        max-height: 400px !important;
+    }
+    .div1 {
+        font-size: 40px;
+    }
+}
+@media screen and (max-width: 1000px) {
+    .tracks {
+        min-width: 330px !important;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .img {
+        max-width: 400px !important;
+    }
+    .tracks {
+        min-width: 300px !important;
+    }    
+}
+
+@media screen and (max-width: 800px) {
+    .img {
+        max-width: 400px !important;
+    }
+    .tracks {
+        min-width: 250px !important;
+	font-size: 16px !important;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .img {
+        max-width: 250px !important;
+    }
+
+    .div1 {
+        font-size: 35px;
+    }
+    .tracks {
+        min-width: 230px !important;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .div1 {
+        font-size: 30px;
+    }
+    .img {
+        max-width: 250px !important;
+    }
+
+    .parent {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+        height: 95vh;
+        width: 95vw;
+    }
+
+    .tracks {
+        min-width: 280px !important; 
+    }
+
+    .modalContent {
+        min-width: 90vw !important;
+    }
+
+    .div1 {
+        grid-area: 1 / 1 / 2 / 2 !important;
+    }
+
+    .div2 {
+        grid-area: 2 / 1 / 3 / 2 !important;
+        margin: 0 auto;
+    }
+
+    .div3 {
+        grid-area: 3 / 1 / 4 / 2 !important;
+    }
+
+    .div4 {
+        grid-area: 4 / 1 / 5 / 2 !important;
+        font-size: 20px !important;
+    }
+}
+
+.div2 {
+    grid-area: 2 / 1 / 8 / 2;
+}
+
+.div3 {
+    grid-area: 2 / 2 / 6 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.div4 {
+    grid-area: 6 / 2 / 7 / 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+}
+
+.img {
+    max-width: 600px;
+}
+
+.tracks {
+    color: black;
+    min-width: 400px;
+    margin: 5px;
+    background: rgb(255, 255, 255);
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 15px;
+    font-size: 30px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.tracks:hover {
+    transform: scale(1.05);
+}
+
+.tracks>p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.audio {
+    width: 90%;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    border-radius: 15px;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    font-size: 20px;
+}
+
+.modal.active {
+    opacity: 1;
+    pointer-events: all;
+    visibility: visible;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeInBackground 0.3s ease-in-out forwards;
+}
+
+.modal.closing {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0);
+    animation: fadeOutBackground 0.3s ease-in-out forwards;
+}
+
+.modalContent {
+    min-width: 400px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    transform: scale(0.9);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.modal.active .modalContent {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.modal.closing .modalContent {
+    transform: scale(0.9);
+    opacity: 0;
+}
+
+@keyframes fadeInBackground {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOutBackground {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeInContent {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOutContent {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .img {
+        max-width: 500px;
+    }
+}

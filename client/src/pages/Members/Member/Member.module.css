@@ -1,0 +1,137 @@
+.member__page {
+    text-align: center;
+    display: block;
+    max-width: 800px;
+    color: black;
+    margin: 0 auto;
+    /* Center the container */
+}
+
+.member__img {
+    max-height: 600px;
+    max-width: 400px;
+    display: block;
+    margin: 0 auto;
+    /* Center the image */
+}
+
+@media screen and (max-height: 850px) {
+    .member__img {
+        max-height: 500px;
+    }
+}
+
+@media screen and (max-height: 700px) {
+    .member__img {
+        max-height: 400px;
+    }
+
+    .title {
+        font-size: 40px !important;
+        padding-bottom: 15px !important;
+    }
+
+    .data_right {
+        font-size: 16px !important;
+    }
+}
+
+.data__table {
+    border: 1px solid white;
+    width: 100%;
+    /* Ensure the table takes full width */
+}
+
+.data_right {
+
+    padding-left: 20px;
+    font-size: 21px;
+    text-align: left;
+
+    /* Align text to the left */
+}
+
+.data_right p {
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.data_left {
+    padding-right: 20px;
+}
+
+.title {
+    color: black;
+    font-size: 60px;
+    font-style: italic;
+    font-weight: 700;
+    padding-bottom: 30px;
+}
+
+table {
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 800px) {
+    .member__img {
+        max-height: 500px;
+    }
+
+    .title {
+        font-size: 50px;
+    }
+}
+
+@media screen and (max-width: 690px) {
+    .member__img {
+        max-width: 300px;
+    }
+}
+
+@media screen and (max-width: 550px) {
+
+    .data_left,
+    .data_right {
+        display: block;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .member__img {
+        max-height: 400px;
+    }
+
+    .member__page {
+        min-width: 400px;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .data_left {
+        margin-bottom: 20px;
+        /* Add space below the image */
+    }
+
+    .data_right {
+        padding-left: 0;
+        /* Remove padding as it's now a block element */
+    }
+}
+
+
+@media screen and (max-width: 400px) {
+    .title {
+        font-size: 40px;
+    }
+
+    .member__img {
+        max-height: 300px;
+    }
+
+    .member__page {
+        min-width: 95vw;
+    }
+
+}

@@ -1,0 +1,19 @@
+.carousel__mine {
+    position: static;
+    max-width: 70vw;
+    display: block;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.image__carousel {
+    max-height: 100%;
+    max-width: 100%;
+
+}
+
+.carousel_item_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,46 @@
+.gig__outer {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.gig__panel {
+    min-width: 800px;
+    min-height: 100px;
+    border-radius: 15px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0px 0px 10px 10px rgba(65, 65, 65, 0.7);
+
+    margin: 50px auto;
+
+    background: white;
+    color: black;
+    font-size: 30px;
+    text-align: center;
+}
+
+@media screen and (max-width: 800px) {
+    .gig__panel {
+        min-width: 90vw;
+	font-size: 20px;
+    }
+
+}
+
+@media screen and (max-width: 460px) {
+	.gig__panel {
+		font-size: 16px;
+	}
+}
+
+
+.gig__panel:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 20px 20px rgba(78, 78, 78, 0.9);
+}
+
+.gig__title {
+    color: white;
+}
