@@ -46,7 +46,7 @@ const LogoEdit = ({api}) => {
                     {logoSuccess}
                 </CAlert>
             )}
-            <h3>Загрузить логотип</h3>
+            <h3>Изменить логотип</h3>
             <CForm style={{ margin: "30px 0" }}>
                 <CFormInput type="file" onChange={handleLogoChange} ref={logoInputRef} />
             </CForm>

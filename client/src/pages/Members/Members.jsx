@@ -4,8 +4,9 @@ import Member from "./Member/Member";
 import LazyLoad from "react-lazyload";
 import cl from "./Members.module.css";
 import MemberButton from "./MemberButton";
-import Spinner from "../../components/Spinner/Spinner"; // Предполагается, что у вас есть компонент Spinner
+import Spinner from "../../components/Spinner/Spinner";
 import ApiContext from "../../ApiContext";
+import axios from "axios";
 
 const Members = () => {
     const apiUrl = useContext(ApiContext);
@@ -18,7 +19,7 @@ const Members = () => {
 
     const fetchMembers = useCallback(async () => {
         try {
-            const response = await fetch(`${apiUrl}/members`);
+            const response = await axios.get(`${apiUrl}/members`);
 	    
             const data = await response.json();
             const filteredData = data.filter(

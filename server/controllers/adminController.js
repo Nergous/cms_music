@@ -8,17 +8,17 @@ env.config();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const pathDir = path.join(__dirname, "../../client/public/uploads")
+        const pathDir = path.join(__dirname, "../../client/public/uploads");
         cb(null, pathDir);
     },
     filename: (req, file, cb) => {
         cb(null, "logo.png");
     },
-})
+});
 const upload = multer({ storage: storage });
 
 exports.loadText = (req, res) => {
-    const filePath = path.join(__dirname, '../../client/config_cms.json');
+    const filePath = path.join(__dirname, "../../client/config_cms.json");
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
             return res.status(500).send("Не удалось загрузить файл конфигурации!");
@@ -30,7 +30,7 @@ exports.loadText = (req, res) => {
             if (!mainText) {
                 return res.status(404).send("Текст не найден");
             }
-            res.status(200).json({ "MainText": mainText });
+            res.status(200).json({ MainText: mainText });
         } catch (error) {
             return res.status(500).send("Не удалось прочесть файл конфигурации!");
         }
@@ -40,10 +40,7 @@ exports.loadText = (req, res) => {
 exports.authenticate = (req, res) => {
     const { username, password } = req.body;
 
-    if (
-        username === process.env.REACT_APP_ADMIN_LOGIN &&
-        password === process.env.REACT_APP_ADMIN_PASSWORD
-    ) {
+    if (username === process.env.REACT_APP_ADMIN_LOGIN && password === process.env.REACT_APP_ADMIN_PASSWORD) {
         const token = jwt.sign({ username }, process.env.JWT_SECRET, {
             expiresIn: "1h",
         });
@@ -62,19 +59,17 @@ exports.checkAuth = (req, res) => {
 };
 
 exports.getImages = (req, res) => {
-    const imageDir = path.join(__dirname, '../../client/public/uploads/carousel');
+    const imageDir = path.join(__dirname, "../../client/public/uploads/carousel");
     fs.readdir(imageDir, (err, files) => {
         if (err) {
             return res.status(500).send("Ошибка при чтении директории");
         }
         res.status(200).json(files);
-        
     });
 };
 
 exports.deleteImage = (req, res) => {
-
-    const imagePath = path.join(__dirname, '../../client/public/uploads/carousel', req.params.filename);
+    const imagePath = path.join(__dirname, "../../client/public/uploads/carousel", req.params.filename);
 
     fs.unlink(imagePath, (err) => {
         if (err) {
@@ -91,13 +86,12 @@ exports.uploadFiles = (req, res) => {
     res.status(200).send("Файлы загружены успешно");
 };
 
-
 exports.saveText = (req, res) => {
     const text = req.body.text;
     const filePath = path.join(__dirname, "../../client", "config_cms.json");
 
     // Читаем текущее содержимое файла
-    fs.readFile(filePath, 'utf8', (err, data) => {
+    fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
             return res.status(500).send("Ошибка при чтении файла");
         }
@@ -156,16 +150,14 @@ exports.updateCredentials = (req, res) => {
 };
 
 exports.uploadLogo = (req, res) => {
-
     if (!req.file) {
-        return res.status(400).contentType('text/plain').send("Файл не был загружен");
+        return res.status(400).contentType("text/plain").send("Файл не был загружен");
     }
     res.status(200).send("Логотип успешно загружен");
-
-}
+};
 
 exports.loadFooter = (req, res) => {
-    const filePath = path.join(__dirname, '../../client/config_cms.json');
+    const filePath = path.join(__dirname, "../../client/config_cms.json");
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
             return res.status(500).send("Не удалось загрузить файл конфигурации!");
@@ -177,7 +169,7 @@ exports.loadFooter = (req, res) => {
             if (!footerText) {
                 return res.status(404).send("Текст подвала не найден");
             }
-            res.status(200).json({ "FooterText": footerText });
+            res.status(200).json({ FooterText: footerText });
         } catch (error) {
             return res.status(500).send("Не удалось прочесть файл конфигурации!");
         }
@@ -189,7 +181,7 @@ exports.saveFooter = (req, res) => {
     const filePath = path.join(__dirname, "../../client", "config_cms.json");
 
     // Читаем текущее содержимое файла
-    fs.readFile(filePath, 'utf8', (err, data) => {
+    fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
             return res.status(500).send("Ошибка при чтении файла");
         }
@@ -215,7 +207,7 @@ exports.saveFooter = (req, res) => {
 };
 
 exports.loadSocials = (req, res) => {
-    const filePath = path.join(__dirname, '../../client/config_cms.json');
+    const filePath = path.join(__dirname, "../../client/config_cms.json");
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
             return res.status(500).send("Не удалось загрузить файл конфигурации!");
@@ -227,13 +219,12 @@ exports.loadSocials = (req, res) => {
             if (!socials) {
                 return res.status(404).send("Социальные сети не найдены");
             }
-            res.status(200).json({ "Socials": socials });
+            res.status(200).json({ Socials: socials });
         } catch (error) {
             return res.status(500).send("Не удалось прочесть файл конфигурации!");
         }
     });
-}
-
+};
 
 exports.saveSocials = (req, res) => {
     const socials = req.body.socials;
@@ -241,7 +232,7 @@ exports.saveSocials = (req, res) => {
     const filePath = path.join(__dirname, "../../client", "config_cms.json");
 
     // Читаем текущее содержимое файла
-    fs.readFile(filePath, 'utf8', (err, data) => {
+    fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
             return res.status(500).send("Ошибка при чтении файла");
         }
@@ -264,4 +255,54 @@ exports.saveSocials = (req, res) => {
             res.status(200).send("Социальные сети успешно сохранены");
         });
     });
-}
+};
+
+exports.getFont = (req, res) => {
+    const filePath = path.join(__dirname, "../../client/config_cms.json");
+    fs.readFile(filePath, "utf8", (err, data) => {
+        if (err) {
+            return res.status(500).send("Не удалось загрузить файл конфигурации!");
+        }
+        try {
+            const parsedData = JSON.parse(data);
+            const fonts = parsedData.fonts;
+
+            if (!fonts) {
+                return res.status(404).send("Шрифт не найден");
+            }
+            res.status(200).json({ Font: fonts });
+        } catch (error) {
+            return res.status(500).send("Не удалось прочесть файл конфигурации!");
+        }
+    });
+};
+
+exports.saveFont = (req, res) => {
+    const font = req.body.fonts;
+    const filePath = path.join(__dirname, "../../client", "config_cms.json");
+
+    // Читаем текущее содержимое файла
+    fs.readFile(filePath, "utf8", (err, data) => {
+        if (err) {
+            return res.status(500).send("Ошибка при чтении файла");
+        }
+
+        let jsonData;
+        try {
+            jsonData = JSON.parse(data);
+        } catch (parseErr) {
+            return res.status(500).send("Ошибка при парсинге JSON");
+        }
+
+        // Обновляем содержимое JSON
+        jsonData.fonts = font;
+
+        // Записываем обновленное содержимое обратно в файл
+        fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (writeErr) => {
+            if (writeErr) {
+                return res.status(500).send("Ошибка при сохранении шрифта в файл");
+            }
+            res.status(200).send("Шрифт успешно сохранен");
+        });
+    });
+};

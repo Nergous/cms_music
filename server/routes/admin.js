@@ -9,6 +9,7 @@ router.get("/load", adminController.loadText);
 router.get("/images", adminController.getImages);
 router.get("/footer", adminController.loadFooter);
 router.get("/socials", adminController.loadSocials);
+router.get("/font", adminController.getFont);
 
 router.post(
     "/upload_files",
@@ -27,6 +28,7 @@ router.post("/login", adminController.authenticate);
 router.post("/save", authMiddleware, adminController.saveText);
 router.post("/save_footer", authMiddleware, adminController.saveFooter);
 router.post("/save_socials", authMiddleware, adminController.saveSocials);
+router.post("/save_font", authMiddleware, adminController.saveFont);
 router.post(
     "/update_credentials",
     authMiddleware,

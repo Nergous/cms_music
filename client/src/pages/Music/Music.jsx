@@ -69,7 +69,7 @@ const Music = () => {
                     />
                 ))
             ) : (
-                <h2 className={cl.music__title}>Пока что здесь ничего нет</h2>
+                <h1 className={cl.music__title}>Пока что здесь ничего нет</h1>
             )}
             <Modal
                 visible={modal}

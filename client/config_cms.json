@@ -5,5 +5,15 @@
     "vk_link": "https://vk.com/",
     "youtube_link": "https://www.youtube.com/",
     "email_link": "mailto:1@1.ru"
+  },
+  "fonts": {
+    "available_fonts": [
+      "Arial",
+      "Times New Roman",
+      "Courier New",
+      "Verdana",
+      "Fira Code"
+    ],
+    "selected_font": "Fira Code"
   }
 }
