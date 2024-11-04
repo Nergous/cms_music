@@ -1,24 +1,26 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import axios from "axios";
 import Modal from "../../components/Modal/Modal";
 import MusicPanel from "./MusicPanel/MusicPanel";
 import Spinner from "../../components/Spinner/Spinner";
 import MusicButton from "./MusicButton";
 import cl from "./Music.module.css";
+import ApiContext from "../../ApiContext";
 
 const Music = () => {
+    const apiUrl = useContext(ApiContext);
+
     const [musicList, setMusicList] = useState([]);
     const [selectedMusic, setSelectedMusic] = useState(null);
     const [modal, setModal] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const app_url = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         const fetchMusic = async () => {
             try {
-                const response = await axios.get(
-                    "api/record"
-                );
+                const response = await axios.get(`${app_url}/record`);
                 setMusicList(response.data);
             } catch (err) {
                 setError(err);
@@ -29,7 +31,7 @@ const Music = () => {
 
         fetchMusic();
     }, []);
-    
+
     useEffect(() => {
         if (modal) {
             document.body.style.overflow = "hidden";
@@ -37,7 +39,6 @@ const Music = () => {
             document.body.style.overflow = "auto";
         }
     }, [modal]);
-
 
     const handleMusicClick = useCallback((music) => {
         setSelectedMusic(music);
@@ -70,7 +71,9 @@ const Music = () => {
             ) : (
                 <h2 className={cl.music__title}>Пока что здесь ничего нет</h2>
             )}
-            <Modal visible={modal} setVisible={setModal}>
+            <Modal
+                visible={modal}
+                setVisible={setModal}>
                 <MusicPanel music={selectedMusic} />
             </Modal>
         </div>

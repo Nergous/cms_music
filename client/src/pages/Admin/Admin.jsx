@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import axios from "axios";
 
 import "./scss/style.scss";
@@ -23,12 +22,19 @@ import EditRoles from "./pages/AdminRoles/EditRoles";
 
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 
+import DefaultLayout from "./layout/DefaultLayout";
+
+import AdminSettings from "./pages/AdminSettings/AdminSettings";
+
+import ApiContext from "../../ApiContext";
+
 const Admin = () => {
+    const apiUrl = useContext(ApiContext);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const checkAuthenticate = async () => {
         await axios
-            .get("/api/admin/checkAuth", {
+            .get(`${apiUrl}/admin/checkAuth`, {
                 withCredentials: true,
             })
             .then((response) => {
@@ -55,29 +61,24 @@ const Admin = () => {
             <Routes>
                 {isAuthenticated && (
                     <>
-                        <Route path="/" element={<AdminDashboard />} />
-                        <Route path="/music" element={<AdminMusic />} />
-                        <Route path="/music/*" element={<AdminMusic />} />
-                        <Route path="/music/create" element={<CreateMusic />} />
-                        <Route path="/music/:id/edit" element={<EditMusic />} />
+                        <Route path="/" element={<DefaultLayout><AdminDashboard /></DefaultLayout>} />
+                        <Route path="/music" element={<DefaultLayout><AdminMusic /></DefaultLayout>} />
+                        <Route path="/music/*" element={<DefaultLayout><AdminMusic /></DefaultLayout>} />
+                        <Route path="/music/create" element={<DefaultLayout><CreateMusic /></DefaultLayout>} />
+                        <Route path="/music/:id/edit" element={<DefaultLayout><EditMusic /></DefaultLayout>} />
+                        <Route path="/settings" element={<DefaultLayout><AdminSettings /></DefaultLayout>} />
 
-                        <Route path="/members/*" element={<AdminMembers />} />
-                        <Route
-                            path="/members/create"
-                            element={<CreateMembers />}
-                        />
-                        <Route
-                            path="/members/:id/edit"
-                            element={<EditMembers />}
-                        />
+                        <Route path="/members/*" element={<DefaultLayout><AdminMembers /></DefaultLayout>} />
+                        <Route path="/members/create" element={<DefaultLayout><CreateMembers /></DefaultLayout>} />
+                        <Route path="/members/:id/edit" element={<DefaultLayout><EditMembers /></DefaultLayout>} />
 
-                        <Route path="/gigs/*" element={<AdminGigs />} />
-                        <Route path="/gigs/create" element={<CreateGigs />} />
-                        <Route path="/gigs/:id/edit" element={<EditGigs />} />
+                        <Route path="/gigs/*" element={<DefaultLayout><AdminGigs /></DefaultLayout>} />
+                        <Route path="/gigs/create" element={<DefaultLayout><CreateGigs /></DefaultLayout>} />
+                        <Route path="/gigs/:id/edit" element={<DefaultLayout><EditGigs /></DefaultLayout>} />
 
-                        <Route path="/roles/*" element={<AdminRoles />} />
-                        <Route path="/roles/:id/edit" element={<EditRoles />} />
-                        <Route path="/roles/create" element={<CreateRoles />} />
+                        <Route path="/roles/*" element={<DefaultLayout><AdminRoles /></DefaultLayout>} />
+                        <Route path="/roles/:id/edit" element={<DefaultLayout><EditRoles /></DefaultLayout>} />
+                        <Route path="/roles/create" element={<DefaultLayout><CreateRoles /></DefaultLayout>} />
 
                         <Route path="/*" element={<Navigate to="/admin" />} />
                     </>

@@ -1,12 +1,14 @@
-import React from "react";
+import React, {useContext} from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import CardBody from "react-bootstrap/esm/CardBody";
 import CardImg from "react-bootstrap/esm/CardImg";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import ApiContext from "../../../../ApiContext";
 
 const CardsMusic = ({ item }) => {
+    const api = useContext(ApiContext);
     const handleDelete = async () => {
         const confirmDelete = window.confirm("Вы уверены что хотите удалить этот релиз?");
         if (!confirmDelete) {
@@ -14,7 +16,7 @@ const CardsMusic = ({ item }) => {
         }
 
         try {
-            await axios.delete(`/api/record/${item.id}`, { withCredentials: true });
+            await axios.delete(`${api}/record/${item.id}`, { withCredentials: true });
             alert("Релиз успешно удален");
             window.location.reload(true);
         } catch (error) {

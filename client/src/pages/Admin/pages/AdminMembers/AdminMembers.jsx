@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/esm/Button";
 import { AppSidebar, AppFooter, AppHeader } from "../../components";
 import CardsMembers from "../AdminMembers/CardsMembers";
 import EditMembers from "../AdminMembers/EditMembers";
+import ApiContext from "../../../../ApiContext";
 
 const AdminMembers = () => {
+    const api = useContext(ApiContext)
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        axios.get("/api/members").then((response) => {
+        axios.get(`${api}/members`).then((response) => {
             setItems(response.data);
         });
     }, []);
 
     return (
         <>
-            <AppSidebar />
-            <div className="wrapper d-flex flex-column min-vh-100">
-                <AppHeader />
 
                 <div className="body flex-grow-1">
                     <Button variant="info" style={{ margin: "30px" }}>
@@ -42,11 +41,6 @@ const AdminMembers = () => {
                         ))}
                     </div>
                 </div>
-                <AppFooter />
-            </div>
-            <Routes>
-                <Route path=":id/edit" element={<EditMembers />} />
-            </Routes>
         </>
     );
 };

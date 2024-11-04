@@ -4,17 +4,17 @@ const adminController = require("../controllers/adminController");
 const authMiddleware = require("../middleware/authMiddleware");
 const { upload, deleteOldLogo } = require("../middleware/multer");
 
-router.post("/login", adminController.authenticate);
 router.get("/checkAuth", authMiddleware, adminController.checkAuth);
-
 router.get("/load", adminController.loadText);
 router.get("/images", adminController.getImages);
-router.delete("/images/:filename", authMiddleware, adminController.deleteImage);
+router.get("/footer", adminController.loadFooter);
+router.get("/socials", adminController.loadSocials);
+
 router.post(
     "/upload_files",
     authMiddleware,
     (req, res, next) => {
-         upload.array("files")(req, res, (err) => {
+        upload.array("files")(req, res, (err) => {
             if (err) {
                 return res.status(400).contentType('text/plain').send(err.message);
             }
@@ -23,7 +23,10 @@ router.post(
     },
     adminController.uploadFiles
 );
+router.post("/login", adminController.authenticate);
 router.post("/save", authMiddleware, adminController.saveText);
+router.post("/save_footer", authMiddleware, adminController.saveFooter);
+router.post("/save_socials", authMiddleware, adminController.saveSocials);
 router.post(
     "/update_credentials",
     authMiddleware,
@@ -36,8 +39,6 @@ router.post(
     (req, res, next) => {
         upload.single("logo")(req, res, (err) => {
             if (err) {
-                console.log("Я умер здесь");
-                console.log(err.message);
                 return res.status(400).contentType('text/plain').send(err.message);
             }
             next();
@@ -45,5 +46,7 @@ router.post(
     },
     adminController.uploadLogo
 );
+
+router.delete("/images/:filename", authMiddleware, adminController.deleteImage);
 
 module.exports = router;

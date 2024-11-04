@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import HTMLReactParser from "html-react-parser/lib/index";
 import CarouselMy from "../../components/Carousel/CarouselMy";
+import ApiContext from "../../ApiContext";
 
 import cl from "./Main.module.css";
 
 const Main = () => {
+    const apiUrl = useContext(ApiContext);
+
     const [hasImages, setHasImages] = useState(false);
     const [images, setImages] = useState([]);
     const [text, setText] = useState("");
@@ -13,7 +17,7 @@ const Main = () => {
         const fetchImages = async () => {
             try {
                 const response = await axios.get(
-                    "/api/admin/images"
+                    `${apiUrl}/admin/images`
                 );
 
                 setHasImages(response.data.length > 0);
@@ -27,9 +31,9 @@ const Main = () => {
         const fetchText = async () => {
             try {
                 const response = await axios.get(
-                    "/api/admin/load"
+                    `${apiUrl}/admin/load`
                 );
-                setText(response.data);
+                setText(response.data.MainText);
             } catch (error) {
                 
             }
@@ -42,7 +46,7 @@ const Main = () => {
     return (
         <>
             <div>{hasImages && <CarouselMy imgs={images} />}</div>
-            <div className={cl.text}>{text}</div>
+            <div className={cl.text}>{HTMLReactParser(text)}</div>
         </>
     );
 };

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/esm/Button";
 import axios from "axios";
+import ApiContext from "../../ApiContext";
 
 const Auth = () => {
+    const appUrl = useContext(ApiContext);
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -13,7 +15,7 @@ const Auth = () => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                "/api/admin/login",
+                `${appUrl}/admin/login`,
                 {
                     username: login,
                     password: password,
@@ -41,8 +43,7 @@ const Auth = () => {
                             <td>
                                 {" "}
                                 <label
-                                    style={{ color: "white", margin: "30px" }}
-                                >
+                                    style={{ color: "white", margin: "30px" }}>
                                     Логин:
                                 </label>
                             </td>
@@ -57,8 +58,7 @@ const Auth = () => {
                         <tr>
                             <td>
                                 <label
-                                    style={{ color: "white", margin: "30px" }}
-                                >
+                                    style={{ color: "white", margin: "30px" }}>
                                     Пароль:
                                 </label>
                             </td>
@@ -78,8 +78,7 @@ const Auth = () => {
                 <Button
                     variant="light"
                     type="submit"
-                    style={{ margin: "30px" }}
-                >
+                    style={{ margin: "30px" }}>
                     Войти
                 </Button>
             </form>

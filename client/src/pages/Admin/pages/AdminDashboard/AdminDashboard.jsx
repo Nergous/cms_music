@@ -4,7 +4,7 @@ import DefaultLayout from "../../layout/DefaultLayout";
 const AdminDashboard = () => {
     return (
         <>
-            <DefaultLayout></DefaultLayout>
+            <div className="body flex-grow-1">Бодро обжаловать</div>
         </>
     );
 };

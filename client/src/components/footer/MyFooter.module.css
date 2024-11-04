@@ -1,5 +1,7 @@
+/* MyFooter.module.css */
+
 .footer {
-    height:auto;
+    height: auto;
     z-index: 1;
     background: white;
     color: black;
@@ -12,7 +14,6 @@
     padding: 10px 10px;
 }
 
-
 .footer_text_right {
     grid-area: 1 / 2 / 2 / 3;
     text-align: right;
@@ -24,9 +25,25 @@
     white-space: normal;
 }
 
+.social_icons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.social_icons a {
+    color: black;
+    margin-left: 10px;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.social_icons a:hover {
+    color: #007bff;
+}
+
 @media screen and (max-width: 520px) {
     .footer_text_left {
-        font-size: px;
+        font-size: 14px;
     }
-
 }

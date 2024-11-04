@@ -6,7 +6,6 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         if (file.fieldname === "logo") {
             const filePath = path.join(__dirname, "../../client/public/uploads/logo")
-            console.log("Вот вам путь к лого", filePath);
             cb(null, filePath);
         } else if (file.fieldname === "files") {
             const filePath = path.join(__dirname, "../../client/public/uploads/carousel");
@@ -15,7 +14,6 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         if (file.fieldname === "logo") {
-            console.log("Вот вам имя лого");
             cb(null, "logo.png");
         } else if (file.fieldname === "files") {
             cb(null, Date.now() + path.extname(file.originalname));
@@ -39,16 +37,13 @@ const upload = multer({ storage: storage, fileFilter: imageFileFilter });
 const deleteOldLogo = (req, res, next) => {
     const logoPath = path.join(__dirname, '../../client/public/uploads/logo', 'logo.png');
     if (fs.existsSync(logoPath)) {
-        console.log("Удаляем по ", logoPath);
         fs.unlink(logoPath, (err) => {
             if (err) {
-                console.log("Не получилось", err);
                 return res.status(500).send('Ошибка при удалении старого логотипа');
             }
             next();
         });
     } else {
-        console.log("Идем дальше");
         next();
     }
 };

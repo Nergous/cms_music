@@ -1,18 +1,20 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import CardImg from "react-bootstrap/CardImg";
+import ApiContext from "../../../../ApiContext";
 
 const CardsMembers = ({ item }) => {
+    const api = useContext(ApiContext);
     const handleDelete = async () => {
         const confirmDelete = window.confirm("Вы уверены что хотите удалить этого участника?");
         if (!confirmDelete) {
             return;
         }
         try {
-            await axios.delete(`/api/members/${item.id}`, { withCredentials: true });
+            await axios.delete(`${api}/members/${item.id}`, { withCredentials: true });
             alert("Участник успешно удален");
             window.location.reload(true);
         } catch (error) {

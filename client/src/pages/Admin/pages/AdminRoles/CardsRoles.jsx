@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import ApiContext from "../../../../ApiContext";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 const CardsRoles = ({ item }) => {
+    const api = useContext(ApiContext);
     const handleDelete = async () => {
         const confirmDelete = window.confirm(
             "Вы уверены что хотите удалить эту роль?"
@@ -14,7 +16,7 @@ const CardsRoles = ({ item }) => {
         }
 
         try {
-            await axios.delete(`/api/music_roles/${item.id}`, {
+            await axios.delete(`${api}/music_roles/${item.id}`, {
                 withCredentials: true,
             });
             alert("Роль успешно удалена");

@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import axios from "axios";
 import Gig from "./GIg/Gig";
 import Modal from "../../components/Modal/Modal";
 import Spinner from "../../components/Spinner/Spinner";
 import cl from "./Gigs.module.css";
+import ApiContext from "../../ApiContext";
 
 const Gigs = () => {
+    const apiUrl = useContext(ApiContext);
     const [gigs, setGigs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedGig, setSelectedGig] = useState(null);
@@ -14,7 +16,7 @@ const Gigs = () => {
     useEffect(() => {
         const fetchGigs = async () => {
             try {
-                const response = await axios.get("/api/gigs");
+                const response = await axios.get(`${apiUrl}/gigs`);
                 setGigs(response.data);
             } catch (error) {
                 console.error("Error fetching gigs:", error);
@@ -47,20 +49,14 @@ const Gigs = () => {
         <div className={cl.gig__outer}>
             <h1 className={cl.gig__title}>Выступления</h1>
             {gigs.length > 0 ? (
-                <>
+                <div className={cl.gig_block}>
                     {gigs.map((gig) => (
-                        <button
-                            className={cl.gig__panel}
-                            key={gig.id}
-                            onClick={() => handleGigClick(gig)}
-                        >
-                            {gig.title}
-                        </button>
+                        <Gig gig={gig} key={gig.id} />
+                        // <button className={cl.gig__panel} key={gig.id} onClick={() => handleGigClick(gig)}>
+                        //     {gig.title}
+                        // </button>
                     ))}
-                    <Modal visible={modal} setVisible={setModal}>
-                        <Gig gig={selectedGig} />
-                    </Modal>
-                </>
+                </div>
             ) : (
                 <h1 className={cl.gig__title}>Пока что нет выступлений</h1>
             )}

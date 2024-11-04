@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import Modal from "../../components/Modal/Modal";
 import Member from "./Member/Member";
 import LazyLoad from "react-lazyload";
 import cl from "./Members.module.css";
 import MemberButton from "./MemberButton";
 import Spinner from "../../components/Spinner/Spinner"; // Предполагается, что у вас есть компонент Spinner
+import ApiContext from "../../ApiContext";
 
 const Members = () => {
+    const apiUrl = useContext(ApiContext);
+
     const [modal, setModal] = useState(false);
     const [members, setMembers] = useState([]);
     const [selectedMember, setSelectedMember] = useState(null);
@@ -15,15 +18,14 @@ const Members = () => {
 
     const fetchMembers = useCallback(async () => {
         try {
-            const response = await fetch("/api/members");
+            const response = await fetch(`${apiUrl}/members`);
 	    
             const data = await response.json();
             const filteredData = data.filter(
                 (item) => item.is_member !== false
             );
             setMembers(filteredData);
-        } catch (error) {
-            console.log("Error fetching members: ", error);
+        } catch (error) {            
         } finally {
             setLoading(false);
         }

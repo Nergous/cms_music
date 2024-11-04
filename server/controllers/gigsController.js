@@ -108,7 +108,6 @@ const GigsController = {
     },
     update: async (req, res) => {
         const id = req.params.id;
-        console.log(req.body);
         upload.single("poster")(req, res, async (err) => {
             if (err) {
                 return res

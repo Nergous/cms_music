@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { AppSidebar, AppFooter, AppHeader } from "../../components";
 import CardsRoles from "./CardsRoles";
 import { Link } from "react-router-dom";
@@ -6,15 +6,17 @@ import axios from "axios";
 import Button from "react-bootstrap/esm/Button";
 import Spinner from "react-bootstrap/Spinner";
 import { CAlert } from "@coreui/react";
+import ApiContext from "../../../../ApiContext";
 
 const AdminRoles = () => {
+    const api = useContext(ApiContext);
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         axios
-            .get("/api/music_roles")
+            .get(`${api}/music_roles`)
             .then((response) => {
                 setItems(response.data);
             })
@@ -28,9 +30,6 @@ const AdminRoles = () => {
 
     return (
         <>
-            <AppSidebar />
-            <div className="wrapper d-flex flex-column min-vh-100">
-                <AppHeader />
 
                 {isLoading ? (
                     <>
@@ -76,8 +75,6 @@ const AdminRoles = () => {
                         </div>
                     </>
                 )}
-                <AppFooter />
-            </div>
         </>
     );
 };

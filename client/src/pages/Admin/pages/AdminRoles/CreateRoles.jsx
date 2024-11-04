@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CForm, CCol, CFormInput, CButton, CLink } from "@coreui/react";
 import { AppSidebar, AppHeader, AppFooter } from "../../components";
+import ApiContext from "../../../../ApiContext";
 
 function CreateRole() {
+    const api = useContext(ApiContext);
     const [roleName, setRoleName] = useState("");
     const [validated, setValidated] = useState(false);
     const navigate = useNavigate();
@@ -22,7 +24,7 @@ function CreateRole() {
             };
             try {
                 const response = await axios.post(
-                    "/api/music_roles",
+                    `${api}/music_roles`,
                     data, { withCredentials: true }
                 );
                 alert("Роль успешно создана");
@@ -35,9 +37,6 @@ function CreateRole() {
 
     return (
         <>
-            <AppSidebar />
-            <div className="wrapper d-flex flex-column min-vh-100">
-                <AppHeader />
                 <div className="body flex-grow-1 m-3">
                     <CButton
                         onClick={() => navigate("/admin/roles")} className="btn btn-primary mb-3">Назад</CButton>
@@ -64,8 +63,6 @@ function CreateRole() {
                         </CCol>
                     </CForm>
                 </div>
-                <AppFooter />
-            </div>
         </>
     );
 }

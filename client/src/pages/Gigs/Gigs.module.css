@@ -5,6 +5,11 @@
     align-items: center;
 }
 
+.gig_block {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .gig__panel {
     min-width: 800px;
     min-height: 100px;

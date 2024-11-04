@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { CForm, CCol, CFormInput, CLink, CButton } from "@coreui/react";
 import axios from "axios";
 import { AppSidebar, AppHeader, AppFooter } from "../../components";
 import { useNavigate, useParams } from "react-router-dom";
 
+import ApiContext from "../../../../ApiContext";
+
 function EditRole() {
+    const api = useContext(ApiContext);
     const [roleName, setRoleName] = useState("");
     const [validated, setValidated] = useState(false);
     const { id } = useParams();
@@ -13,13 +16,10 @@ function EditRole() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(
-                    `/api/music_roles/${id}`
-                );
+                const response = await axios.get(`${api}/music_roles/${id}`);
                 setRoleName(response.data.role_name);
-                console.log(response.data.role_name);
             } catch (error) {
-                console.error(error);
+                alert("Произошла ошибка при получении роли");
             }
         };
         fetchData();
@@ -39,8 +39,9 @@ function EditRole() {
             };
             try {
                 const response = await axios.put(
-                    `/api/music_roles/${id}`,
-                    data, { withCredentials: true }
+                    `${api}/music_roles/${id}`,
+                    data,
+                    { withCredentials: true }
                 );
                 navigate("/admin/roles");
                 alert("Роль успешно обновлена");
@@ -52,37 +53,36 @@ function EditRole() {
 
     return (
         <>
-            <AppSidebar />
-            <div className="wrapper d-flex flex-column min-vh-100">
-                <AppHeader />
-                <div className="body flex-grow-1 p-3" >
-                    <CButton
-                        onClick={() => navigate("/admin/roles")} className="btn btn-primary mb-3">Назад</CButton>
-                    <CForm
-                        className="row g-3 needs-validation"
-                        validated={validated}
-                        onSubmit={handleSubmit}
-                    >
-                        <CCol md={8}>
-                            <CFormInput
-                                type="text"
-                                feedbackValid="Всё хорошо!"
-                                id="roleName"
-                                label="Роль"
-                                value={roleName}
-                                placeholder="Название роли"
-                                required
-                                onChange={(e) => setRoleName(e.target.value)}
-                            />
-                        </CCol>
-                        <CCol xs={8}>
-                            <CButton color="primary" type="submit">
-                                Обновить
-                            </CButton>
-                        </CCol>
-                    </CForm>
-                </div>
-                <AppFooter />
+            <div className="body flex-grow-1 p-3">
+                <CButton
+                    onClick={() => navigate("/admin/roles")}
+                    className="btn btn-primary mb-3">
+                    Назад
+                </CButton>
+                <CForm
+                    className="row g-3 needs-validation"
+                    validated={validated}
+                    onSubmit={handleSubmit}>
+                    <CCol md={8}>
+                        <CFormInput
+                            type="text"
+                            feedbackValid="Всё хорошо!"
+                            id="roleName"
+                            label="Роль"
+                            value={roleName}
+                            placeholder="Название роли"
+                            required
+                            onChange={(e) => setRoleName(e.target.value)}
+                        />
+                    </CCol>
+                    <CCol xs={8}>
+                        <CButton
+                            color="primary"
+                            type="submit">
+                            Обновить
+                        </CButton>
+                    </CCol>
+                </CForm>
             </div>
         </>
     );

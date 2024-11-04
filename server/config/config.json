@@ -1,22 +1,22 @@
 {
   "development": {
-    "username": "nergous",
-    "password": "pj272s9b28b",
-    "database": "cms_test",
+    "username": "test",
+    "password": "test",
+    "database": "cms",
     "host": "localhost",
     "dialect": "mariadb"
   },
   "test": {
-    "username": "nergous",
-    "password": "pj272s9b28b",
-    "database": "cms_test",
+    "username": "test",
+    "password": "test",
+    "database": "cms",
     "host": "127.0.0.1",
     "dialect": "mariadb"
   },
   "production": {
-    "username": "nergous",
-    "password": "pj272s9b28b",
-    "database": "cms_test",
+    "username": "test",
+    "password": "test",
+    "database": "cms",
     "host": "127.0.0.1",
     "dialect": "mariadb"
   }
