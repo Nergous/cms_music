@@ -11,16 +11,16 @@ const Music = () => {
     const apiUrl = useContext(ApiContext);
 
     const [musicList, setMusicList] = useState([]);
+    const [fontColor, setFontColor] = useState("#000000");
     const [selectedMusic, setSelectedMusic] = useState(null);
     const [modal, setModal] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const app_url = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         const fetchMusic = async () => {
             try {
-                const response = await axios.get(`${app_url}/record`);
+                const response = await axios.get(`${apiUrl}/record`);
                 setMusicList(response.data);
             } catch (err) {
                 setError(err);
@@ -29,6 +29,17 @@ const Music = () => {
             }
         };
 
+        const fetchFontColor = async () => {
+            try  {
+                const res = await axios.get(`${apiUrl}/admin/font_colors`);
+                setFontColor(res.data.FontColors.mainFontColor);
+            } catch (error) {
+                setFontColor("#000000");
+            }
+        };
+
+
+        fetchFontColor();
         fetchMusic();
     }, []);
 
@@ -46,12 +57,12 @@ const Music = () => {
     }, []);
 
     if (loading) {
-        return <Spinner />;
+        return <Spinner color={fontColor} />;
     }
 
     if (error) {
         return (
-            <div className={cl.error}>
+            <div style={{ color: fontColor }} className={cl.error}>
                 Ошибка при загрузке данных: {error.message}
             </div>
         );
@@ -59,7 +70,7 @@ const Music = () => {
 
     return (
         <div className={cl.music__container}>
-            <h1 className={cl.music__title}>Музыка</h1>
+            <h1 style={{ color: fontColor }} className={cl.music__title}>Музыка</h1>
             {musicList.length > 0 ? (
                 musicList.map((music) => (
                     <MusicButton
@@ -69,7 +80,7 @@ const Music = () => {
                     />
                 ))
             ) : (
-                <h1 className={cl.music__title}>Пока что здесь ничего нет</h1>
+                <h1 style={{ color: fontColor }} className={cl.music__title}>Пока что здесь ничего нет</h1>
             )}
             <Modal
                 visible={modal}

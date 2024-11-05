@@ -17,6 +17,7 @@ const MainText = ({api}) => {
                 setText(response.data.MainText);
             } catch (error) {
                 setTextError("Ошибка при загрузке текста");
+                setTimeout(() => setTextError(""), 3000);
             }
         };
 
@@ -34,9 +35,11 @@ const MainText = ({api}) => {
             );
             setTextSuccess("Текст успешно сохранен");
             setTextError("");
+            setTimeout(() => setTextSuccess(""), 3000);
         } catch (error) {
             setTextError(error.response.data.message);
             setTextSuccess("");
+            setTimeout(() => setTextError(""), 3000);
         }
     };
 

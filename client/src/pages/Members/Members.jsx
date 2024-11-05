@@ -16,6 +16,8 @@ const Members = () => {
     const [selectedMember, setSelectedMember] = useState(null);
     const [hoveredId, setHoveredId] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [fontColor, setFontColor] = useState("#000000");
+
 
     const fetchMembers = useCallback(async () => {
         try {
@@ -32,9 +34,23 @@ const Members = () => {
         }
     }, []);
 
+    
     useEffect(() => {
         fetchMembers();
     }, [fetchMembers]);
+    
+    useEffect(() => {
+        const fetchFontColor = async () => {
+            try  {
+                const res = await axios.get(`${apiUrl}/admin/font_colors`);
+                setFontColor(res.data.FontColors.mainFontColor);
+            } catch (error) {
+                setFontColor("#000000");
+            }
+        }
+
+        fetchFontColor();
+    }, []);
 
     useEffect(() => {
 	if (modal) {
@@ -58,17 +74,17 @@ const Members = () => {
     }, []);
 
     if (loading) {
-        return <Spinner />;
+        return <Spinner color={fontColor} />;
     }
 
     return (
         <>
-            <h1 className={cl.title}>Участники</h1>
+            <h1 style={{ color: fontColor }} className={cl.title}>Участники</h1>
             <div className={cl.main}>
                 {members.length === 0 && (
                     <h1
                         className={cl.title}
-                        style={{ textAlign: "center", margin: "0 auto" }}
+                        style={{ textAlign: "center", margin: "0 auto", color: fontColor }}
                     >
                         Похоже здесь нет участников
                     </h1>

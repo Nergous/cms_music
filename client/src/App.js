@@ -14,6 +14,8 @@ function App() {
     const api = useContext(ApiContext);
     const [font, setFont] = useState("Arial");
     const [fonts, setFonts] = useState([]);
+    const [color, setColor] = useState("#ffffff");
+        
     useEffect(() => {
         //get font
         const loadFont = async () => {
@@ -27,6 +29,17 @@ function App() {
                 setFont("Montserrat")
             }
         };
+
+        const fetchColor = async () => {
+            try {
+                const response = await axios.get(`${api}/admin/colors`);
+                setColor(response.data.Colors.backgroundColor);
+            } catch (error) {
+                setColor("#ffffff")
+            }
+        };
+
+        fetchColor();
         loadFont();
     },[])
 
@@ -41,7 +54,7 @@ function App() {
                         element={
                             <>
                                 <MyHeader />
-                                <div className="main__part">
+                                <div style={{ backgroundColor: color }} className="main__part">
                                     <AppRouter />
                                 </div>
                                 <MyFooter />

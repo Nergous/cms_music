@@ -18,6 +18,7 @@ const CarouselEdit = ({api}) => {
                 setImages(response.data);
             } catch (error) {
                 setFilesError("Ошибка при загрузке изображений");
+                setTimeout(() => setFilesError(""), 3000);
             }
         };
 
@@ -43,12 +44,14 @@ const CarouselEdit = ({api}) => {
             });
             setFilesSuccess("Файлы успешно загружены");
             setFilesError("");
+            setTimeout(() => setFilesSuccess(""), 3000);
             const response = await axios.get(`${api}/admin/images`);
             setImages(response.data);
             fileInputRef.current.value = ""; // Очистка формы
         } catch (error) {
             setFilesError(error.response.data);
             setFilesSuccess("");
+            setTimeout(() => setFilesError(""), 3000);
         }
     };
 
@@ -59,12 +62,14 @@ const CarouselEdit = ({api}) => {
             });
             setFilesSuccess("Файл успешно удален");
             setFilesError("");
+            setTimeout(() => setFilesSuccess(""), 3000);
             // Обновляем список изображений
             const response = await axios.get(`${api}/admin/images`);
             setImages(response.data);
         } catch (error) {
             setFilesError(error.response.data.message);
             setFilesSuccess("");
+            setTimeout(() => setFilesError(""), 3000);
         }
     };
 

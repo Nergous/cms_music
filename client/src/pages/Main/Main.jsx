@@ -12,32 +12,37 @@ const Main = () => {
     const [hasImages, setHasImages] = useState(false);
     const [images, setImages] = useState([]);
     const [text, setText] = useState("");
-
+    const [fontColor, setFontColor] = useState("#000000");
+    
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const response = await axios.get(
-                    `${apiUrl}/admin/images`
-                );
-
+                const response = await axios.get(`${apiUrl}/admin/images`);
+                
                 setHasImages(response.data.length > 0);
                 setImages(response.data);
             } catch (error) {
-                
                 setHasImages(false);
             }
         };
-
+        
         const fetchText = async () => {
             try {
-                const response = await axios.get(
-                    `${apiUrl}/admin/load`
-                );
+                const response = await axios.get(`${apiUrl}/admin/load`);
                 setText(response.data.MainText);
-            } catch (error) {
-                
-            }
+            } catch (error) {}
         };
+
+        const fetchFontColor = async () => {
+            try  {
+                const res = await axios.get(`${apiUrl}/admin/font_colors`);
+                setFontColor(res.data.FontColors.mainFontColor);
+            } catch (error) {
+                setFontColor("#000000");
+            }
+        }
+        
+        fetchFontColor();
 
         fetchImages();
         fetchText();
@@ -46,7 +51,7 @@ const Main = () => {
     return (
         <>
             <div>{hasImages && <CarouselMy imgs={images} />}</div>
-            <div className={cl.text}>{HTMLReactParser(text)}</div>
+            <div style={{ color: fontColor }} className={cl.text}>{HTMLReactParser(text)}</div>
         </>
     );
 };

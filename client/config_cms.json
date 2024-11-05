@@ -15,5 +15,20 @@
       "Fira Code"
     ],
     "selected_font": "Fira Code"
+  },
+  "colors": {
+    "headerColor": "#ffffff",
+    "backgroundColor": "#000000",
+    "footerColor": "#ffffff"
+  },
+  "fontColors": {
+    "mainFontColor": "#ff0000",
+    "headerFontColor": "#ff0000",
+    "footerFontColor": "#e60000"
+  },
+  "iconColors": {
+    "vkColor": "#1e00ff",
+    "youtubeColor": "#ff0000",
+    "emailColor": "#ff9500"
   }
 }

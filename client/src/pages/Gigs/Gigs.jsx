@@ -8,6 +8,8 @@ import ApiContext from "../../ApiContext";
 
 const Gigs = () => {
     const apiUrl = useContext(ApiContext);
+
+    const [fontColor, setFontColor] = useState("#000000");
     const [gigs, setGigs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedGig, setSelectedGig] = useState(null);
@@ -25,6 +27,16 @@ const Gigs = () => {
             }
         };
 
+        const fetchFontColor = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/admin/font_colors`);
+                setFontColor(response.data.FontColors.mainFontColor);
+            } catch (error) {
+                setFontColor("#000000");
+            }
+        }
+
+        fetchFontColor();
         fetchGigs();
     }, []);
 
@@ -42,12 +54,12 @@ const Gigs = () => {
     }, []);
 
     if (loading) {
-        return <Spinner />;
+        return <Spinner color={fontColor}  />;
     }
 
     return (
         <div className={cl.gig__outer}>
-            <h1 className={cl.gig__title}>Выступления</h1>
+            <h1 style={{ color: fontColor }} className={cl.gig__title}>Выступления</h1>
             {gigs.length > 0 ? (
                 <div className={cl.gig_block}>
                     {gigs.map((gig) => (
@@ -58,7 +70,7 @@ const Gigs = () => {
                     ))}
                 </div>
             ) : (
-                <h1 className={cl.gig__title}>Пока что нет выступлений</h1>
+                <h1 style={{ color: fontColor }} className={cl.gig__title}>Пока что нет выступлений</h1>
             )}
         </div>
     );

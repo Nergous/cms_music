@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { LogoEdit, CarouselEdit, MainText, FooterEdit, FontEdit } from "./SettingsComponents";
+import { LogoEdit, CarouselEdit, MainText, FooterEdit, FontEdit, ColorEdit, FontColorEdit, IconColorEdit } from "./SettingsComponents";
 
 
 const AppeareanceSettings = ({api}) => {
@@ -11,6 +11,9 @@ const AppeareanceSettings = ({api}) => {
             <CarouselEdit api={api} />
             <LogoEdit api={api} />
             <FontEdit api={api} />
+            <ColorEdit api={api} />
+            <FontColorEdit api={api} />
+            <IconColorEdit api={api} />
         </>
     );
 };

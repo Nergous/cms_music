@@ -10,6 +10,9 @@ router.get("/images", adminController.getImages);
 router.get("/footer", adminController.loadFooter);
 router.get("/socials", adminController.loadSocials);
 router.get("/font", adminController.getFont);
+router.get("/colors", adminController.getColors);
+router.get("/font_colors", adminController.getFontColors);
+router.get("/icon_colors", adminController.getIconColors);
 
 router.post(
     "/upload_files",
@@ -29,6 +32,9 @@ router.post("/save", authMiddleware, adminController.saveText);
 router.post("/save_footer", authMiddleware, adminController.saveFooter);
 router.post("/save_socials", authMiddleware, adminController.saveSocials);
 router.post("/save_font", authMiddleware, adminController.saveFont);
+router.post("/save_colors", authMiddleware, adminController.saveColors);
+router.post("/save_font_colors", authMiddleware, adminController.saveFontColors);
+router.post("/save_icon_colors", authMiddleware, adminController.saveIconColors);
 router.post(
     "/update_credentials",
     authMiddleware,

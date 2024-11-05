@@ -26,11 +26,13 @@ const LogoEdit = ({api}) => {
             setLogoSuccess("Логотип успешно загружен");
             setLogoError("");
             setCurrentLogo("/uploads/logo/logo.png");
+            setTimeout(() => setLogoSuccess(""), 3000);
             logoInputRef.current.value = ""; // Очистка формы
             window.location.reload();
         } catch (error) {
             setLogoError(error.response.data);
             setLogoSuccess("");
+            setTimeout(() => setLogoError(""), 3000);
         }
     };
 

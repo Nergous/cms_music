@@ -32,9 +32,11 @@ const FooterEdit = ({api}) => {
             );
             setFooterTextSuccess("Текст успешно сохранен");
             setFooterTextError("");
+            setTimeout(() => setFooterTextSuccess(""), 3000);
         } catch (error) {
             setFooterTextError(error.response.data.message);
             setFooterTextSuccess("");
+            setTimeout(() => setFooterTextError(""), 3000);
         }
     };
 
