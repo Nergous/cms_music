@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const MembersController = require("../controllers/membersController");
+const MembersController = require("../controllers/tablesControllers/membersController");
 const authMiddleware = require("../middleware/authMiddleware");
 
 router.get("/", MembersController.getAll);

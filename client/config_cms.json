@@ -8,11 +8,11 @@
   },
   "fonts": {
     "available_fonts": [
-      "Arial",
       "Times New Roman",
       "Courier New",
       "Verdana",
-      "Fira Code"
+      "Fira Code",
+      "Montserrat"
     ],
     "selected_font": "Fira Code"
   },
@@ -22,13 +22,15 @@
     "footerColor": "#ffffff"
   },
   "fontColors": {
-    "mainFontColor": "#ff0000",
-    "headerFontColor": "#ff0000",
-    "footerFontColor": "#e60000"
+    "mainFontColor": "#ffffff",
+    "headerFontColor": "#000000",
+    "footerFontColor": "#000000"
   },
   "iconColors": {
-    "vkColor": "#1e00ff",
-    "youtubeColor": "#ff0000",
-    "emailColor": "#ff9500"
-  }
+    "vkColor": "#000000",
+    "youtubeColor": "#000000",
+    "emailColor": "#000000"
+  },
+  "description": "hgdfhdfhdfgfgjfgj",
+  "title": "Пиво"
 }

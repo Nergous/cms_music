@@ -1,6 +1,6 @@
-const { tracks } = require("../models");
+const { tracks } = require("../../models");
 const fs = require("fs");
-const { music_authors, members } = require("../models");
+const { music_authors, members } = require("../../models");
 
 const TracksController = {
     getAll: async (req, res) => {

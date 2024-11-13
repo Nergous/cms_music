@@ -1,47 +1,57 @@
 const express = require("express");
 const router = express.Router();
-const adminController = require("../controllers/adminController");
+const {
+    adminController, authController, 
+    colorController, fontController, 
+    textController, imageController,
+    footerController, htmlController
+} = require("../controllers/adminControllers");
+
 const authMiddleware = require("../middleware/authMiddleware");
-const { upload, deleteOldLogo } = require("../middleware/multer");
+const { upload, uploadFavicon, deleteOldLogo, deleteOldFavicon } = require("../middleware/multer");
 
-router.get("/checkAuth", authMiddleware, adminController.checkAuth);
-router.get("/load", adminController.loadText);
-router.get("/images", adminController.getImages);
-router.get("/footer", adminController.loadFooter);
-router.get("/socials", adminController.loadSocials);
-router.get("/font", adminController.getFont);
-router.get("/colors", adminController.getColors);
-router.get("/font_colors", adminController.getFontColors);
-router.get("/icon_colors", adminController.getIconColors);
+// Проверка аутентификации администратора
+router.get("/checkAuth", authMiddleware, authController.checkAuth);
+router.post("/login", authController.authenticate);
 
-router.post(
-    "/upload_files",
-    authMiddleware,
-    (req, res, next) => {
-        upload.array("files")(req, res, (err) => {
-            if (err) {
-                return res.status(400).contentType('text/plain').send(err.message);
-            }
-            next();
-        });
-    },
-    adminController.uploadFiles
-);
-router.post("/login", adminController.authenticate);
-router.post("/save", authMiddleware, adminController.saveText);
-router.post("/save_footer", authMiddleware, adminController.saveFooter);
-router.post("/save_socials", authMiddleware, adminController.saveSocials);
-router.post("/save_font", authMiddleware, adminController.saveFont);
-router.post("/save_colors", authMiddleware, adminController.saveColors);
-router.post("/save_font_colors", authMiddleware, adminController.saveFontColors);
-router.post("/save_icon_colors", authMiddleware, adminController.saveIconColors);
-router.post(
-    "/update_credentials",
-    authMiddleware,
-    adminController.updateCredentials
-);
-router.post(
-    "/upload_logo",
+router.post("/update_credentials", authMiddleware, adminController.updateCredentials);
+
+// Текст на главной странице
+router.get("/load", textController.loadText);
+router.post("/save", authMiddleware, textController.saveText);
+
+// Изображения в каруселе на главной странице
+router.get("/images", imageController.getImages);
+router.post("/upload_files", authMiddleware, imageController.uploadFiles);
+router.delete("/images/:filename", authMiddleware, imageController.deleteImage);
+
+// Подвал приложения
+router.get("/footer", footerController.loadFooter);
+router.post("/save_footer", authMiddleware, footerController.saveFooter);
+
+// Значки социальных сетей в подвале
+router.get("/socials", footerController.loadSocials);
+router.post("/save_socials", authMiddleware, footerController.saveSocials);
+
+// Шрифт приложения
+router.get("/font", fontController.getFont);
+router.post("/save_font", authMiddleware, fontController.saveFont);
+router.delete("/delete_font", authMiddleware, fontController.deleteFont);
+
+// Основные цвета приложения
+router.get("/colors", colorController.getColors);
+router.post("/save_colors", authMiddleware, colorController.saveColors);
+
+// Цвет шрифтов приложения
+router.get("/font_colors", colorController.getFontColors);
+router.post("/save_font_colors", authMiddleware, colorController.saveFontColors);
+
+// Цвет значков соц. сетей в подвале
+router.get("/icon_colors", colorController.getIconColors);
+router.post("/save_icon_colors", authMiddleware, colorController.saveIconColors);
+
+// Логотип в шапке
+router.post("/upload_logo",
     authMiddleware,
     deleteOldLogo,
     (req, res, next) => {
@@ -52,9 +62,26 @@ router.post(
             next();
         });
     },
-    adminController.uploadLogo
+    imageController.uploadLogo
 );
 
-router.delete("/images/:filename", authMiddleware, adminController.deleteImage);
+// Favicon
+router.get("/get_favicon", imageController.getFavicon);
+router.post("/save_favicon", authMiddleware, (req, res, next) => {
+    uploadFavicon.single('favicon')(req, res, (err) => {
+        if (err) {
+            return res.status(400).contentType('text/plain').send(err.message);
+        }
+        next();
+    });
+}, imageController.saveFavicon);
+
+// Описание страницы
+router.get("/get_description", htmlController.getDescription);
+router.post("/save_description", authMiddleware, htmlController.saveDescription);
+
+// Название страницы
+router.get("/get_title", htmlController.getTitle);
+router.post("/save_title", authMiddleware, htmlController.saveTitle);
 
 module.exports = router;

@@ -5,7 +5,7 @@ import { CButton, CAlert, CForm } from "@coreui/react";
 
 import ReactQuill from "react-quill-new";
 
-const MainText = ({api}) => {
+const MainText = ({api, id, label}) => {
     const [text, setText] = useState("");
     const [textError, setTextError] = useState("");
     const [textSuccess, setTextSuccess] = useState("");
@@ -44,7 +44,7 @@ const MainText = ({api}) => {
     };
 
     return (
-        <div style={{ margin: "30px 0" }}>
+        <div id={id} label={label} style={{ margin: "30px 0" }}>
             {textError && (
                 <CAlert color="danger" dismissible onClose={() => setTextError("")}>
                     {textError}

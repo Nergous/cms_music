@@ -6,7 +6,7 @@ const {
     members,
     tracks,
     tracks_in_record,
-} = require("../models");
+} = require("../../models");
 
 const RecordsController = {
     getAll: async (req, res) => {

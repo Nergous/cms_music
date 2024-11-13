@@ -7,7 +7,9 @@ const DefaultLayout = ({ children }) => {
             <AppSidebar />
             <div className="wrapper d-flex flex-column min-vh-100">
                 <AppHeader />
-                {children}
+                <div className="flex-grow-1" style={{ overflowY: "auto", position: "relative" }}>
+                    {children}
+                </div>
                 <AppFooter />
             </div>
         </>

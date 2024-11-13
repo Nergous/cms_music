@@ -1,8 +1,8 @@
-const { members } = require("../models");
+const { members } = require("../../models");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const { member_roles, music_roles } = require("../models");
+const { member_roles, music_roles } = require("../../models");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {

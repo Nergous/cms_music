@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CButton, CAlert, CForm, CFormInput } from "@coreui/react";
 
-const ColorEdit = ({ api }) => {
+const ColorEdit = ({api, id, label}) => {
     const [colors, setColors] = useState({
         headerColor: "#000000",
         backgroundColor: "#ffffff",
-        footerColor: "#000000"
+        footerColor: "#000000",
     });
     const [colorError, setColorError] = useState("");
     const [colorSuccess, setColorSuccess] = useState("");
@@ -29,7 +29,7 @@ const ColorEdit = ({ api }) => {
             await axios.post(
                 `${api}/admin/save_colors`,
                 {
-                    Colors: colors
+                    Colors: colors,
                 },
                 { withCredentials: true }
             );
@@ -47,12 +47,40 @@ const ColorEdit = ({ api }) => {
         const { name, value } = event.target;
         setColors({
             ...colors,
-            [name]: value
+            [name]: value,
         });
     };
 
+    const defaultColors = async () => {
+        try {
+            await axios.post(
+                `${api}/admin/save_colors`,
+                {
+                    Colors: {
+                        headerColor: "#ffffff",
+                        backgroundColor: "#000000",
+                        footerColor: "#ffffff",
+                    },
+                },
+                { withCredentials: true }
+            );
+            setColorSuccess("Цвета успешно восстановлены в стандартные значения");
+            setColors({
+                headerColor: "#ffffff",
+                backgroundColor: "#000000",
+                footerColor: "#ffffff",
+            })
+            setColorError("");
+            setTimeout(() => setColorSuccess(""), 3000); // Скрыть сообщение об успехе через 3 секунды
+        } catch (error) {
+            setColorError(error.response.data.message);
+            setColorSuccess("");
+            setTimeout(() => setColorError(""), 3000); // Скрыть сообщение об ошибке через 3 секунды
+        }
+    }
+
     return (
-        <div style={{ margin: "30px 0" }}>
+        <div id={id} label={label} style={{ margin: "30px 0" }}>
             {colorError && (
                 <CAlert color="danger" dismissible onClose={() => setColorError("")}>
                     {colorError}
@@ -68,13 +96,7 @@ const ColorEdit = ({ api }) => {
             <CForm style={{ margin: "30px 0" }}>
                 <div style={{ marginBottom: "20px" }}>
                     <label htmlFor="headerColor">Цвет шапки:</label>
-                    <CFormInput
-                        type="color"
-                        id="headerColor"
-                        name="headerColor"
-                        value={colors.headerColor}
-                        onChange={handleColorChange}
-                    />
+                    <CFormInput type="color" id="headerColor" name="headerColor" value={colors.headerColor} onChange={handleColorChange} />
                 </div>
                 <div style={{ marginBottom: "20px" }}>
                     <label htmlFor="backgroundColor">Цвет фона:</label>
@@ -88,18 +110,17 @@ const ColorEdit = ({ api }) => {
                 </div>
                 <div style={{ marginBottom: "20px" }}>
                     <label htmlFor="footerColor">Цвет подвала:</label>
-                    <CFormInput
-                        type="color"
-                        id="footerColor"
-                        name="footerColor"
-                        value={colors.footerColor}
-                        onChange={handleColorChange}
-                    />
+                    <CFormInput type="color" id="footerColor" name="footerColor" value={colors.footerColor} onChange={handleColorChange} />
                 </div>
             </CForm>
-            <CButton color="primary" onClick={handleSave}>
-                Сохранить
-            </CButton>
+            <div style={{ marginTop: "20px", display: "inline-block" }}>
+                <CButton color="primary" onClick={handleSave}>
+                    Сохранить
+                </CButton>
+                <CButton color="secondary" style={{ marginLeft: "10px" }} onClick={defaultColors}>
+                    Сбросить
+                </CButton>
+            </div>
         </div>
     );
 };

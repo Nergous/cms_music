@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { CButton, CAlert, CForm, CFormInput } from "@coreui/react";
 
-const CredentialsEdit = ({api}) => {
+const CredentialsEdit = ({api, id, label}) => {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [credentialsError, setCredentialsError] = useState("");
@@ -28,7 +28,7 @@ const CredentialsEdit = ({api}) => {
     };
 
     return (
-        <div style={{ margin: "30px 0" }}>
+        <div id={id} label={label} style={{ margin: "30px 0" }}>
             {credentialsError && (
                 <CAlert color="danger" dismissible onClose={() => setCredentialsError("")}>
                     {credentialsError}

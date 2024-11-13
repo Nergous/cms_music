@@ -1,4 +1,4 @@
-const { gig_members } = require("../models");
+const { gig_members } = require("../../models");
 
 const GigMembersController = {
     getAll: async (req, res) => {

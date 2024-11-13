@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { CButton, CAlert, CForm, CFormInput, CImage } from "@coreui/react";
 
-const LogoEdit = ({api}) => {
+const LogoEdit = ({api, id, label}) => {
     const [logo, setLogo] = useState(null);
     const [logoError, setLogoError] = useState("");
     const [logoSuccess, setLogoSuccess] = useState("");
@@ -37,7 +37,7 @@ const LogoEdit = ({api}) => {
     };
 
     return (
-        <div style={{ margin: "30px 0" }}>
+        <div id={id} label={label} style={{ margin: "30px 0" }}>
             {logoError && (
                 <CAlert color="danger" dismissible onClose={() => setLogoError("")}>
                     {logoError}

@@ -1,4 +1,4 @@
-const { tracks_in_record } = require("../models");
+const { tracks_in_record } = require("../../models");
 
 const TracksInRecordController = {
     getAll: async (req, res) => {

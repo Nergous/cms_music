@@ -1,4 +1,4 @@
-const { music_roles } = require("../models");
+const { music_roles } = require("../../models");
 
 const MusicRolesController = {
     getAll: async (req, res) => {

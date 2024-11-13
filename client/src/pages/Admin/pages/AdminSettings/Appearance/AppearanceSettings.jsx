@@ -1,21 +1,20 @@
-import React, { useContext } from "react";
+import React, { forwardRef } from "react";
 import { LogoEdit, CarouselEdit, MainText, FooterEdit, FontEdit, ColorEdit, FontColorEdit, IconColorEdit } from "./SettingsComponents";
 
-
-const AppeareanceSettings = ({api}) => {
+const AppeareanceSettings = forwardRef(({ api }, ref) => {
     return (
-        <>
-            <h1>Настройки внешнего вида</h1>
-            <MainText api={api} />
-            <FooterEdit api={api} />
-            <CarouselEdit api={api} />
-            <LogoEdit api={api} />
-            <FontEdit api={api} />
-            <ColorEdit api={api} />
-            <FontColorEdit api={api} />
-            <IconColorEdit api={api} />
-        </>
+        <div ref={ref}>
+            <h1 style={{ marginTop: "30px" }}>Настройки внешнего вида</h1>
+            <MainText id="mainText" label="Главный текст" api={api} />
+            <FooterEdit id="footerEdit" label="Подвал" api={api} />
+            <CarouselEdit id="carouselEdit" label="Фото-Карусель" api={api} />
+            <LogoEdit id="logoEdit" label="Логотип" api={api} />
+            <FontEdit id="fontEdit" label="Шрифт" api={api} />
+            <ColorEdit id="colorEdit" label="Цвета" api={api} />
+            <FontColorEdit id="fontColorEdit" label="Цвета шрифта" api={api} />
+            <IconColorEdit id="iconColorEdit" label="Цвета иконок" api={api} />
+        </div>
     );
-};
+});
 
 export default AppeareanceSettings;

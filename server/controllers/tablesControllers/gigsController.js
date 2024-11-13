@@ -1,8 +1,8 @@
-const { gigs } = require("../models");
+const { gigs } = require("../../models");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const { gig_members, members } = require("../models");
+const { gig_members, members } = require("../../models");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {

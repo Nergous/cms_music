@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { CButton, CAlert, CForm, CFormInput, CImage } from "@coreui/react";
 
-const CarouselEdit = ({api}) => {
+const CarouselEdit = ({api, id, label}) => {
     const [files, setFiles] = useState(null);
     const [images, setImages] = useState([]);
     const [filesError, setFilesError] = useState("");
@@ -74,7 +74,7 @@ const CarouselEdit = ({api}) => {
     };
 
     return (
-        <div style={{ margin: "30px 0" }}>
+        <div id={id} label={label} style={{ margin: "30px 0" }}>
             {filesError && (
                 <CAlert color="danger" dismissible onClose={() => setFilesError("")}>
                     {filesError}

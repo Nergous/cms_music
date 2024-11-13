@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const TracksController = require("../controllers/tracksController");
+const TracksController = require("../controllers/tablesControllers/tracksController");
 const authMiddleware = require("../middleware/authMiddleware");
 
 router.get("/", TracksController.getAll);

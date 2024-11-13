@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const MusicRolesController = require("../controllers/musicRolesController");
+const MusicRolesController = require("../controllers/tablesControllers/musicRolesController");
 const authMiddleware = require("../middleware/authMiddleware");
 
 router.get("/", MusicRolesController.getAll);

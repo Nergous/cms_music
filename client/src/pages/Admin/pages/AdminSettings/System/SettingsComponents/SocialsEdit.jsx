@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CForm, CFormInput, CFormCheck, CAlert, CButton } from "@coreui/react";
 
-const SocialsEdit = ({ api }) => {
+const SocialsEdit = ({api, id, label}) => {
     const [vkLink, setVkLink] = useState("");
     const [youtubeLink, setYoutubeLink] = useState("");
     const [emailLink, setEmailLink] = useState("");
@@ -80,7 +80,7 @@ const SocialsEdit = ({ api }) => {
     }
 
     return (
-        <div>
+        <div id={id} label={label}>
             {error && (
                 <CAlert color="danger" dismissible onClose={() => setError("")}>
                     {error}

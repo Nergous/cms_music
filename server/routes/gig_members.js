@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const GigMembersController = require("../controllers/gigMembersController");
+const GigMembersController = require("../controllers/tablesControllers/gigMembersController");
 const authMiddleware = require("../middleware/authMiddleware");
 
 router.get("/", GigMembersController.getAll);

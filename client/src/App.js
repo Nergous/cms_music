@@ -17,6 +17,27 @@ function App() {
     const [color, setColor] = useState("#ffffff");
         
     useEffect(() => {
+
+        const loadTitle = async () => {
+            try {
+                const response = await axios.get(`${api}/admin/get_title`);
+                const title = response.data.title;
+                document.querySelector("title").innerHTML = title;
+            } catch (error) {
+                document.querySelector("title").innerHTML = "";
+            }
+        };
+
+        const loadDescription = async () => {
+            try {
+                const response = await axios.get(`${api}/admin/get_description`);
+                const description = response.data.description;
+                document.querySelector("meta[name='description']").setAttribute("content", description);
+            } catch (error) {
+                document.querySelector("meta[name='description']").setAttribute("content", "");
+            }
+        };
+
         //get font
         const loadFont = async () => {
             try {
@@ -39,6 +60,8 @@ function App() {
             }
         };
 
+        loadTitle();
+        loadDescription();
         fetchColor();
         loadFont();
     },[])

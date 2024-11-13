@@ -4,7 +4,7 @@ import axios from "axios";
 import { CButton, CAlert, CForm } from "@coreui/react";
 import ReactQuill from "react-quill-new";
 
-const FooterEdit = ({api}) => {
+const FooterEdit = ({api, id, label}) => {
     const [footerText, setFooterText] = useState("");
     const [footerTextError, setFooterTextError] = useState("");
     const [footerTextSuccess, setFooterTextSuccess] = useState("");
@@ -41,7 +41,7 @@ const FooterEdit = ({api}) => {
     };
 
     return (
-        <div style={{ margin: "30px 0" }}>
+        <div id={id} label={label} style={{ margin: "30px 0" }}>
             {footerTextError && (
                 <CAlert color="danger" dismissible onClose={() => setFooterTextError("")}>
                     {footerTextError}

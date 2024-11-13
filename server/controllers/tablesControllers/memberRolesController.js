@@ -1,4 +1,4 @@
-const { member_roles } = require("../models");
+const { member_roles } = require("../../models");
 
 const MemberRolesController = {
     getAll: async (req, res) => {
