@@ -30,14 +30,13 @@ const Music = () => {
         };
 
         const fetchFontColor = async () => {
-            try  {
+            try {
                 const res = await axios.get(`${apiUrl}/admin/font_colors`);
                 setFontColor(res.data.FontColors.mainFontColor);
             } catch (error) {
                 setFontColor("#000000");
             }
         };
-
 
         fetchFontColor();
         fetchMusic();
@@ -70,23 +69,21 @@ const Music = () => {
 
     return (
         <div className={cl.music__container}>
-            <h1 style={{ color: fontColor }} className={cl.music__title}>Музыка</h1>
+            <h1 style={{ color: fontColor }} className={cl.music__title}>
+                Музыка
+            </h1>
             {musicList.length > 0 ? (
-                musicList.map((music) => (
-                    <MusicButton
-                        key={music.id}
-                        music={music}
-                        handleMusicClick={handleMusicClick}
-                    />
-                ))
+                musicList.map((music) => <MusicButton key={music.id} music={music} handleMusicClick={handleMusicClick} />)
             ) : (
-                <h1 style={{ color: fontColor }} className={cl.music__title}>Пока что здесь ничего нет</h1>
+                <h1 style={{ color: fontColor }} className={cl.music__title}>
+                    Пока что здесь ничего нет
+                </h1>
             )}
-            <Modal
-                visible={modal}
-                setVisible={setModal}>
-                <MusicPanel music={selectedMusic} />
-            </Modal>
+            {selectedMusic && (
+                <Modal visible={modal} setVisible={setModal}>
+                    <MusicPanel id={selectedMusic.id} />
+                </Modal>
+            )}
         </div>
     );
 };

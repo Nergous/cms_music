@@ -4,7 +4,8 @@ const {
     adminController, authController, 
     colorController, fontController, 
     textController, imageController,
-    footerController, htmlController
+    footerController, htmlController,
+    navbarController
 } = require("../controllers/adminControllers");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -83,5 +84,9 @@ router.post("/save_description", authMiddleware, htmlController.saveDescription)
 // Название страницы
 router.get("/get_title", htmlController.getTitle);
 router.post("/save_title", authMiddleware, htmlController.saveTitle);
+
+// Навигационная панель
+router.get("/navbar_settings", navbarController.getNavbarSettings);
+router.post("/save_navbar_settings", authMiddleware, navbarController.saveNavbarSettings);
 
 module.exports = router;

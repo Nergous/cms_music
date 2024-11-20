@@ -145,10 +145,10 @@ const CreateMusic = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        event.stopPropagation();
         const form = event.currentTarget;
 
         if (form.checkValidity() === false) {
-            event.stopPropagation();
         }
 
         setValidated(true);

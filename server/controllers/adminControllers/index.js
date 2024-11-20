@@ -6,6 +6,7 @@ const textController = require("./textController");
 const imageController = require("./imageController");
 const footerController = require("./footerController");
 const htmlController = require("./htmlController");
+const navbarController = require("./navbarController");
 
 module.exports = {
     adminController,
@@ -15,5 +16,6 @@ module.exports = {
     textController,
     imageController,
     footerController,
-    htmlController
+    htmlController,
+    navbarController
 };

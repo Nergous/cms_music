@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import cl from "./MusicPanel.module.css";
 import TrackList from "./TrackList";
 import TrackModal from "./TrackModal";
 import axios from "axios";
+import ApiContext from "../../../ApiContext";
+import Spinner from "../../../components/Spinner/Spinner";
 
-const MusicPanel = ({ music }) => {
+const MusicPanel = ({ id }) => {
+    const apiUrl = useContext(ApiContext);
     const [selectedTrack, setSelectedTrack] = useState(null);
     const [trackModalIsOpen, setTrackModalIsOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
-    const [trackData, setTrackData] = useState(null);
+    const [recordData, setRecordData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const getType = (type) => {
         if (type === "single") {
@@ -19,10 +23,9 @@ const MusicPanel = ({ music }) => {
             return "Альбом";
         }
     };
-   
 
     useEffect(() => {
-    	if (trackModalIsOpen) {
+        if (trackModalIsOpen) {
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "auto";
@@ -30,20 +33,18 @@ const MusicPanel = ({ music }) => {
     }, [trackModalIsOpen]);
 
     useEffect(() => {
-        if (music) {
-            const fetchTrackData = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get(
-                    "/api/record/" + music.id
-                );
-                setTrackData(response.data);
+                const response = await axios.get(`${apiUrl}/record/` + id);
+                setRecordData(response.data);
             } catch (err) {
                 console.error(err);
+            } finally {
+                setIsLoading(false);
             }
         };
-        fetchTrackData();
-        }
-    }, [music]);
+        fetchData();
+    }, [id]);
 
     const openTrackModal = (track) => {
         setSelectedTrack(track);
@@ -62,10 +63,7 @@ const MusicPanel = ({ music }) => {
 
     useEffect(() => {
         const handleOutsideClick = (event) => {
-            if (
-                trackModalIsOpen &&
-                event.target.closest(`.${cl.modalContent}`) === null
-            ) {
+            if (trackModalIsOpen && event.target.closest(`.${cl.modalContent}`) === null) {
                 closeTrackModal();
             }
         };
@@ -76,39 +74,30 @@ const MusicPanel = ({ music }) => {
         };
     }, [trackModalIsOpen]);
 
-    if (!music) {
+    if (!id) {
         return <></>;
     }
 
     return (
         <>
-            <div className={cl.parent}>
-                <div className={cl.div1}>
-                    {music.record_name} - {getType(music.type_of_record)}
-                </div>
-                <div className={cl.div2}>
-                    <img
-                        className={cl.img}
-                        src={music.path_to_cover}
-                        alt="music"
-                    ></img>
-                </div>
-                <div className={cl.div4}>
-                    Дата выпуска - {music.year_of_publish}
-                </div>
-                {trackData && (
-                    <TrackList
-                        tracks={trackData.tracks}
-                        onTrackClick={openTrackModal}
-                    />
-                )}
-            </div>
-            {(trackModalIsOpen || selectedTrack !== null) && (
-                <TrackModal
-                    track={selectedTrack}
-                    onClose={closeTrackModal}
-                    isClosing={isClosing}
-                />
+            {isLoading ? (
+                <Spinner color={"#f1f1f1"} />
+            ) : (
+                <>
+                    <div className={cl.parent}>
+                        <div className={cl.div1}>
+                            {recordData.record_name} - {getType(recordData.type_of_record)}
+                        </div>
+                        <div className={cl.div2}>
+                            <img className={cl.img} src={recordData.path_to_cover} alt="music"></img>
+                        </div>
+                        <div className={cl.div4}>Дата выпуска - {recordData.year_of_publish}</div>
+                        {recordData.tracks && <TrackList tracks={recordData.tracks} onTrackClick={openTrackModal} />}
+                    </div>
+                    {(trackModalIsOpen || selectedTrack !== null) && (
+                        <TrackModal track={selectedTrack} onClose={closeTrackModal} isClosing={isClosing} />
+                    )}
+                </>
             )}
         </>
     );

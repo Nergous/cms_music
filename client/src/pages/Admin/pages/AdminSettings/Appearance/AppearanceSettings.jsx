@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { LogoEdit, CarouselEdit, MainText, FooterEdit, FontEdit, ColorEdit, FontColorEdit, IconColorEdit } from "./SettingsComponents";
+import { LogoEdit, CarouselEdit, MainText, FooterEdit, FontEdit, ColorEdit, FontColorEdit, IconColorEdit, NavbarEdit } from "./SettingsComponents";
 
 const AppeareanceSettings = forwardRef(({ api }, ref) => {
     return (
@@ -13,6 +13,7 @@ const AppeareanceSettings = forwardRef(({ api }, ref) => {
             <ColorEdit id="colorEdit" label="Цвета" api={api} />
             <FontColorEdit id="fontColorEdit" label="Цвета шрифта" api={api} />
             <IconColorEdit id="iconColorEdit" label="Цвета иконок" api={api} />
+            <NavbarEdit id="navbarEdit" label="Вид навигационной панели" api={api} />
         </div>
     );
 });

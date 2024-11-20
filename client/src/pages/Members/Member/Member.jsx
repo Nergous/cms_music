@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import cl from "./Member.module.css";
+import ApiContext from "../../../ApiContext";
 
 const Member = ({ member }) => {
-    const [role, setRole] = useState([]);
 
     const formatDate = (dateString) => {
         const months = [
@@ -27,33 +27,6 @@ const Member = ({ member }) => {
         return `${day} ${month} ${year}`;
     };
 
-    useEffect(() => {
-        const fetchRoles = async () => {
-            try {
-                const responseRoles = await axios.get(
-                    "api/music_roles"
-                );
-                const responseMemberRoles = await axios.get(
-                    `api/member_roles`
-                );
-                if (responseRoles.data && responseMemberRoles.data && member) {
-                    const memberRole = responseMemberRoles.data.filter(
-                        (rol) => rol.id_member === member.id
-                    );
-                    const memberRolesId = memberRole.map(
-                        (role) => role.id_role
-                    );
-                    const filteredRoles = responseRoles.data.filter((role) =>
-                        memberRolesId.includes(role.id)
-                    );
-                    setRole(filteredRoles);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchRoles();
-    }, [member]);
 
     if (!member) {
         return <></>;
@@ -80,7 +53,7 @@ const Member = ({ member }) => {
                             <hr />
                             <p style={{ textAlign: "left" }}>
                                 <b>Роль в группе:</b>{" "}
-                                {role.map((r) => r.role_name).join(", ")}
+                                {member.music_roles.map((r) => r.role_name).join(", ")}
                             </p>
                             <p style={{ textAlign: "left" }}>
                                 Участник группы с{" "}

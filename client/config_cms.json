@@ -32,5 +32,6 @@
     "emailColor": "#000000"
   },
   "description": "hgdfhdfhdfgfgjfgj",
-  "title": "Пиво"
+  "title": "Пиво",
+  "navbarDisplayMode": "alwaysBurger"
 }

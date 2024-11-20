@@ -1,11 +1,23 @@
 import React from "react";
-
 import cl from "./Navbar.module.css";
 
-const BurgerToggle = ({ isOpen, setIsOpen }) => {
+const BurgerToggle = ({ isOpen, setIsOpen, displayMode }) => {
+    const getToggleClassName = () => {
+        let className = cl.navbar__toggle;
+        if (isOpen) {
+            className += ` ${cl.change}`;
+        }
+        if (displayMode === "alwaysBurger") {
+            className += ` ${cl.alwaysBurger}`;
+        } else if (displayMode === "alwaysFull") {
+            className += ` ${cl.alwaysFull}`;
+        }
+        return className;
+    };
+
     return (
         <div
-            className={`${cl.navbar__toggle} ${isOpen ? cl.change : ""}`}
+            className={getToggleClassName()}
             onClick={() => setIsOpen(!isOpen)}
         >
             <div className={`${cl.bar} ${isOpen ? cl.bar1 : ""}`}></div>
@@ -14,4 +26,5 @@ const BurgerToggle = ({ isOpen, setIsOpen }) => {
         </div>
     );
 };
+
 export default BurgerToggle;

@@ -53,6 +53,7 @@ const RecordsController = {
 
     create: async (req, res) => {
         try {
+            console.log(req.body);
             const { recordName, recordType, releaseYear } = req.body;
 
             const coverFullPath = req.files["cover"][0].path;

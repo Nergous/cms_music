@@ -18,46 +18,40 @@ const Members = () => {
     const [loading, setLoading] = useState(true);
     const [fontColor, setFontColor] = useState("#000000");
 
-
-    const fetchMembers = useCallback(async () => {
-        try {
-            const response = await axios.get(`${apiUrl}/members`);
-	    
-            const data = await response.json();
-            const filteredData = data.filter(
-                (item) => item.is_member !== false
-            );
-            setMembers(filteredData);
-        } catch (error) {            
-        } finally {
-            setLoading(false);
-        }
+    useEffect(() => {
+        const fetchMembers = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/members`);
+                const data = await response.data;
+                const filteredData = data.filter((item) => item.is_member !== false);
+                setMembers(filteredData);
+            } catch (error) {
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchMembers();
     }, []);
 
-    
-    useEffect(() => {
-        fetchMembers();
-    }, [fetchMembers]);
-    
     useEffect(() => {
         const fetchFontColor = async () => {
-            try  {
+            try {
                 const res = await axios.get(`${apiUrl}/admin/font_colors`);
                 setFontColor(res.data.FontColors.mainFontColor);
             } catch (error) {
                 setFontColor("#000000");
             }
-        }
+        };
 
         fetchFontColor();
     }, []);
 
     useEffect(() => {
-	if (modal) {
-	    document.body.style.overflow = "hidden";
-	} else {
-	    document.body.style.overflow = "auto";
-	}
+        if (modal) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
     }, [modal]);
 
     const handleMemberClick = useCallback((member) => {
@@ -79,13 +73,12 @@ const Members = () => {
 
     return (
         <>
-            <h1 style={{ color: fontColor }} className={cl.title}>Участники</h1>
+            <h1 style={{ color: fontColor }} className={cl.title}>
+                Участники
+            </h1>
             <div className={cl.main}>
                 {members.length === 0 && (
-                    <h1
-                        className={cl.title}
-                        style={{ textAlign: "center", margin: "0 auto", color: fontColor }}
-                    >
+                    <h1 className={cl.title} style={{ textAlign: "center", margin: "0 auto", color: fontColor }}>
                         Похоже здесь нет участников
                     </h1>
                 )}
@@ -97,9 +90,7 @@ const Members = () => {
                                     member={member}
                                     isHovered={hoveredId === member.id}
                                     onClick={() => handleMemberClick(member)}
-                                    onMouseEnter={() =>
-                                        handleMouseEnter(member.id)
-                                    }
+                                    onMouseEnter={() => handleMouseEnter(member.id)}
                                     onMouseLeave={handleMouseLeave}
                                 />
                             </LazyLoad>
