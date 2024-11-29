@@ -1,11 +1,11 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const {
     adminController, authController, 
     colorController, fontController, 
     textController, imageController,
     footerController, htmlController,
-    navbarController
+    navbarController, pagesController
 } = require("../controllers/adminControllers");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -88,5 +88,9 @@ router.post("/save_title", authMiddleware, htmlController.saveTitle);
 // Навигационная панель
 router.get("/navbar_settings", navbarController.getNavbarSettings);
 router.post("/save_navbar_settings", authMiddleware, navbarController.saveNavbarSettings);
+
+// Страница
+router.get("/load_page/:pageName", pagesController.loadPage);
+router.post("/save_page", authMiddleware, pagesController.savePage);
 
 module.exports = router;

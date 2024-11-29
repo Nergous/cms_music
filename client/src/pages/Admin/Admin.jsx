@@ -26,7 +26,9 @@ import DefaultLayout from "./layout/DefaultLayout";
 
 import AdminSettings from "./pages/AdminSettings/AdminSettings";
 
+
 import ApiContext from "../../ApiContext";
+import VisualEditor from "./pages/VisualEditor/VisualEditor";
 
 const Admin = () => {
     const apiUrl = useContext(ApiContext);
@@ -79,6 +81,12 @@ const Admin = () => {
                         <Route path="/roles/*" element={<DefaultLayout><AdminRoles /></DefaultLayout>} />
                         <Route path="/roles/:id/edit" element={<DefaultLayout><EditRoles /></DefaultLayout>} />
                         <Route path="/roles/create" element={<DefaultLayout><CreateRoles /></DefaultLayout>} />
+
+                        <Route path="/editor/main" element={<VisualEditor page="main" />} />
+                        <Route path="/editor/members" element={<VisualEditor page="members" />} />
+                        <Route path="/editor/gigs" element={<VisualEditor page="gigs" />} />
+                        <Route path="/editor/music" element={<VisualEditor page="music" />} />
+                        
 
                         <Route path="/*" element={<Navigate to="/admin" />} />
                     </>

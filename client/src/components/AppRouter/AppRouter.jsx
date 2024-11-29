@@ -8,12 +8,11 @@ import Admin from "../../pages/Admin/Admin";
 import AdminAuth from "../../pages/Admin/AdminAuth";
 
 const AppRouter = () => {
-
     return (
         <>
             <Routes>
                 <Route path="/*" element={<Navigate to="/" replace />} />
-                <Route path="/" element={<Main />}></Route>
+                <Route path="/" element={<Main pageName={"main"} />}></Route>
                 <Route path="/members" element={<Members />}></Route>
                 <Route path="/music" element={<Music />}></Route>
                 <Route path="/gigs" element={<Gigs />}></Route>

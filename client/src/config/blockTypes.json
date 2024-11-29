@@ -1,0 +1,11 @@
+{
+    "TextBlock": {
+        "component": "Text"
+    },
+    "HtmlBlock": {
+        "component": "Html"
+    },
+    "ContainerBlock": {
+        "component": "Container"
+    }
+}

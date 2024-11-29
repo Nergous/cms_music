@@ -7,6 +7,7 @@ const imageController = require("./imageController");
 const footerController = require("./footerController");
 const htmlController = require("./htmlController");
 const navbarController = require("./navbarController");
+const pagesController = require("./pagesController");
 
 module.exports = {
     adminController,
@@ -17,5 +18,6 @@ module.exports = {
     imageController,
     footerController,
     htmlController,
-    navbarController
+    navbarController,
+    pagesController
 };
