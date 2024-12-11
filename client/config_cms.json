@@ -27,7 +27,7 @@
     "footerFontColor": "#000000"
   },
   "iconColors": {
-    "vkColor": "#000000",
+    "vkColor": "#ff0000",
     "youtubeColor": "#000000",
     "emailColor": "#000000"
   },
@@ -71,19 +71,38 @@
             "content": "<h1 class=\"ql-align-right\"><span style=\"color: rgb(194, 133, 255);\">hegtkhjkjghjkg</span></h1>"
           }
         ]
+      },
+      {
+        "id": 1733916350839,
+        "type": "ContainerBlock",
+        "content": [
+          {
+            "id": 1733916352741,
+            "type": "TextBlock",
+            "content": "<p>gdfgdfgdfg</p>"
+          }
+        ]
       }
     ],
-    "members": {
-      "components": [],
-      "styles": []
-    },
-    "music": {
-      "components": [],
-      "styles": []
-    },
-    "gigs": {
-      "components": [],
-      "styles": []
-    }
+    "members": [
+      {
+        "id": 1733916885586,
+        "type": "ContainerBlock",
+        "content": [
+          {
+            "id": 1733916889170,
+            "type": "TextBlock",
+            "content": "<p><span style=\"color: rgb(255, 255, 255);\">Пипирка</span></p>"
+          },
+          {
+            "id": 1733916891189,
+            "type": "TextBlock",
+            "content": "<p><span style=\"background-color: rgb(230, 0, 0);\">Попочка</span></p>"
+          }
+        ]
+      }
+    ],
+    "music": [],
+    "gigs": []
   }
 }
