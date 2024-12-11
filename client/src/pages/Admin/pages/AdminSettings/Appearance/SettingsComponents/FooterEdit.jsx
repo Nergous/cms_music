@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-import { CButton, CAlert, CForm } from "@coreui/react";
+import { CButton, CForm } from "@coreui/react";
 import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const FooterEdit = ({api, id, label}) => {
+const FooterEdit = ({ api, id, label }) => {
     const [footerText, setFooterText] = useState("");
-    const [footerTextError, setFooterTextError] = useState("");
-    const [footerTextSuccess, setFooterTextSuccess] = useState("");
 
     useEffect(() => {
         const loadFooter = async () => {
@@ -15,13 +15,20 @@ const FooterEdit = ({api, id, label}) => {
                 const response = await axios.get(`${api}/admin/footer`);
                 setFooterText(response.data.FooterText);
             } catch (error) {
-                setFooterTextError("Ошибка при загрузке текста");
+                toast.error("Ошибка при загрузке текста подвала: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
         loadFooter();
-    }, []);
+    }, [api]);
 
-    const handleSaveFooterText = async (event) => {
+    const handleSaveFooterText = async () => {
         try {
             await axios.post(
                 `${api}/admin/save_footer`,
@@ -30,28 +37,28 @@ const FooterEdit = ({api, id, label}) => {
                 },
                 { withCredentials: true }
             );
-            setFooterTextSuccess("Текст успешно сохранен");
-            setFooterTextError("");
-            setTimeout(() => setFooterTextSuccess(""), 3000);
+            toast.success("Текст подвала успешно сохранен", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setFooterTextError(error.response.data.message);
-            setFooterTextSuccess("");
-            setTimeout(() => setFooterTextError(""), 3000);
+            toast.error("Произошла ошибка при сохранении текста подвала: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {footerTextError && (
-                <CAlert color="danger" dismissible onClose={() => setFooterTextError("")}>
-                    {footerTextError}
-                </CAlert>
-            )}
-            {footerTextSuccess && (
-                <CAlert color="success" dismissible onClose={() => setFooterTextSuccess("")}>
-                    {footerTextSuccess}
-                </CAlert>
-            )}
             <h3>Текст подвала</h3>
             <CForm style={{ margin: "30px 0" }}>
                 <ReactQuill

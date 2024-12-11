@@ -7,13 +7,13 @@ exports.getDescription = (req, res) => {
         const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
         res.status(200).send({ description: config.description });
     } else {
-        res.status(404).send("Описание не найдено");
+        res.status(404).json({ error: "Описание не найдено" });
     }
 };
 exports.saveDescription = (req, res) => {
     const { description } = req.body;
     if (!description) {
-        return res.status(400).contentType("text/plain").send("Описание не было отправлено");
+        return res.status(400).contentType("text/plain").json({ error: "Описание не было отправлено" });
     }
 
     const configPath = path.join(__dirname, '../../../client/config_cms.json');
@@ -24,7 +24,7 @@ exports.saveDescription = (req, res) => {
     config.description = description;
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
 
-    res.status(200).send("Описание успешно сохранено");
+    res.status(200).json({ success: "Описание успешно сохранено" });
 };
 
 
@@ -34,7 +34,7 @@ exports.getTitle = (req, res) => {
         const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
         res.status(200).send({ title: config.title });
     } else {
-        res.status(404).send("Название не найдено");
+        res.status(404).json({ error: "Название не найдено" });
     }
 }
 
@@ -42,7 +42,7 @@ exports.getTitle = (req, res) => {
 exports.saveTitle = (req, res) => {
     const { title } = req.body;
     if (!title) {        
-        return res.status(400).contentType("text/plain").send("Название не было отправлено");
+        return res.status(400).contentType("text/plain").json({ error: "Название не было отправлено" });
     }
 
     const configPath = path.join(__dirname, '../../../client/config_cms.json');
@@ -53,5 +53,5 @@ exports.saveTitle = (req, res) => {
     config.title = title;
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
 
-    res.status(200).send("Название успешно сохранено");
+    res.status(200).json({ success: "Название успешно сохранено" });
 };

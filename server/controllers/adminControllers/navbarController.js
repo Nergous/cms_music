@@ -6,7 +6,7 @@ exports.getNavbarSettings = (req, res) => {
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
             console.error(err);
-            res.status(500).send("Internal Server Error");
+            res.status(500).json({ error: "Ошибка при чтении файла" });
         } else {
             try {
                 let parsedData = JSON.parse(data);
@@ -17,7 +17,7 @@ exports.getNavbarSettings = (req, res) => {
                 res.status(200).json({ displayMode: parsedData.navbarDisplayMode });
             } catch (error) {
                 console.error(error);
-                res.status(500).send("Internal Server Error");
+                res.status(500).json({ error: "Ошибка при получении данных" });
             }
         }
     });
@@ -29,16 +29,16 @@ exports.saveNavbarSettings = (req, res) => {
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
             console.error(err);
-            res.status(500).send("Internal Server Error");
+            res.status(500).json({ error: "Ошибка при чтении файла" });
         } else {
             try {
                 let parsedData = JSON.parse(data);
                 parsedData.navbarDisplayMode = displayMode;
                 fs.writeFileSync(filePath, JSON.stringify(parsedData, null, 2));
-                res.status(200).send("Настройки навигационной панели успешно сохранены");
+                res.status(200).json({ success: "Настройки навигационной панели успешно сохранены" });
             } catch (error) {
                 console.error(error);
-                res.status(500).send("Internal Server Error");
+                res.status(500).json({ error: "Ошибка при сохранении данных" });
             }
         }
     });

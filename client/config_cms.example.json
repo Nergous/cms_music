@@ -1,0 +1,37 @@
+{
+    "mainText": "",
+    "footerText": "",
+    "socials": {
+        "vk_link": "",
+        "youtube_link": "",
+        "email_link": ""
+    },
+    "fonts": {
+        "available_fonts": ["Times New Roman", "Courier New", "Verdana"],
+        "selected_font": "Times New Roman"
+    },
+    "colors": {
+        "headerColor": "#ffffff",
+        "backgroundColor": "#000000",
+        "footerColor": "#ffffff"
+    },
+    "fontColors": {
+        "mainFontColor": "#ffffff",
+        "headerFontColor": "#000000",
+        "footerFontColor": "#000000"
+    },
+    "iconColors": {
+        "vkColor": "#000000",
+        "youtubeColor": "#000000",
+        "emailColor": "#000000"
+    },
+    "description": "",
+    "title": "Default",
+    "navbarDisplayMode": "auto",
+    "pages": {
+        "main": [],
+        "members": [],
+        "music": [],
+        "gigs": []
+    }
+}

@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import { CButton, CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/react';
 import blocks from "../EditableBlock/Blocks";
 import './Sidebar.css'; // Импортируем CSS для анимаций
+import blockTypesData from "../../config/blockTypes.json"
 
-const Sidebar = ({ show, onClose, onSelectBlock }) => {
+const Sidebar = ({ show, onClose, onSelectBlock, currentBlockType }) => {
     const [isAnimating, setIsAnimating] = useState(false);
 
     useEffect(() => {
@@ -20,7 +21,17 @@ const Sidebar = ({ show, onClose, onSelectBlock }) => {
 
     if (!show && !isAnimating) return null;
 
-    const blockTypes = Object.keys(blocks).map((key) => ({
+    const blockTypes = Object.keys(blocks)
+        .filter((key) => {
+            const block = blocks[key];
+            // read from json file
+            const isRecursive = blockTypesData[key].isRecursive
+            if (currentBlockType && !isRecursive && key === currentBlockType) {
+                return false
+            }
+            return true
+        })
+    .map((key) => ({
         type: key,
         label: blocks[key].label || key,
     }));

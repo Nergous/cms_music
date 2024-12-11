@@ -5,18 +5,18 @@ exports.getFont = (req, res) => {
     const filePath = path.join(__dirname, "../../../client/config_cms.json");
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
-            return res.status(500).send("Не удалось загрузить файл конфигурации!");
+            return res.status(500).json({ error: "Не удалось загрузить файл конфигурации!" });
         }
         try {
             const parsedData = JSON.parse(data);
             const fonts = parsedData.fonts;
 
             if (!fonts) {
-                return res.status(404).send("Шрифт не найден");
+                return res.status(404).json({ error: "Шрифт не найден" });
             }
             res.status(200).json({ Font: fonts });
         } catch (error) {
-            return res.status(500).send("Не удалось прочесть файл конфигурации!");
+            return res.status(500).json({ error: "Не удалось прочесть файл конфигурации!" });
         }
     });
 };
@@ -28,14 +28,14 @@ exports.saveFont = (req, res) => {
     // Читаем текущее содержимое файла
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
-            return res.status(500).send("Ошибка при чтении файла");
+            return res.status(500).json({ error: "Ошибка при чтении файла" });
         }
 
         let jsonData;
         try {
             jsonData = JSON.parse(data);
         } catch (parseErr) {
-            return res.status(500).send("Ошибка при парсинге JSON");
+            return res.status(500).json({ error: "Ошибка при парсинге JSON" });
         }
 
         // Обновляем содержимое JSON
@@ -44,9 +44,9 @@ exports.saveFont = (req, res) => {
         // Записываем обновленное содержимое обратно в файл
         fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (writeErr) => {
             if (writeErr) {
-                return res.status(500).send("Ошибка при сохранении шрифта в файл");
+                return res.status(500).json({ error: "Ошибка при сохранении шрифта в файл" });
             }
-            res.status(200).send("Шрифт успешно сохранен");
+            res.status(200).json({ success: "Шрифт успешно сохранен" });
         });
     });
 };
@@ -57,23 +57,23 @@ exports.deleteFont = (req, res) => {
     // Читаем текущее содержимое файла
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
-            return res.status(500).send("Ошибка при чтении файла");
+            return res.status(500).json({ error: "Ошибка при чтении файла" });
         }
 
         let jsonData;
         try {
             jsonData = JSON.parse(data);
         } catch (parseErr) {
-            return res.status(500).send("Ошибка при парсинге JSON");
+            return res.status(500).json({ error: "Ошибка при парсинге JSON" });
         }
 
         // Проверяем, существует ли шрифт в списке
         if (!jsonData.fonts || !jsonData.fonts.available_fonts.includes(fontToDelete)) {
-            return res.status(404).send("Шрифт не найден");
+            return res.status(404).json({ error: "Шрифт не найден" });
         }
 
         // Удаляем шрифт из списка
-        jsonData.fonts.available_fonts = jsonData.fonts.available_fonts.filter(font => font !== fontToDelete);
+        jsonData.fonts.available_fonts = jsonData.fonts.available_fonts.filter((font) => font !== fontToDelete);
 
         // Если удаляемый шрифт был выбранным, выбираем первый доступный шрифт
         if (jsonData.fonts.selected_font === fontToDelete) {
@@ -83,10 +83,9 @@ exports.deleteFont = (req, res) => {
         // Записываем обновленное содержимое обратно в файл
         fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (writeErr) => {
             if (writeErr) {
-                return res.status(500).send("Ошибка при удалении шрифта из файла");
+                return res.status(500).json({ error: "Ошибка при удалении шрифта из файла" });
             }
-            res.status(200).send("Шрифт успешно удален");
+            res.status(200).json({ success: "Шрифт успешно удален" });
         });
     });
 };
-

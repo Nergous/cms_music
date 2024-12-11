@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { CForm, CCol, CFormInput, CLink, CButton } from "@coreui/react";
+import { CForm, CCol, CFormInput, CButton } from "@coreui/react";
 import axios from "axios";
-import { AppSidebar, AppHeader, AppFooter } from "../../components";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ApiContext from "../../../../ApiContext";
 
 function EditRole() {
@@ -19,11 +19,18 @@ function EditRole() {
                 const response = await axios.get(`${api}/music_roles/${id}`);
                 setRoleName(response.data.role_name);
             } catch (error) {
-                alert("Произошла ошибка при получении роли");
+                toast.error("Произошла ошибка при получении роли: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
         fetchData();
-    }, [id]);
+    }, [id, api]);
 
     const handleSubmit = async (event) => {
         const form = event.currentTarget;
@@ -38,15 +45,25 @@ function EditRole() {
                 role_name: roleName,
             };
             try {
-                const response = await axios.put(
-                    `${api}/music_roles/${id}`,
-                    data,
-                    { withCredentials: true }
-                );
-                navigate("/admin/roles");
-                alert("Роль успешно обновлена");
+                await axios.put(`${api}/music_roles/${id}`, data, { withCredentials: true });
+                toast.success("Роль успешно обновлена!", {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                setTimeout(() => navigate("/admin/roles"), 3000);
             } catch (error) {
-                alert("Произошла ошибка при обновлении роли");
+                toast.error("Произошла ошибка при обновлении роли: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         }
     };
@@ -54,15 +71,10 @@ function EditRole() {
     return (
         <>
             <div className="body flex-grow-1 p-3">
-                <CButton
-                    onClick={() => navigate("/admin/roles")}
-                    className="btn btn-primary mb-3">
+                <CButton onClick={() => navigate("/admin/roles")} className="btn btn-primary mb-3">
                     Назад
                 </CButton>
-                <CForm
-                    className="row g-3 needs-validation"
-                    validated={validated}
-                    onSubmit={handleSubmit}>
+                <CForm className="row g-3 needs-validation" validated={validated} onSubmit={handleSubmit}>
                     <CCol md={8}>
                         <CFormInput
                             type="text"
@@ -76,14 +88,25 @@ function EditRole() {
                         />
                     </CCol>
                     <CCol xs={8}>
-                        <CButton
-                            color="primary"
-                            type="submit">
+                        <CButton color="primary" type="submit">
                             Обновить
                         </CButton>
                     </CCol>
                 </CForm>
             </div>
+
+            {/* Всплывающее окно для уведомлений */}
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 }

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { CButton, CAlert, CForm, CFormInput, CImage } from "@coreui/react";
+import { CButton, CForm, CFormInput, CImage } from "@coreui/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FaviconSettings = ({ api, id, label }) => {
     const [faviconFile, setFaviconFile] = useState(null);
     const [faviconUrl, setFaviconUrl] = useState("");
-    const [faviconError, setFaviconError] = useState("");
-    const [faviconSuccess, setFaviconSuccess] = useState("");
 
     useEffect(() => {
         const loadFavicon = async () => {
@@ -14,8 +14,14 @@ const FaviconSettings = ({ api, id, label }) => {
                 const response = await axios.get(`${api}/admin/get_favicon`);
                 setFaviconUrl(response.data.faviconUrl);
             } catch (error) {
-                setFaviconError("Ошибка при загрузке фавикона");
-                setTimeout(() => setFaviconError(""), 3000);
+                toast.error("Ошибка при загрузке фавикона: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
@@ -37,8 +43,14 @@ const FaviconSettings = ({ api, id, label }) => {
         event.preventDefault();
 
         if (!faviconFile) {
-            setFaviconError("Пожалуйста, выберите файл");
-            setTimeout(() => setFaviconError(""), 3000);
+            toast.error("Пожалуйста, выберите файл", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
             return;
         }
 
@@ -56,29 +68,28 @@ const FaviconSettings = ({ api, id, label }) => {
                     withCredentials: true,
                 }
             );
-            setFaviconSuccess("Фавикон успешно сохранен");
-            setFaviconError("");
-            setTimeout(() => setFaviconSuccess(""), 3000);
+            toast.success("Фавикон успешно сохранен", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setFaviconError(error.response.data);
-            setFaviconSuccess("");
-            setTimeout(() => setFaviconError(""), 3000);
+            toast.error("Произошла ошибка при сохранении фавикона: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {faviconError && (
-                <CAlert color="danger" dismissible onClose={() => setFaviconError("")}>
-                    {faviconError}
-                </CAlert>
-            )}
-            {faviconSuccess && (
-                <CAlert color="success" dismissible onClose={() => setFaviconSuccess("")}>
-                    {faviconSuccess}
-                </CAlert>
-            )}
-
             <h3>Настройка фавикона</h3>
             <CForm style={{ margin: "30px 0" }} onSubmit={handleSave}>
                 <CFormInput

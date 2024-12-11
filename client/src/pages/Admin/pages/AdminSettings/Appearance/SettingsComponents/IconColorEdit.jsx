@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { CButton, CAlert, CForm, CFormInput } from "@coreui/react";
+import { CButton, CForm, CFormInput } from "@coreui/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const IconColorEdit = ({api, id, label}) => {
+const IconColorEdit = ({ api, id, label }) => {
     const [iconColors, setIconColors] = useState({
         vkColor: "#000000",
         youtubeColor: "#000000",
         emailColor: "#000000",
     });
-    const [colorError, setColorError] = useState("");
-    const [colorSuccess, setColorSuccess] = useState("");
 
     useEffect(() => {
         const loadIconColors = async () => {
@@ -17,7 +17,14 @@ const IconColorEdit = ({api, id, label}) => {
                 const response = await axios.get(`${api}/admin/icon_colors`);
                 setIconColors(response.data.IconColors);
             } catch (error) {
-                setColorError(error.response.data.message);
+                toast.error("Ошибка при загрузке цветов иконок: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
@@ -33,13 +40,23 @@ const IconColorEdit = ({api, id, label}) => {
                 },
                 { withCredentials: true }
             );
-            setColorSuccess("Цвета иконок успешно сохранены");
-            setColorError("");
-            setTimeout(() => setColorSuccess(""), 3000); // Скрыть сообщение об успехе через 3 секунды
+            toast.success("Цвета иконок успешно сохранены", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setColorError(error.response.data.message);
-            setColorSuccess("");
-            setTimeout(() => setColorError(""), 3000); // Скрыть сообщение об ошибке через 3 секунды
+            toast.error("Произошла ошибка при сохранении цветов иконок: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
@@ -53,41 +70,44 @@ const IconColorEdit = ({api, id, label}) => {
 
     const defaultColor = async () => {
         try {
-            await axios.post(`${api}/admin/save_icon_colors`, {
-                IconColors: {
-                    vkColor: "#000000",
-                    youtubeColor: "#000000",
-                    emailColor: "#000000",
+            await axios.post(
+                `${api}/admin/save_icon_colors`,
+                {
+                    IconColors: {
+                        vkColor: "#000000",
+                        youtubeColor: "#000000",
+                        emailColor: "#000000",
+                    },
                 },
-            }, { withCredentials: true });
-            setColorSuccess("Цвета иконок успешно сброшены на значения по умолчанию");
+                { withCredentials: true }
+            );
             setIconColors({
                 vkColor: "#000000",
                 youtubeColor: "#000000",
                 emailColor: "#000000",
-            })
-            setColorError("");
-            setTimeout(() => setColorSuccess(""), 3000); // Скрыть сообщение об успехе через 3 секунды
+            });
+            toast.success("Цвета иконок успешно сброшены на значения по умолчанию", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setColorError(error.response.data.message);
-            setColorSuccess("");
-            setTimeout(() => setColorError(""), 3000); // Скрыть сообщение об ошибке через 3 секунды
+            toast.error("Произошла ошибка при сбросе цветов иконок: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
-    }
+    };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {colorError && (
-                <CAlert color="danger" dismissible onClose={() => setColorError("")}>
-                    {colorError}
-                </CAlert>
-            )}
-            {colorSuccess && (
-                <CAlert color="success" dismissible onClose={() => setColorSuccess("")}>
-                    {colorSuccess}
-                </CAlert>
-            )}
-
             <h3>Изменение цветов иконок социальных сетей</h3>
             <CForm style={{ margin: "30px 0" }}>
                 <div style={{ marginBottom: "20px" }}>
@@ -110,7 +130,6 @@ const IconColorEdit = ({api, id, label}) => {
                 <CButton color="secondary" style={{ marginLeft: "10px" }} onClick={defaultColor}>
                     Сбросить
                 </CButton>
-                
             </div>
         </div>
     );

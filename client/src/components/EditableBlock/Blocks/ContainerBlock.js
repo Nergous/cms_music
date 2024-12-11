@@ -82,6 +82,7 @@ const ContainerBlockComponent = ({ id, content, onEdit, onDelete }) => {
                     show={showSidebar}
                     onClose={() => setShowSidebar(false)}
                     onSelectBlock={handleBlockSelect}
+                    currentBlockType="ContainerBlock"
                 />
             </CCol>
         </CRow>

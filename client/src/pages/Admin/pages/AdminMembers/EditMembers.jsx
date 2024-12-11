@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { CForm, CCol, CFormInput, CButton, CFormSelect, CListGroup, CListGroupItem, CFormCheck, CAlert, CFormLabel } from "@coreui/react";
-import { AppSidebar, AppHeader, AppFooter } from "../../components";
+import { CForm, CCol, CFormInput, CButton, CFormSelect, CListGroup, CListGroupItem, CFormCheck, CFormLabel } from "@coreui/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ApiContext from "../../../../ApiContext";
 
 function EditMembers() {
@@ -21,7 +21,6 @@ function EditMembers() {
     const [imgPreview, setImgPreview] = useState(null);
     const [validated, setValidated] = useState(false);
     const [isNotMember, setIsNotMember] = useState(false);
-    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const fetchRoles = async (music_roles) => {
@@ -31,9 +30,17 @@ function EditMembers() {
             const availableRoles = data.filter((role) => !music_roles.some((r) => r.id === role.id));
             setRoles(availableRoles);
         } catch (error) {
-            setError("Ошибка получения ролей: " + error.message);
+            toast.error("Ошибка при загрузке ролей: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
+
     useEffect(() => {
         const fetchMember = async () => {
             try {
@@ -50,12 +57,19 @@ function EditMembers() {
                 setSelectedRoles(member.music_roles);
                 await fetchRoles(member.music_roles);
             } catch (error) {
-                setError(error.message);
+                toast.error("Ошибка при загрузке участника: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
         fetchMember();
-    }, [id]);
+    }, [id, api]);
 
     const handleAddRole = () => {
         const roleToAdd = roles.find((role) => role.id == selectedRole);
@@ -81,7 +95,14 @@ function EditMembers() {
             reader.readAsDataURL(file);
         } else {
             setImgPreview(null);
-            alert("Пожалуйста, выберите файл изображения.");
+            toast.error("Пожалуйста, выберите файл изображения.", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
@@ -93,7 +114,8 @@ function EditMembers() {
             event.stopPropagation();
         }
         setValidated(true);
-        if (isNotMember === true) {
+
+        if (isNotMember) {
             const data = {
                 name_of_member: name,
                 description: description,
@@ -104,10 +126,24 @@ function EditMembers() {
                 await axios.put(`${api}/members/${id}`, data, {
                     withCredentials: true,
                 });
-                alert("Член команды успешно обновлен");
-                navigate("/admin/members");
+                toast.success("Участник успешно обновлен!", {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                setTimeout(() => navigate("/admin/members"), 3000);
             } catch (error) {
-                alert("Произошла ошибка при добавлении члена команды:\n" + error.response.data);
+                toast.error("Произошла ошибка при обновлении участника: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         } else {
             if (form.checkValidity() !== false) {
@@ -126,10 +162,24 @@ function EditMembers() {
 
                 try {
                     await axios.put(`${api}/members/${id}`, formData, { withCredentials: true });
-                    alert("Член команды успешно обновлен");
-                    navigate("/admin/members");
+                    toast.success("Участник успешно обновлен!", {
+                        position: "bottom-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
+                    setTimeout(() => navigate("/admin/members"), 3000);
                 } catch (error) {
-                    alert("Произошла ошибка при обновлении члена команды:\n" + error.response.data);
+                    toast.error("Произошла ошибка при обновлении участника: " + error.response.data.error, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
                 }
             }
         }
@@ -138,178 +188,177 @@ function EditMembers() {
     return (
         <>
             <div className="body flex-grow-1" style={{ margin: "30px" }}>
-                {error ? (
-                    <CAlert color="danger">{error}</CAlert>
-                ) : (
-                    <>
-                        <CButton onClick={() => navigate("/admin/members")} color="primary">
-                            Назад
-                        </CButton>
-                        <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
+                <CButton onClick={() => navigate("/admin/members")} color="primary">
+                    Назад
+                </CButton>
+                <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
+                    <CCol md={8}>
+                        <CFormInput
+                            type="text"
+                            feedbackValid="Всё в порядке!"
+                            id="name_of_member"
+                            label="Имя"
+                            placeholder="Имя"
+                            required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </CCol>
+                    <CCol md={8}>
+                        <CFormCheck
+                            type="checkbox"
+                            id="isNotMember"
+                            label="Не является участником"
+                            checked={isNotMember}
+                            onChange={(e) => setIsNotMember(e.target.checked)}
+                        />
+                    </CCol>
+                    {isNotMember && (
+                        <CCol md={8}>
+                            <CFormInput
+                                type="text"
+                                placeholder="Ссылка на человека (группу)"
+                                feedbackValid="Всё в порядке!"
+                                id="description"
+                                label="Ссылка на человека (группу)"
+                                required
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
+                        </CCol>
+                    )}
+
+                    {!isNotMember && (
+                        <CCol md={8}>
+                            <CFormInput
+                                type="text"
+                                placeholder="Описание"
+                                feedbackValid="Всё в порядке!"
+                                id="description"
+                                label="Описание"
+                                required
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
+                        </CCol>
+                    )}
+
+                    {!isNotMember && (
+                        <>
                             <CCol md={8}>
                                 <CFormInput
                                     type="text"
+                                    placeholder="Прозвище"
                                     feedbackValid="Всё в порядке!"
-                                    id="name_of_member"
-                                    label="Имя"
-                                    placeholder="Имя"
-                                    required
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
+                                    id="nickname"
+                                    label="Сценическое прозвище (необязательно)"
+                                    value={nickname}
+                                    onChange={(e) => setNickname(e.target.value)}
                                 />
                             </CCol>
                             <CCol md={8}>
-                                <CFormCheck
-                                    type="checkbox"
-                                    id="isNotMember"
-                                    label="Не является участником"
-                                    checked={isNotMember}
-                                    onChange={(e) => setIsNotMember(e.target.checked)}
+                                <CFormInput
+                                    type="date"
+                                    placeholder="01.01.2001"
+                                    feedbackValid="Всё в порядке!"
+                                    id="date_start"
+                                    label="Дата вступления"
+                                    required
+                                    value={dateStart}
+                                    onChange={(e) => setDateStart(e.target.value)}
                                 />
                             </CCol>
-                            {isNotMember && (
-                                <CCol md={8}>
-                                    <CFormInput
-                                        type="text"
-                                        placeholder="Ссылка на человека (группу)"
-                                        feedbackValid="Всё в порядке!"
-                                        id="description"
-                                        label="Ссылка на человека (группу)"
-                                        required
-                                        value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
-                                    />
-                                </CCol>
-                            )}
-
-                            {!isNotMember && (
-                                <CCol md={8}>
-                                    <CFormInput
-                                        type="text"
-                                        placeholder="Описание"
-                                        feedbackValid="Всё в порядке!"
-                                        id="description"
-                                        label="Описание"
-                                        required
-                                        value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
-                                    />
-                                </CCol>
-                            )}
-
-                            {!isNotMember && (
+                            <CCol md={8}>
+                                <CFormInput
+                                    type="date"
+                                    placeholder="01.01.2001"
+                                    feedbackValid="Всё в порядке!"
+                                    id="date_end"
+                                    label="Дата окончания (необязательно)"
+                                    value={dateEnd}
+                                    onChange={(e) => setDateEnd(e.target.value)}
+                                />
+                            </CCol>
+                            {roles.length > 0 && (
                                 <>
                                     <CCol md={8}>
-                                        <CFormInput
-                                            type="text"
-                                            placeholder="Прозвище"
-                                            feedbackValid="Всё в порядке!"
-                                            id="nickname"
-                                            label="Сценическое прозвище (необязательно)"
-                                            value={nickname}
-                                            onChange={(e) => setNickname(e.target.value)}
-                                        />
+                                        <CFormSelect id="role" label="Роль" value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
+                                            <option value="">Выберите роль</option>
+                                            {roles.map((role) => (
+                                                <option key={role.id} value={role.id}>
+                                                    {role.role_name}
+                                                </option>
+                                            ))}
+                                        </CFormSelect>
                                     </CCol>
                                     <CCol md={8}>
-                                        <CFormInput
-                                            type="date"
-                                            placeholder="01.01.2001"
-                                            feedbackValid="Всё в порядке!"
-                                            id="date_start"
-                                            label="Дата вступления"
-                                            required
-                                            value={dateStart}
-                                            onChange={(e) => setDateStart(e.target.value)}
-                                        />
+                                        <CButton color="primary" onClick={handleAddRole} disabled={!selectedRole}>
+                                            Добавить роль
+                                        </CButton>
                                     </CCol>
-                                    <CCol md={8}>
-                                        <CFormInput
-                                            type="date"
-                                            placeholder="01.01.2001"
-                                            feedbackValid="Всё в порядке!"
-                                            id="date_end"
-                                            label="Дата окончания (необязательно)"
-                                            value={dateEnd}
-                                            onChange={(e) => setDateEnd(e.target.value)}
-                                        />
-                                    </CCol>
-                                    {roles.length > 0 && (
-                                        <>
-                                            <CCol md={8}>
-                                                <CFormSelect
-                                                    id="role"
-                                                    label="Роль"
-                                                    value={selectedRole}
-                                                    onChange={(e) => setSelectedRole(e.target.value)}>
-                                                    <option value="">Выберите роль</option>
-                                                    {roles.map((role) => (
-                                                        <option key={role.id} value={role.id}>
-                                                            {role.role_name}
-                                                        </option>
-                                                    ))}
-                                                </CFormSelect>
-                                            </CCol>
-                                            <CCol md={8}>
-                                                <CButton color="primary" onClick={handleAddRole} disabled={!selectedRole}>
-                                                    Добавить роль
-                                                </CButton>
-                                            </CCol>
-                                        </>
-                                    )}
-                                    {selectedRoles.length > 0 && (
-                                        <CCol md={8}>
-                                            <CListGroup>
-                                                {selectedRoles.map((role) => {
-                                                    return (
-                                                        <CListGroupItem key={role.id}>
-                                                            {role.role_name}
-                                                            <CButton
-                                                                color="danger"
-                                                                size="sm"
-                                                                className="float-end"
-                                                                onClick={() => handleRemoveRole(role)}>
-                                                                Удалить
-                                                            </CButton>
-                                                        </CListGroupItem>
-                                                    );
-                                                })}
-                                            </CListGroup>
-                                        </CCol>
-                                    )}
-                                    <CCol md={8}>
-                                        <CFormLabel htmlFor="path_to_photo">Фото</CFormLabel>
-                                        <CFormInput
-                                            type="file"
-                                            id="path_to_photo"
-                                            feedbackInvalid="Неверный формат файла"
-                                            aria-label="file example"
-                                            onChange={handleImgChange}
-                                        />
-                                    </CCol>
-                                    {imgPreview && (
-                                        <CCol md={8}>
-                                            <p>Предварительный просмотр фото:</p>
-                                            <img src={imgPreview.replace("..", "")} alt="Preview" style={{ maxHeight: "400px" }} />
-                                        </CCol>
-                                    )}
                                 </>
                             )}
-                            {(selectedRoles.length > 0 || isNotMember === true) && (
-                                <CCol xs={8}>
-                                    <CButton color="primary" type="submit">
-                                        Обновить
-                                    </CButton>
+                            {selectedRoles.length > 0 && (
+                                <CCol md={8}>
+                                    <CListGroup>
+                                        {selectedRoles.map((role) => {
+                                            return (
+                                                <CListGroupItem key={role.id}>
+                                                    {role.role_name}
+                                                    <CButton color="danger" size="sm" className="float-end" onClick={() => handleRemoveRole(role)}>
+                                                        Удалить
+                                                    </CButton>
+                                                </CListGroupItem>
+                                            );
+                                        })}
+                                    </CListGroup>
                                 </CCol>
                             )}
-                            {roles.length === 0 && selectedRoles.length === 0 && (
-                                <CCol xs={8}>
-                                    <p className="text-danger">Нет доступных ролей</p>
+                            <CCol md={8}>
+                                <CFormLabel htmlFor="path_to_photo">Фото</CFormLabel>
+                                <CFormInput
+                                    type="file"
+                                    id="path_to_photo"
+                                    feedbackInvalid="Неверный формат файла"
+                                    aria-label="file example"
+                                    onChange={handleImgChange}
+                                />
+                            </CCol>
+                            {imgPreview && (
+                                <CCol md={8}>
+                                    <p>Предварительный просмотр фото:</p>
+                                    <img src={imgPreview.replace("..", "")} alt="Preview" style={{ maxHeight: "400px" }} />
                                 </CCol>
                             )}
-                        </CForm>
-                    </>
-                )}
+                        </>
+                    )}
+                    {(selectedRoles.length > 0 || isNotMember === true) && (
+                        <CCol xs={8}>
+                            <CButton color="primary" type="submit">
+                                Обновить
+                            </CButton>
+                        </CCol>
+                    )}
+                    {roles.length === 0 && selectedRoles.length === 0 && (
+                        <CCol xs={8}>
+                            <p className="text-danger">Нет доступных ролей</p>
+                        </CCol>
+                    )}
+                </CForm>
             </div>
+
+            {/* Всплывающее окно для уведомлений */}
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 }

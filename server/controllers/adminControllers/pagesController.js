@@ -1,29 +1,29 @@
 // server/controllers/pagesController.js
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const configPath = path.join(__dirname, '../../../client/config_cms.json');
+const configPath = path.join(__dirname, "../../../client/config_cms.json");
 
 exports.loadPage = (req, res) => {
     const pageName = req.params.pageName;
 
     if (!pageName) {
-        return res.status(400).send('Имя страницы обязательно');
+        return res.status(400).json({ error: "Имя страницы обязательно" });
     }
 
-    fs.readFile(configPath, 'utf8', (err, data) => {
+    fs.readFile(configPath, "utf8", (err, data) => {
         if (err) {
-            console.error('Ошибка при чтении файла конфигурации:', err);
-            return res.status(500).send('Ошибка при чтении файла конфигурации');
+            console.error("Ошибка при чтении файла конфигурации:", err);
+            return res.status(500).json({ error: "Ошибка при чтении файла конфигурации" });
         }
 
         try {
             const config = JSON.parse(data);
-            const page = config.pages[pageName] || { components: [], styles: [] };
+            const page = config.pages[pageName] || [];
             res.json(page);
         } catch (parseError) {
-            console.error('Ошибка при парсинге JSON:', parseError);
-            res.status(500).send('Ошибка при парсинге JSON');
+            console.error("Ошибка при парсинге JSON:", parseError);
+            res.status(500).json({ error: "Ошибка при парсинге JSON" });
         }
     });
 };
@@ -32,13 +32,13 @@ exports.savePage = (req, res) => {
     const { pageName, page } = req.body;
 
     if (!pageName || !page) {
-        return res.status(400).send('Имя страницы и данные страницы обязательны');
+        return res.status(400).json({ error: "Имя страницы и данные страницы обязательны" });
     }
 
-    fs.readFile(configPath, 'utf8', (err, data) => {
+    fs.readFile(configPath, "utf8", (err, data) => {
         if (err) {
-            console.error('Ошибка при чтении файла конфигурации:', err);
-            return res.status(500).send('Ошибка при чтении файла конфигурации');
+            console.error("Ошибка при чтении файла конфигурации:", err);
+            return res.status(500).json({ error: "Ошибка при чтении файла конфигурации" });
         }
 
         try {
@@ -50,14 +50,14 @@ exports.savePage = (req, res) => {
 
             fs.writeFile(configPath, JSON.stringify(config, null, 2), (err) => {
                 if (err) {
-                    console.error('Ошибка при записи в файл конфигурации:', err);
-                    return res.status(500).send('Ошибка при записи в файл конфигурации');
+                    console.error("Ошибка при записи в файл конфигурации:", err);
+                    return res.status(500).json({ error: "Ошибка при записи в файл конфигурации" });
                 }
-                res.status(200).send('Страница успешно сохранена');
+                res.status(200).json({ success: "Страница успешно сохранена" });
             });
         } catch (parseError) {
-            console.error('Ошибка при парсинге JSON:', parseError);
-            res.status(500).send('Ошибка при парсинге JSON');
+            console.error("Ошибка при парсинге JSON:", parseError);
+            res.status(500).json({ error: "Ошибка при парсинге JSON" });
         }
     });
 };

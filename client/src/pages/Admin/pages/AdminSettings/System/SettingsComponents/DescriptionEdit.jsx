@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { CButton, CAlert, CForm, CFormInput, CFormTextarea } from "@coreui/react";
+import { CButton, CForm, CFormInput, CFormTextarea } from "@coreui/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DescriptionEdit = ({ api, id, label }) => {
     const [description, setDescription] = useState("");
-    const [descriptionError, setDescriptionError] = useState("");
-    const [descriptionSuccess, setDescriptionSuccess] = useState("");
 
     useEffect(() => {
         const loadDescription = async () => {
@@ -13,8 +13,14 @@ const DescriptionEdit = ({ api, id, label }) => {
                 const response = await axios.get(`${api}/admin/get_description`);
                 setDescription(response.data.description);
             } catch (error) {
-                setDescriptionError("Ошибка при загрузке описания");
-                setTimeout(() => setDescriptionError(""), 3000);
+                toast.error("Ошибка при загрузке описания: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
@@ -25,8 +31,14 @@ const DescriptionEdit = ({ api, id, label }) => {
         event.preventDefault();
 
         if (!description) {
-            setDescriptionError("Пожалуйста, введите описание");
-            setTimeout(() => setDescriptionError(""), 3000);
+            toast.error("Пожалуйста, введите описание", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
             return;
         }
 
@@ -41,29 +53,28 @@ const DescriptionEdit = ({ api, id, label }) => {
                     withCredentials: true,
                 }
             );
-            setDescriptionSuccess("Описание успешно сохранено");
-            setDescriptionError("");
-            setTimeout(() => setDescriptionSuccess(""), 3000);
+            toast.success("Описание успешно сохранено", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setDescriptionError(error.response.data.message);
-            setDescriptionSuccess("");
-            setTimeout(() => setDescriptionError(""), 3000);
+            toast.error("Произошла ошибка при сохранении описания: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {descriptionError && (
-                <CAlert color="danger" dismissible onClose={() => setDescriptionError("")}>
-                    {descriptionError}
-                </CAlert>
-            )}
-            {descriptionSuccess && (
-                <CAlert color="success" dismissible onClose={() => setDescriptionSuccess("")}>
-                    {descriptionSuccess}
-                </CAlert>
-            )}
-
             <h3>Редактирование описания страницы</h3>
             <CForm style={{ margin: "30px 0" }} onSubmit={handleSave}>
                 <CFormTextarea

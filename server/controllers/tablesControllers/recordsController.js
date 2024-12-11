@@ -42,12 +42,12 @@ const RecordsController = {
                 ],
             });
             if (!recordData) {
-                return res.status(404).json({ message: "Релиз не найден" });
+                return res.status(404).json({ error: "Релиз не найден" });
             }
             res.json(recordData);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: "Ошибка при получении релиза" });
+            res.status(500).json({ error: "Ошибка при получении релиза" });
         }
     },
 
@@ -104,10 +104,10 @@ const RecordsController = {
                 await Promise.all(authorPromise);
             }
 
-            res.status(200).json({ message: "Релиз успешно добавлен" });
+            res.status(200).json({ success: "Релиз успешно добавлен" });
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: "Ошибка при добавлении релиза" });
+            res.status(500).json({ error: "Ошибка при добавлении релиза" });
         }
     },
 
@@ -117,7 +117,7 @@ const RecordsController = {
         try {
             const recordDelete = await record.findByPk(id);
             if (!recordDelete) {
-                return res.status(404).json({ message: "Релиз не найден" });
+                return res.status(404).json({ error: "Релиз не найден" });
             }
 
             const allTracksInRecord = await tracks_in_record.findAll({
@@ -155,10 +155,10 @@ const RecordsController = {
             }
 
             await recordDelete.destroy();
-            res.status(200).json({ message: "Релиз успешно удален" });
+            res.status(200).json({ success: "Релиз успешно удален" });
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: "Ошибка при удалении релиза" });
+            res.status(500).json({ error: "Ошибка при удалении релиза" });
         }
     },
 
@@ -169,7 +169,7 @@ const RecordsController = {
 
             const existingRecord = await record.findByPk(id);
             if (!existingRecord) {
-                return res.status(404).json({ message: "Релиз не найден" });
+                return res.status(404).json({ error: "Релиз не найден" });
             }
 
             existingRecord.record_name = recordName;
@@ -317,10 +317,10 @@ const RecordsController = {
                 }
             }
 
-            res.status(200).json({ message: "Релиз успешно добавлен" });
+            res.status(200).json({ success: "Релиз успешно добавлен" });
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: "Ошибка при добавлении релиза" });
+            res.status(500).json({ error: "Ошибка при добавлении релиза" });
         }
     },
 };

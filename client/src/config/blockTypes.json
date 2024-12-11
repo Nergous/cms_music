@@ -1,11 +1,14 @@
 {
     "TextBlock": {
-        "component": "Text"
+        "component": "Text",
+        "isRecursive": true
     },
     "HtmlBlock": {
-        "component": "Html"
+        "component": "Html",
+        "isRecursive": true
     },
     "ContainerBlock": {
-        "component": "Container"
+        "component": "Container",
+        "isRecursive": false
     }
 }

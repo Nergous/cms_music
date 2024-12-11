@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { CForm, CFormInput, CFormCheck, CAlert, CButton } from "@coreui/react";
+import { CForm, CFormInput, CFormCheck, CButton } from "@coreui/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const SocialsEdit = ({api, id, label}) => {
+const SocialsEdit = ({ api, id, label }) => {
     const [vkLink, setVkLink] = useState("");
     const [youtubeLink, setYoutubeLink] = useState("");
     const [emailLink, setEmailLink] = useState("");
@@ -10,8 +12,6 @@ const SocialsEdit = ({api, id, label}) => {
     const [youtubeChecked, setYoutubeChecked] = useState(false);
     const [emailChecked, setEmailChecked] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
 
     useEffect(() => {
         const loadSocials = async () => {
@@ -25,7 +25,14 @@ const SocialsEdit = ({api, id, label}) => {
                 setYoutubeChecked(!!youtube_link);
                 setEmailChecked(!!email_link);
             } catch (error) {
-                setError(error.response.data);
+                toast.error("Ошибка при загрузке социальных сетей: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             } finally {
                 setLoading(false);
             }
@@ -42,17 +49,38 @@ const SocialsEdit = ({api, id, label}) => {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (vkChecked && !vkRegex.test(vkLink)) {
-                setError("Ссылка на Вконтакте должна начинаться с https://vk.com/");
+                toast.error("Ссылка на Вконтакте должна начинаться с https://vk.com/", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
                 return;
             }
 
             if (youtubeChecked && !youtubeRegex.test(youtubeLink)) {
-                setError("Ссылка на Ютуб должна начинаться с https://www.youtube.com/");
+                toast.error("Ссылка на Ютуб должна начинаться с https://www.youtube.com/", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
                 return;
             }
 
             if (emailChecked && !emailRegex.test(emailLink)) {
-                setError("Неверный формат почты");
+                toast.error("Неверный формат почты", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
                 return;
             }
 
@@ -67,11 +95,23 @@ const SocialsEdit = ({api, id, label}) => {
                 },
                 { withCredentials: true }
             );
-            setSuccess("Настройки социальных сетей успешно сохранены");
-            setError("");
+            toast.success("Настройки социальных сетей успешно сохранены", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setError(error.response.data.message);
-            setSuccess("");
+            toast.error("Произошла ошибка при сохранении социальных сетей: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
@@ -81,16 +121,6 @@ const SocialsEdit = ({api, id, label}) => {
 
     return (
         <div id={id} label={label}>
-            {error && (
-                <CAlert color="danger" dismissible onClose={() => setError("")}>
-                    {error}
-                </CAlert>
-            )}
-            {success && (
-                <CAlert color="success" dismissible onClose={() => setSuccess("")}>
-                    {success}
-                </CAlert>
-            )}
             <h3>Настройки социальных сетей</h3>
             <CForm style={{ margin: "30px 0" }}>
                 <div>

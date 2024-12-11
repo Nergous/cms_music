@@ -12,7 +12,7 @@ exports.updateCredentials = (req, res) => {
 
     fs.readFile(envPath, "utf8", (err, data) => {
         if (err) {
-            return res.status(500).send("Ошибка при чтении файла .env");
+            return res.status(500).json({ error: "Ошибка при чтении файла .env" });
         }
 
         let envConfig = {};
@@ -32,13 +32,9 @@ exports.updateCredentials = (req, res) => {
 
         fs.writeFile(envPath, newEnv, (err) => {
             if (err) {
-                return res.status(500).send("Ошибка при обновлении .env файла");
+                return res.status(500).json({ error: "Ошибка при обновлении .env файла" });
             }
-            res.status(200).send("Данные успешно обновлены");
+            res.status(200).json({ success: "Данные успешно обновлены" });
         });
     });
 };
-
-
-
-

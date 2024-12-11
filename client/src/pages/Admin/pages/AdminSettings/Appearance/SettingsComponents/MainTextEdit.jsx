@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-import { CButton, CAlert, CForm } from "@coreui/react";
-
+import { CButton, CForm } from "@coreui/react";
 import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const MainText = ({api, id, label}) => {
+const MainText = ({ api, id, label }) => {
     const [text, setText] = useState("");
-    const [textError, setTextError] = useState("");
-    const [textSuccess, setTextSuccess] = useState("");
 
     useEffect(() => {
         const loadText = async () => {
@@ -16,15 +15,21 @@ const MainText = ({api, id, label}) => {
                 const response = await axios.get(`${api}/admin/load`);
                 setText(response.data.MainText);
             } catch (error) {
-                setTextError("Ошибка при загрузке текста");
-                setTimeout(() => setTextError(""), 3000);
+                toast.error("Ошибка при загрузке текста: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
         loadText();
-    }, []);
+    }, [api]);
 
-    const handleSave = async (event) => {
+    const handleSave = async () => {
         try {
             await axios.post(
                 `${api}/admin/save`,
@@ -33,29 +38,28 @@ const MainText = ({api, id, label}) => {
                 },
                 { withCredentials: true }
             );
-            setTextSuccess("Текст успешно сохранен");
-            setTextError("");
-            setTimeout(() => setTextSuccess(""), 3000);
+            toast.success("Текст успешно сохранен", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setTextError(error.response.data.message);
-            setTextSuccess("");
-            setTimeout(() => setTextError(""), 3000);
+            toast.error("Произошла ошибка при сохранении текста: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {textError && (
-                <CAlert color="danger" dismissible onClose={() => setTextError("")}>
-                    {textError}
-                </CAlert>
-            )}
-            {textSuccess && (
-                <CAlert color="success" dismissible onClose={() => setTextSuccess("")}>
-                    {textSuccess}
-                </CAlert>
-            )}
-
             <h3>Текст на главной странице</h3>
             <CForm style={{ margin: "30px 0" }}>
                 <ReactQuill

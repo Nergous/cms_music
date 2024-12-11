@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { CButton, CAlert, CForm, CFormSelect, CFormInput } from "@coreui/react";
+import { CButton, CForm, CFormSelect, CFormInput } from "@coreui/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const FontEdit = ({api, id, label}) => {
+const FontEdit = ({ api, id, label }) => {
     const [font, setFont] = useState("");
     const [fonts, setFonts] = useState(["Arial", "Times New Roman", "Courier New", "Verdana"]);
     const [newFont, setNewFont] = useState("");
     const [isAddingNewFont, setIsAddingNewFont] = useState(false);
-    const [fontError, setFontError] = useState("");
-    const [fontSuccess, setFontSuccess] = useState("");
 
     useEffect(() => {
         const loadFont = async () => {
@@ -19,7 +19,14 @@ const FontEdit = ({api, id, label}) => {
                 }
                 setFont(response.data.Font.selected_font);
             } catch (error) {
-                setFontError(error.response.data);
+                toast.error("Ошибка при загрузке шрифтов: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
@@ -38,13 +45,23 @@ const FontEdit = ({api, id, label}) => {
                 },
                 { withCredentials: true }
             );
-            setFontSuccess("Шрифт успешно сохранен");
-            setFontError("");
-            setTimeout(() => setFontSuccess(""), 3000); // Скрыть сообщение об успехе через 5 секунд
+            toast.success("Шрифт успешно сохранен", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setFontError(error.response.data.message);
-            setFontSuccess("");
-            setTimeout(() => setFontError(""), 3000); // Скрыть сообщение об ошибке через 5 секунд
+            toast.error("Произошла ошибка при сохранении шрифта: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
@@ -76,29 +93,28 @@ const FontEdit = ({api, id, label}) => {
                 data: { font: fontToDelete },
                 withCredentials: true,
             });
-            setFontSuccess("Шрифт успешно удален");
-            setFontError("");
-            setTimeout(() => setFontSuccess(""), 3000); // Скрыть сообщение об успехе через 5 секунд
+            toast.success("Шрифт успешно удален", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setFontError(error.response.data.message);
-            setFontSuccess("");
-            setTimeout(() => setFontError(""), 3000); // Скрыть сообщение об ошибке через 5 секунд
+            toast.error("Произошла ошибка при удалении шрифта: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {fontError && (
-                <CAlert color="danger" dismissible onClose={() => setFontError("")}>
-                    {fontError}
-                </CAlert>
-            )}
-            {fontSuccess && (
-                <CAlert color="success" dismissible onClose={() => setFontSuccess("")}>
-                    {fontSuccess}
-                </CAlert>
-            )}
-
             <h3>Изменение шрифта</h3>
             {isAddingNewFont ? (
                 <CForm style={{ margin: "30px 0" }}>

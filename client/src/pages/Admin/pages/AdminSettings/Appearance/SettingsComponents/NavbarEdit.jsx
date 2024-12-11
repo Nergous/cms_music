@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { CForm, CFormCheck, CButton, CAlert } from "@coreui/react";
+import { CForm, CFormCheck, CButton } from "@coreui/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const NavbarEdit = ({ api, id, label }) => {
     const [displayMode, setDisplayMode] = useState("auto");
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
 
     useEffect(() => {
         const fetchNavbarSettings = async () => {
@@ -13,7 +13,14 @@ const NavbarEdit = ({ api, id, label }) => {
                 const response = await axios.get(`${api}/admin/navbar_settings`);
                 setDisplayMode(response.data.displayMode);
             } catch (error) {
-                setError("Ошибка при загрузке настроек");
+                toast.error("Ошибка при загрузке настроек: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
         fetchNavbarSettings();
@@ -22,28 +29,28 @@ const NavbarEdit = ({ api, id, label }) => {
     const handleSaveSettings = async () => {
         try {
             await axios.post(`${api}/admin/save_navbar_settings`, { displayMode }, { withCredentials: true });
-            setSuccess("Настройки успешно сохранены");
-            setError("");
-            setTimeout(() => setSuccess(""), 3000);
+            toast.success("Настройки успешно сохранены", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setError("Ошибка при сохранении настроек");
-            setSuccess("");
-            setTimeout(() => setError(""), 3000);
+            toast.error("Ошибка при сохранении настроек: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {error && (
-                <CAlert color="danger" dismissible onClose={() => setError("")}>
-                    {error}
-                </CAlert>
-            )}
-            {success && (
-                <CAlert color="success" dismissible onClose={() => setSuccess("")}>
-                    {success}
-                </CAlert>
-            )}
             <h3>Режим отображения навигационной панели</h3>
             <CForm style={{ margin: "30px 0" }}>
                 <CFormCheck

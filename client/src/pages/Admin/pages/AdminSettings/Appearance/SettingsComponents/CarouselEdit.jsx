@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { CButton, CForm, CFormInput, CImage } from "@coreui/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import { CButton, CAlert, CForm, CFormInput, CImage } from "@coreui/react";
-
-const CarouselEdit = ({api, id, label}) => {
+const CarouselEdit = ({ api, id, label }) => {
     const [files, setFiles] = useState(null);
     const [images, setImages] = useState([]);
-    const [filesError, setFilesError] = useState("");
-    const [filesSuccess, setFilesSuccess] = useState("");
-
     const fileInputRef = useRef(null);
 
     useEffect(() => {
@@ -17,13 +15,19 @@ const CarouselEdit = ({api, id, label}) => {
                 const response = await axios.get(`${api}/admin/images`);
                 setImages(response.data);
             } catch (error) {
-                setFilesError("Ошибка при загрузке изображений");
-                setTimeout(() => setFilesError(""), 3000);
+                toast.error("Ошибка при загрузке изображений: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
         loadImages();
-    }, []);
+    }, [api]);
 
     const handleFileChange = (event) => {
         setFiles(event.target.files);
@@ -42,16 +46,26 @@ const CarouselEdit = ({api, id, label}) => {
                 },
                 withCredentials: true,
             });
-            setFilesSuccess("Файлы успешно загружены");
-            setFilesError("");
-            setTimeout(() => setFilesSuccess(""), 3000);
+            toast.success("Файлы успешно загружены", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
             const response = await axios.get(`${api}/admin/images`);
             setImages(response.data);
             fileInputRef.current.value = ""; // Очистка формы
         } catch (error) {
-            setFilesError(error.response.data);
-            setFilesSuccess("");
-            setTimeout(() => setFilesError(""), 3000);
+            toast.error("Произошла ошибка при загрузке файлов: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
@@ -60,31 +74,31 @@ const CarouselEdit = ({api, id, label}) => {
             await axios.delete(`${api}/admin/images/${filename}`, {
                 withCredentials: true,
             });
-            setFilesSuccess("Файл успешно удален");
-            setFilesError("");
-            setTimeout(() => setFilesSuccess(""), 3000);
+            toast.success("Файл успешно удален", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
             // Обновляем список изображений
             const response = await axios.get(`${api}/admin/images`);
             setImages(response.data);
         } catch (error) {
-            setFilesError(error.response.data.message);
-            setFilesSuccess("");
-            setTimeout(() => setFilesError(""), 3000);
+            toast.error("Произошла ошибка при удалении файла: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {filesError && (
-                <CAlert color="danger" dismissible onClose={() => setFilesError("")}>
-                    {filesError}
-                </CAlert>
-            )}
-            {filesSuccess && (
-                <CAlert color="success" dismissible onClose={() => setFilesSuccess("")}>
-                    {filesSuccess}
-                </CAlert>
-            )}
             <h3>Фото карусель</h3>
             <CForm style={{ margin: "30px 0" }}>
                 <CFormInput type="file" multiple onChange={handleFileChange} ref={fileInputRef} />

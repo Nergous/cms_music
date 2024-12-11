@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { CButton, CForm, CFormInput } from "@coreui/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import { CButton, CAlert, CForm, CFormInput } from "@coreui/react";
-
-const CredentialsEdit = ({api, id, label}) => {
+const CredentialsEdit = ({ api, id, label }) => {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
-    const [credentialsError, setCredentialsError] = useState("");
-    const [credentialsSuccess, setCredentialsSuccess] = useState("");
 
     const handleUpdateCredentials = async () => {
         try {
@@ -19,26 +18,28 @@ const CredentialsEdit = ({api, id, label}) => {
                 },
                 { withCredentials: true }
             );
-            setCredentialsSuccess("Логин и пароль успешно обновлены");
-            setCredentialsError("");
+            toast.success("Логин и пароль успешно обновлены", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setCredentialsError(error.response.data);
-            setCredentialsSuccess("");
+            toast.error("Произошла ошибка при обновлении данных: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {credentialsError && (
-                <CAlert color="danger" dismissible onClose={() => setCredentialsError("")}>
-                    {credentialsError}
-                </CAlert>
-            )}
-            {credentialsSuccess && (
-                <CAlert color="success" dismissible onClose={() => setCredentialsSuccess("")}>
-                    {credentialsSuccess}
-                </CAlert>
-            )}
             <h3>Изменить логин и пароль</h3>
             <CForm style={{ margin: "30px 0" }}>
                 <CFormInput type="text" placeholder="Новый логин" value={login} onChange={(e) => setLogin(e.target.value)} />

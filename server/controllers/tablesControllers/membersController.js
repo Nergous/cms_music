@@ -6,7 +6,7 @@ const { member_roles, music_roles } = require("../../models");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const uploadsDir = path.join(__dirname, "../../client/public/uploads");
+        const uploadsDir = path.join(__dirname, "../../../client/public/uploads");
         fs.mkdirSync(uploadsDir, { recursive: true });
         cb(null, uploadsDir);
     },
@@ -17,9 +17,7 @@ const storage = multer.diskStorage({
 
 const imageFileFilter = (req, file, cb) => {
     const filetypes = /jpeg|jpg|png/;
-    const extname = filetypes.test(
-        path.extname(file.originalname).toLowerCase()
-    );
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = filetypes.test(file.mimetype);
     if (extname && mimetype) {
         return cb(null, true);
@@ -73,7 +71,7 @@ const MembersController = {
             if (member) {
                 res.json(member);
             } else {
-                res.status(404).send("Участник не найден");
+                res.status(404).json({ error: "Участник не найден" });
             }
         } catch (error) {
             res.status(500).json({ error: "Ошибка при получении участника" });
@@ -89,12 +87,8 @@ const MembersController = {
                 nickname: req.body.nickname,
                 description: req.body.description,
                 date_start: req.body.date_start,
-                date_end: req.body.date_end
-                    ? new Date(req.body.date_end)
-                    : null,
-                path_to_photo: req.file
-                    ? path.join("..", "uploads", req.file.filename)
-                    : req.body.img,
+                date_end: req.body.date_end ? new Date(req.body.date_end) : null,
+                path_to_photo: req.file ? path.join("..", "uploads", req.file.filename) : req.body.img,
                 is_member: req.body.is_member,
             };
 
@@ -110,10 +104,8 @@ const MembersController = {
             }
 
             res.status(200).json(newMember);
-        } catch (error) {
-            res.status(500).send(
-                "Ошибка при сохранении участника в базу данных: " + error
-            );
+        } catch (_error) {
+            res.status(500).json({ error: "Ошибка при сохранении участника в базу данных: " + _error });
         }
     },
 
@@ -122,7 +114,7 @@ const MembersController = {
         const member = await members.findByPk(memberId);
 
         if (!member) {
-            return res.status(404).send("Участник не найден");
+            return res.status(404).json({ error: "Участник не найден" });
         }
 
         try {
@@ -133,31 +125,17 @@ const MembersController = {
                 nickname: req.body.nickname,
                 description: req.body.description,
                 date_start: req.body.date_start,
-                date_end: req.body.date_end
-                    ? new Date(req.body.date_end)
-                    : null,
+                date_end: req.body.date_end ? new Date(req.body.date_end) : null,
             };
 
             if (req.file) {
                 if (member.path_to_photo) {
-                    const oldFilePath = path.join(
-                        __dirname,
-                        "../../client/public/uploads",
-                        member.path_to_photo
-                    );
+                    const oldFilePath = path.join(__dirname, "../../../client/public/uploads", member.path_to_photo);
                     fs.unlink(oldFilePath, (err) => {
-                        if (err)
-                            console.error(
-                                "Ошибка при удалении старого файла:",
-                                err
-                            );
+                        if (err) console.error("Ошибка при удалении старого файла:", err);
                     });
                 }
-                updatedMemberData.path_to_photo = path.join(
-                    "..",
-                    "uploads",
-                    req.file.filename
-                );
+                updatedMemberData.path_to_photo = path.join("..", "uploads", req.file.filename);
             }
 
             await member.update(updatedMemberData);
@@ -178,9 +156,7 @@ const MembersController = {
 
             res.status(200).json(member);
         } catch (error) {
-            res.status(500).send(
-                "Ошибка при обновлении участника в базе данных" + error
-            );
+            res.status(500).json({ error: "Ошибка при обновлении участника в базе данных" + error });
         }
     },
 
@@ -189,31 +165,21 @@ const MembersController = {
         const member = await members.findByPk(memberId);
 
         if (!member) {
-            return res.status(404).send("Участник не найден");
+            return res.status(404).json({ error: "Участник не найден" });
         }
 
         try {
             if (member.path_to_photo) {
-                const filePath = path.join(
-                    __dirname,
-                    "../../client/public/uploads",
-                    member.path_to_photo
-                );
+                const filePath = path.join(__dirname, "../../client/public/uploads", member.path_to_photo);
                 fs.unlink(filePath, (err) => {
-                    if (err)
-                        console.error(
-                            "Ошибка при удалении фото участника:",
-                            err
-                        );
+                    if (err) console.error("Ошибка при удалении фото участника:", err);
                 });
             }
 
             await member.destroy();
-            res.status(200).send("Участник успешно удален");
+            res.status(200).json({ success: "Участник успешно удален" });
         } catch (error) {
-            res.status(500).send(
-                "Ошибка при удалении участника из базы данных"
-            );
+            res.status(500).json({ error: "Ошибка при удалении участника из базы данных" });
         }
     },
 };

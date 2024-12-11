@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { CForm, CCol, CFormInput, CButton, CFormSelect, CListGroup, CListGroupItem, CFormLabel, CAlert } from "@coreui/react";
-import { AppSidebar, AppHeader, AppFooter } from "../../components";
+import { CForm, CCol, CFormInput, CButton, CFormSelect, CListGroup, CListGroupItem, CFormLabel } from "@coreui/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ApiContext from "../../../../ApiContext";
 
 const CreateGigs = () => {
@@ -18,7 +19,6 @@ const CreateGigs = () => {
     const [availableParticipants, setAvailableParticipants] = useState([]);
     const [poster, setPoster] = useState(null);
     const [posterPreview, setPosterPreview] = useState(null);
-    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const getMembers = () => {
@@ -28,7 +28,14 @@ const CreateGigs = () => {
                 setAvailableParticipants(response.data);
             })
             .catch((error) => {
-                setError(error.message);
+                toast.error("Ошибка при загрузке участников: " + error.message, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             });
     };
 
@@ -65,7 +72,14 @@ const CreateGigs = () => {
             reader.readAsDataURL(file);
         } else {
             setPosterPreview(null);
-            alert("Пожалуйста, выберите файл изображения.");
+            toast.error("Пожалуйста, выберите файл изображения.", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
@@ -97,11 +111,25 @@ const CreateGigs = () => {
                     withCredentials: true,
                 })
                 .then((response) => {
-                    alert("Выступление успешно добавлено");
-                    navigate("/admin/gigs");
+                    toast.success("Выступление успешно добавлено!", {
+                        position: "bottom-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
+                    setTimeout(() => navigate("/admin/gigs"), 2000);
                 })
                 .catch((error) => {
-                    alert("Произошла ошибка при добавлении выступления:\n " + error.response.data.error);
+                    toast.error("Произошла ошибка при добавлении выступления: " + error.response.data.error, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
                 });
         }
     };
@@ -109,7 +137,6 @@ const CreateGigs = () => {
     return (
         <>
             <div className="body flex-grow-1" style={{ margin: "30px" }}>
-                {error && <CAlert color="danger">{error}</CAlert>}
                 <CButton onClick={() => navigate("/admin/gigs")} className="mb-3" color="primary">
                     Назад
                 </CButton>
@@ -223,6 +250,19 @@ const CreateGigs = () => {
                     </CCol>
                 </CForm>
             </div>
+
+            {/* Всплывающее окно для уведомлений */}
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 };

@@ -13,7 +13,7 @@ const AppRouter = () => {
             <Routes>
                 <Route path="/*" element={<Navigate to="/" replace />} />
                 <Route path="/" element={<Main pageName={"main"} />}></Route>
-                <Route path="/members" element={<Members />}></Route>
+                <Route path="/members" element={<Members pageName={"members"} />}></Route>
                 <Route path="/music" element={<Music />}></Route>
                 <Route path="/gigs" element={<Gigs />}></Route>
                 <Route path="/admin" element={<Admin />}></Route>

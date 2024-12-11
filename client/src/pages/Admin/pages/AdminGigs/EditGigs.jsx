@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { CForm, CCol, CFormInput, CButton, CFormSelect, CListGroup, CListGroupItem, CFormLabel, CAlert } from "@coreui/react";
-import { AppSidebar, AppHeader, AppFooter } from "../../components";
+import { CForm, CCol, CFormInput, CButton, CFormSelect, CListGroup, CListGroupItem, CFormLabel } from "@coreui/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ApiContext from "../../../../ApiContext";
 
 const EditGigs = () => {
@@ -18,7 +19,6 @@ const EditGigs = () => {
     const [availableParticipants, setAvailableParticipants] = useState([]);
     const [poster, setPoster] = useState(null);
     const [currentPoster, setCurrentPoster] = useState("");
-    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const { id } = useParams();
@@ -31,7 +31,14 @@ const EditGigs = () => {
 
             setAvailableParticipants(filteredParticipants);
         } catch (error) {
-            setError("Ошибка при загрузке участников");
+            toast.error("Ошибка при загрузке участников: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
@@ -50,7 +57,14 @@ const EditGigs = () => {
                 setCurrentPoster(gig.path_to_poster);
                 await getMembers(gig.members);
             } catch (error) {
-                setError("Ошибка при загрузке выступления");
+                toast.error("Ошибка при загрузке выступления: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
@@ -101,11 +115,25 @@ const EditGigs = () => {
                     withCredentials: true,
                 })
                 .then((response) => {
-                    alert("Выступление успешно обновлено");
-                    navigate("/admin/gigs");
+                    toast.success("Выступление успешно обновлено!", {
+                        position: "bottom-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
+                    setTimeout(() => navigate("/admin/gigs"), 2000);
                 })
                 .catch((error) => {
-                    alert(error.response.data.error);
+                    toast.error("Ошибка при обновлении выступления: " + error.response.data.error, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
                 });
         }
     };
@@ -113,7 +141,6 @@ const EditGigs = () => {
     return (
         <>
             <div className="body flex-grow-1" style={{ margin: "30px" }}>
-                {error && <CAlert color="danger">{error}</CAlert>}
                 <CButton onClick={() => navigate("/admin/gigs")} className="mb-3" color="primary">
                     Назад
                 </CButton>
@@ -225,7 +252,7 @@ const EditGigs = () => {
                         </CButton>
                     </CCol>
                 </CForm>
-                {poster && (
+                {currentPoster && (
                     <>
                         <h3 style={{ marginTop: "20px" }}>Текущая афиша:</h3>
                         <div style={{ marginTop: "20px" }}>
@@ -234,6 +261,19 @@ const EditGigs = () => {
                     </>
                 )}
             </div>
+
+            {/* Всплывающее окно для уведомлений */}
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 };

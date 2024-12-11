@@ -6,7 +6,7 @@ const { gig_members, members } = require("../../models");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const pathToDir = path.join(__dirname, "../../client/public/uploads/")
+        const pathToDir = path.join(__dirname, "../../../client/public/uploads/");
         cb(null, pathToDir);
     },
     filename: function (req, file, cb) {
@@ -16,9 +16,7 @@ const storage = multer.diskStorage({
 
 const imageFileFilter = (req, file, cb) => {
     const filetypes = /jpeg|jpg|png/;
-    const extname = filetypes.test(
-        path.extname(file.originalname).toLowerCase()
-    );
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = filetypes.test(file.mimetype);
     if (extname && mimetype) {
         return cb(null, true);
@@ -30,10 +28,7 @@ const imageFileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: imageFileFilter });
 
 function deleteFile(filePath) {
-    const path_to_delete = filePath.replace(
-        "uploads",
-        "../client/public/uploads"
-    );
+    const path_to_delete = filePath.replace("uploads", "../client/public/uploads");
     const pathFile = path.join(__dirname, path_to_delete);
     if (fs.existsSync(path_to_delete)) {
         fs.unlinkSync(path_to_delete);
@@ -69,6 +64,7 @@ const GigsController = {
     create: async (req, res) => {
         upload.single("poster")(req, res, async (err) => {
             if (err) {
+                console.log(err);
                 return res
                     .status(500)
                     .json({ error: "Ошибка при загрузке файла\nПроверьте расширение файла: файл должен иметь расширение jpg, jpeg или png" });
@@ -110,9 +106,7 @@ const GigsController = {
         const id = req.params.id;
         upload.single("poster")(req, res, async (err) => {
             if (err) {
-                return res
-                    .status(500)
-                    .json({ error: "Ошибка при загрузке файла:\n" + err.message });
+                return res.status(500).json({ error: "Ошибка при загрузке файла:\n" + err.message });
             }
             const raw_data = req.body;
 

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { CButton, CAlert, CForm, CFormInput } from "@coreui/react";
+import { CButton, CForm, CFormInput } from "@coreui/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const FontColorEdit = ({api, id, label}) => {
+const FontColorEdit = ({ api, id, label }) => {
     const [fontColors, setFontColors] = useState({
         mainFontColor: "#ffffff",
         headerFontColor: "#ffffff",
         footerFontColor: "#ffffff",
     });
-    const [colorError, setColorError] = useState("");
-    const [colorSuccess, setColorSuccess] = useState("");
 
     useEffect(() => {
         const loadFontColors = async () => {
@@ -17,7 +17,14 @@ const FontColorEdit = ({api, id, label}) => {
                 const response = await axios.get(`${api}/admin/font_colors`);
                 setFontColors(response.data.FontColors);
             } catch (error) {
-                setColorError(error.response.data.message);
+                toast.error("Ошибка при загрузке цветов шрифтов: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
@@ -33,13 +40,23 @@ const FontColorEdit = ({api, id, label}) => {
                 },
                 { withCredentials: true }
             );
-            setColorSuccess("Цвета шрифтов успешно сохранены");
-            setColorError("");
-            setTimeout(() => setColorSuccess(""), 3000); // Скрыть сообщение об успехе через 3 секунды
+            toast.success("Цвета шрифтов успешно сохранены", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setColorError(error.response.data.message);
-            setColorSuccess("");
-            setTimeout(() => setColorError(""), 3000); // Скрыть сообщение об ошибке через 3 секунды
+            toast.error("Произошла ошибка при сохранении цветов шрифтов: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
@@ -64,34 +81,33 @@ const FontColorEdit = ({api, id, label}) => {
                 },
                 { withCredentials: true }
             );
-            setColorSuccess("Цвета шрифтов успешно восстановлены в стандартные значения");
             setFontColors({
                 mainFontColor: "#ffffff",
                 headerFontColor: "#000000",
                 footerFontColor: "#000000",
             });
-            setColorError("");
-            setTimeout(() => setColorSuccess(""), 3000); // Скрыть сообщение об успехе через 3 секунды
+            toast.success("Цвета шрифтов успешно восстановлены в стандартные значения", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setColorError(error.response.data.message);
-            setColorSuccess("");
-            setTimeout(() => setColorError(""), 3000); // Скрыть сообщение об ошибке через 3 секунды
+            toast.error("Произошла ошибка при сбросе цветов шрифтов: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {colorError && (
-                <CAlert color="danger" dismissible onClose={() => setColorError("")}>
-                    {colorError}
-                </CAlert>
-            )}
-            {colorSuccess && (
-                <CAlert color="success" dismissible onClose={() => setColorSuccess("")}>
-                    {colorSuccess}
-                </CAlert>
-            )}
-
             <h3>Изменение цветов шрифтов</h3>
             <CForm style={{ margin: "30px 0" }}>
                 <div style={{ marginBottom: "20px" }}>
@@ -120,13 +136,12 @@ const FontColorEdit = ({api, id, label}) => {
                 </div>
             </CForm>
             <div style={{ marginTop: "20px", display: "inline-block" }}>
-            <CButton color="primary" onClick={handleSave}>
-                Сохранить
-            </CButton>
-            <CButton color="secondary" style={{ marginLeft: "10px" }} onClick={defaultColors}>
-                Сбросить
-            </CButton>
-
+                <CButton color="primary" onClick={handleSave}>
+                    Сохранить
+                </CButton>
+                <CButton color="secondary" style={{ marginLeft: "10px" }} onClick={defaultColors}>
+                    Сбросить
+                </CButton>
             </div>
         </div>
     );

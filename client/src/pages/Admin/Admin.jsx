@@ -82,10 +82,7 @@ const Admin = () => {
                         <Route path="/roles/:id/edit" element={<DefaultLayout><EditRoles /></DefaultLayout>} />
                         <Route path="/roles/create" element={<DefaultLayout><CreateRoles /></DefaultLayout>} />
 
-                        <Route path="/editor/main" element={<VisualEditor page="main" />} />
-                        <Route path="/editor/members" element={<VisualEditor page="members" />} />
-                        <Route path="/editor/gigs" element={<VisualEditor page="gigs" />} />
-                        <Route path="/editor/music" element={<VisualEditor page="music" />} />
+                        <Route path="/editor" element={<VisualEditor/>} />
                         
 
                         <Route path="/*" element={<Navigate to="/admin" />} />

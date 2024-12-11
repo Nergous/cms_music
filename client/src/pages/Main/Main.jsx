@@ -7,7 +7,7 @@ import ApiContext from "../../ApiContext";
 import { loadBlockTypes } from "../../utils/loadBlockTypes";
 import cl from "./Main.module.css";
 
-const Main = ({ children, pageName }) => {
+const Main = ({ pageName }) => {
     const apiUrl = useContext(ApiContext);
 
     const [hasImages, setHasImages] = useState(false);
@@ -76,7 +76,6 @@ const Main = ({ children, pageName }) => {
         <div style={{maxWidth: "80%", margin: "0 auto"}}>
             <div>{hasImages && <CarouselMy imgs={images} />}</div>
             <div style={{ color: fontColor }} className={cl.text}>{HTMLReactParser(text)}</div>
-            {children}
             <div style={{ display: "flex", flexDirection: "column"}}>
                 {pageStructure.map((block) => (
                     <div key={block.id} style={{ marginBottom: "20px" }}>

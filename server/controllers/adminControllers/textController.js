@@ -5,18 +5,18 @@ exports.loadText = (req, res) => {
     const filePath = path.join(__dirname, "../../../client/config_cms.json");
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
-            return res.status(500).send("Не удалось загрузить файл конфигурации!");
+            return res.status(500).json({ error: "Не удалось загрузить файл конфигурации!" });
         }
         try {
             const parsedData = JSON.parse(data);
             const mainText = parsedData.mainText;
 
             if (!mainText) {
-                return res.status(404).send("Текст не найден");
+                return res.status(404).json({ error: "Текст не найден" });
             }
             res.status(200).json({ MainText: mainText });
         } catch (error) {
-            return res.status(500).send("Не удалось прочесть файл конфигурации!");
+            return res.status(500).json({ error: "Не удалось прочесть файл конфигурации!" });
         }
     });
 };
@@ -28,14 +28,14 @@ exports.saveText = (req, res) => {
     // Читаем текущее содержимое файла
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
-            return res.status(500).send("Ошибка при чтении файла");
+            return res.status(500).json({ error: "Ошибка при чтении файла" });
         }
 
         let jsonData;
         try {
             jsonData = JSON.parse(data);
         } catch (parseErr) {
-            return res.status(500).send("Ошибка при парсинге JSON");
+            return res.status(500).json({ error: "Ошибка при парсинге JSON" });
         }
 
         // Обновляем содержимое JSON
@@ -44,9 +44,9 @@ exports.saveText = (req, res) => {
         // Записываем обновленное содержимое обратно в файл
         fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (writeErr) => {
             if (writeErr) {
-                return res.status(500).send("Ошибка при сохранении текста в файл");
+                return res.status(500).json({ error: "Ошибка при сохранении текста в файл" });
             }
-            res.status(200).send("Текст успешно сохранен");
+            res.status(200).json({ success: "Текст успешно сохранен" });
         });
     });
 };

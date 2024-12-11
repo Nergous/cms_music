@@ -7,8 +7,9 @@ import MemberButton from "./MemberButton";
 import Spinner from "../../components/Spinner/Spinner";
 import ApiContext from "../../ApiContext";
 import axios from "axios";
+import { loadBlockTypes } from "../../utils/loadBlockTypes";
 
-const Members = () => {
+const Members = ({ pageName }) => {
     const apiUrl = useContext(ApiContext);
 
     const [modal, setModal] = useState(false);
@@ -17,21 +18,8 @@ const Members = () => {
     const [hoveredId, setHoveredId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [fontColor, setFontColor] = useState("#000000");
-
-    useEffect(() => {
-        const fetchMembers = async () => {
-            try {
-                const response = await axios.get(`${apiUrl}/members`);
-                const data = await response.data;
-                const filteredData = data.filter((item) => item.is_member !== false);
-                setMembers(filteredData);
-            } catch (error) {
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchMembers();
-    }, []);
+    const [pageStructure, setPageStructure] = useState([]);
+    const blockTypes = loadBlockTypes();
 
     useEffect(() => {
         const fetchFontColor = async () => {
@@ -43,7 +31,30 @@ const Members = () => {
             }
         };
 
+        const fetchPageStructure = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/admin/load_page/${pageName}`);
+                setPageStructure(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error("Ошибка при загрузке структуры страницы:", error);
+            }
+        };
+        const fetchMembers = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/members`);
+                const data = await response.data;
+                const filteredData = data.filter((item) => item.is_member !== false);
+                setMembers(filteredData);
+            } catch (error) {
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchFontColor();
+        fetchPageStructure();
+        fetchMembers();
     }, []);
 
     useEffect(() => {
@@ -66,6 +77,19 @@ const Members = () => {
     const handleMouseLeave = useCallback(() => {
         setHoveredId(null);
     }, []);
+
+    const renderBlock = (block) => {
+        const BlockComponent = blockTypes[block.type]?.component;
+        if (BlockComponent) {
+            const Block = React.lazy(() => import(`../../components/Blocks/${BlockComponent}`));
+            return (
+                <React.Suspense fallback={<div>Загрузка...</div>}>
+                    <Block id={block.id} content={block.content} />
+                </React.Suspense>
+            );
+        }
+        return null;
+    };
 
     if (loading) {
         return <Spinner color={fontColor} />;
@@ -100,6 +124,13 @@ const Members = () => {
                         </Modal>
                     </>
                 )}
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+                {pageStructure.map((block) => (
+                    <div key={block.id} style={{ marginBottom: "20px" }}>
+                        {renderBlock(block)}
+                    </div>
+                ))}
             </div>
         </>
     );

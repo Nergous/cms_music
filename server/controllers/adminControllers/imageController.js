@@ -35,7 +35,7 @@ exports.getImages = (req, res) => {
     const imageDir = path.join(__dirname, "../../../client/public/uploads/carousel");
     fs.readdir(imageDir, (err, files) => {
         if (err) {
-            return res.status(500).send("Ошибка при чтении директории");
+            return res.status(500).json({ error: "Ошибка при чтении директории" });
         }
         res.status(200).json(files);
     });
@@ -46,24 +46,24 @@ exports.deleteImage = (req, res) => {
 
     fs.unlink(imagePath, (err) => {
         if (err) {
-            return res.status(500).send("Ошибка при удалении файла");
+            return res.status(500).json({ error: "Ошибка при удалении файла" });
         }
-        res.status(200).send("Файл успешно удален");
+        res.status(200).json({ success: "Файл успешно удален" });
     });
 };
 
 exports.uploadFiles = (req, res) => {
     if (!req.files) {
-        return res.status(400).send("Нет файлов");
+        return res.status(400).json({ error: "Нет файлов" });
     }
-    res.status(200).send("Файлы загружены успешно");
+    res.status(200).json({ success: "Файлы загружены успешно" });
 };
 
 exports.uploadLogo = (req, res) => {
     if (!req.file) {
-        return res.status(400).contentType("text/plain").send("Файл не был загружен");
+        return res.status(400).contentType("text/plain").json({ error: "Файл не был загружен" });
     }
-    res.status(200).send("Логотип успешно загружен");
+    res.status(200).json({ success: "Логотип успешно загружен" });
 };
 
 exports.getFavicon = (req, res) => {
@@ -71,13 +71,13 @@ exports.getFavicon = (req, res) => {
     if (fs.existsSync(faviconPath)) {
         res.status(200).send({ faviconUrl: "/favicon.ico" });
     } else {
-        res.status(404).send("Фавикон не найден");
+        res.status(404).json({ error: "Фавикон не найден" });
     }
 };
 exports.saveFavicon = (req, res) => {
     if (!req.file) {
-        return res.status(400).contentType("text/plain").send("Файл не был загружен");
+        return res.status(400).contentType("text/plain").json({ error: "Файл не был загружен" });
     }
 
-    res.status(200).send("Фавикон успешно загружен");
+    res.status(200).json({ success: "Фавикон успешно загружен" });
 };

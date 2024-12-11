@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { CButton, CAlert, CForm, CFormInput } from "@coreui/react";
+import { CButton, CForm, CFormInput } from "@coreui/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const ColorEdit = ({api, id, label}) => {
+const ColorEdit = ({ api, id, label }) => {
     const [colors, setColors] = useState({
         headerColor: "#000000",
         backgroundColor: "#ffffff",
         footerColor: "#000000",
     });
-    const [colorError, setColorError] = useState("");
-    const [colorSuccess, setColorSuccess] = useState("");
 
     useEffect(() => {
         const loadColors = async () => {
@@ -17,7 +17,14 @@ const ColorEdit = ({api, id, label}) => {
                 const response = await axios.get(`${api}/admin/colors`);
                 setColors(response.data.Colors);
             } catch (error) {
-                setColorError(error.response.data.message);
+                toast.error("Ошибка при загрузке цветов: " + error.response.data.error, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
@@ -33,13 +40,23 @@ const ColorEdit = ({api, id, label}) => {
                 },
                 { withCredentials: true }
             );
-            setColorSuccess("Цвета успешно сохранены");
-            setColorError("");
-            setTimeout(() => setColorSuccess(""), 3000); // Скрыть сообщение об успехе через 3 секунды
+            toast.success("Цвета успешно сохранены", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setColorError(error.response.data.message);
-            setColorSuccess("");
-            setTimeout(() => setColorError(""), 3000); // Скрыть сообщение об ошибке через 3 секунды
+            toast.error("Произошла ошибка при сохранении цветов: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
@@ -64,34 +81,33 @@ const ColorEdit = ({api, id, label}) => {
                 },
                 { withCredentials: true }
             );
-            setColorSuccess("Цвета успешно восстановлены в стандартные значения");
             setColors({
                 headerColor: "#ffffff",
                 backgroundColor: "#000000",
                 footerColor: "#ffffff",
-            })
-            setColorError("");
-            setTimeout(() => setColorSuccess(""), 3000); // Скрыть сообщение об успехе через 3 секунды
+            });
+            toast.success("Цвета успешно восстановлены в стандартные значения", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
-            setColorError(error.response.data.message);
-            setColorSuccess("");
-            setTimeout(() => setColorError(""), 3000); // Скрыть сообщение об ошибке через 3 секунды
+            toast.error("Произошла ошибка при сбросе цветов: " + error.response.data.error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
-    }
+    };
 
     return (
         <div id={id} label={label} style={{ margin: "30px 0" }}>
-            {colorError && (
-                <CAlert color="danger" dismissible onClose={() => setColorError("")}>
-                    {colorError}
-                </CAlert>
-            )}
-            {colorSuccess && (
-                <CAlert color="success" dismissible onClose={() => setColorSuccess("")}>
-                    {colorSuccess}
-                </CAlert>
-            )}
-
             <h3>Изменение цветов</h3>
             <CForm style={{ margin: "30px 0" }}>
                 <div style={{ marginBottom: "20px" }}>

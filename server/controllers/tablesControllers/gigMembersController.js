@@ -39,7 +39,7 @@ const GigMembersController = {
             await gig_members.update(gigMember, {
                 where: { id: id },
             });
-            res.json({ message: "Запись успешно обновлена" });
+            res.json({ success: "Запись успешно обновлена" });
         } catch (error) {
             res.status(500).json({ error: "Ошибка при попытке обновления" });
         }
@@ -49,7 +49,7 @@ const GigMembersController = {
         const id = req.params.id;
         try {
             await gig_members.destroy({ where: { id: id } });
-            res.json({ message: "Запись успешно удалена" });
+            res.json({ success: "Запись успешно удалена" });
         } catch (error) {
             res.status(500).json({ error: "Ошибка при попытке удаления" });
         }

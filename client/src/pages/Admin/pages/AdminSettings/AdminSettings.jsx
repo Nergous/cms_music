@@ -6,6 +6,8 @@ import { CNav, CNavItem, CNavLink, CTabContent, CTabPane } from "@coreui/react";
 
 import AppearanceSettings from "./Appearance/AppearanceSettings";
 import SystemSettings from "./System/SystemSettings";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdminSettings = () => {
     const api = useContext(ApiContext);
@@ -53,20 +55,12 @@ const AdminSettings = () => {
             <div style={{ flex: 1, marginRight: "20px" }}>
                 <CNav variant="tabs" role="tablist">
                     <CNavItem>
-                        <CNavLink
-                            style={{ cursor: "pointer" }}
-                            active={activeTab === "appearance"}
-                            onClick={() => setActiveTab("appearance")}
-                        >
+                        <CNavLink style={{ cursor: "pointer" }} active={activeTab === "appearance"} onClick={() => setActiveTab("appearance")}>
                             Настройки внешнего вида
                         </CNavLink>
                     </CNavItem>
                     <CNavItem>
-                        <CNavLink
-                            style={{ cursor: "pointer" }}
-                            active={activeTab === "system"}
-                            onClick={() => setActiveTab("system")}
-                        >
+                        <CNavLink style={{ cursor: "pointer" }} active={activeTab === "system"} onClick={() => setActiveTab("system")}>
                             Системные настройки
                         </CNavLink>
                     </CNavItem>
@@ -80,7 +74,16 @@ const AdminSettings = () => {
                     </CTabPane>
                 </CTabContent>
             </div>
-            <div style={{ width: "250px", backgroundColor: "#f8f9fa", padding: "20px", borderLeft: "1px solid #dee2e6", position: "fixed", top: "60px", right: "30px" }}>
+            <div
+                style={{
+                    width: "250px",
+                    backgroundColor: "#f8f9fa",
+                    padding: "20px",
+                    borderLeft: "1px solid #dee2e6",
+                    position: "fixed",
+                    top: "60px",
+                    right: "30px",
+                }}>
                 <h5>Навигация</h5>
                 <CNav style={{ flexDirection: "column" }}>
                     {activeTab ? (
@@ -88,8 +91,10 @@ const AdminSettings = () => {
                             <CNavItem key={subTab.id}>
                                 <CNavLink
                                     href={`#${subTab.id}`}
-                                    onClick={() => { setActiveSubTab(subTab.id); scrollToElement(subTab.id); }}
-                                >
+                                    onClick={() => {
+                                        setActiveSubTab(subTab.id);
+                                        scrollToElement(subTab.id);
+                                    }}>
                                     {subTab.label}
                                 </CNavLink>
                             </CNavItem>
@@ -110,6 +115,17 @@ const AdminSettings = () => {
                     )}
                 </CNav>
             </div>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </div>
     );
 };
