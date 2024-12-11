@@ -1,5 +1,4 @@
 node_modules
 build
 config_cms.json
-package-lock.json
-client/uploads/
+public/uploads/
