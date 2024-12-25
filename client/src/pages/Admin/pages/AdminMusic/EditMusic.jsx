@@ -200,6 +200,11 @@ const EditMusic = () => {
             });
 
             try {
+
+                // for (var pair of formData.entries()) {
+                //     console.log(pair[0]+ ', ' + pair[1]); 
+                // }
+                // return;
                 const response = await axios.put(`${api}/record/${id}`, formData, { withCredentials: true });
                 toast.success("Релиз успешно обновлен!", {
                     position: "bottom-right",
@@ -324,6 +329,7 @@ const EditMusic = () => {
                                     value={track.lyrics_author || ""}
                                     onChange={(e) => handleTrackChange(trackIndex, "lyrics_author", e.target.value)}
                                     required>
+                                    <option value="">Выберите автора слов</option>
                                     {members.map((member) => (
                                         <option key={member.id} value={member.id}>
                                             {member.name_of_member}
