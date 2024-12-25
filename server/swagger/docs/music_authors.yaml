@@ -1,0 +1,151 @@
+openapi: 3.0.0
+info:
+    title: API для управления связями авторов музыки и треков
+    version: 1.0.0
+    description: API для управления связями авторов музыки и треков.
+servers:
+    - url: http://localhost:3001/api
+      description: Локальный сервер разработки
+tags:
+    - name: MusicAuthors
+      description: Управление связями авторов музыки и треков
+paths:
+    /music-authors:
+        get:
+            summary: Получить список всех связей авторов музыки и треков
+            tags: [MusicAuthors]
+            responses:
+                200:
+                    description: Список связей успешно получен
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/MusicAuthor"
+                500:
+                    description: Ошибка при получении списка связей
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        post:
+            summary: Создать новую связь автора музыки и трека
+            tags: [MusicAuthors]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/MusicAuthor"
+            responses:
+                201:
+                    description: Связь успешно создана
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Success"
+                400:
+                    description: Некорректные данные
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при создании связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+    /music-authors/{id}:
+        get:
+            summary: Получить связь автора музыки и трека по ID
+            tags: [MusicAuthors]
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID связи
+            responses:
+                200:
+                    description: Связь найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/MusicAuthor"
+                404:
+                    description: Связь не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при получении связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        delete:
+            summary: Удалить связь автора музыки и трека по ID
+            tags: [MusicAuthors]
+            security:
+                - cookieAuth: []
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID связи
+            responses:
+                204:
+                    description: Связь успешно удалена
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                404:
+                    description: Связь не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при удалении связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+components:
+    securitySchemes:
+        cookieAuth:
+            type: apiKey
+            in: cookie
+            name: token
+    schemas:
+        Error:
+            type: object
+            properties:
+                error:
+                    type: string
+                    example: "Произошла ошибка"
+        Success:
+            type: object
+            properties:
+                success:
+                    type: string
+                    example: "Операция выполнена успешно"

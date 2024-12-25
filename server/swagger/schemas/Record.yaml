@@ -1,0 +1,47 @@
+components:
+    schemas:
+        Record:
+            type: object
+            required:
+                - record_name
+                - type_of_record
+                - path_to_cover
+                - year_of_publish
+            properties:
+                id:
+                    type: integer
+                    description: Автогенерируемый ID записи
+                    example: 1
+                record_name:
+                    type: string
+                    maxLength: 50
+                    description: Название записи
+                    example: "A Night at the Opera"
+                type_of_record:
+                    type: string
+                    enum:
+                        - album
+                        - EP
+                        - single
+                    description: Тип записи (альбом, EP, сингл)
+                    example: "album"
+                path_to_cover:
+                    type: string
+                    maxLength: 100
+                    description: Путь к обложке записи
+                    example: "/uploads/covers/a_night_at_the_opera.jpg"
+                year_of_publish:
+                    type: string
+                    format: date
+                    description: Год выпуска записи
+                    example: "1975-11-21"
+                createdAt:
+                    type: string
+                    format: date-time
+                    description: Дата создания записи в таблице
+                    example: "2024-09-07T11:09:28.000Z"
+                updatedAt:
+                    type: string
+                    format: date-time
+                    description: Дата последнего обновления записи в таблице
+                    example: "2024-09-07T11:09:28.000Z"

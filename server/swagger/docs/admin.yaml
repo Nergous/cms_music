@@ -1,0 +1,1370 @@
+openapi: 3.0.0
+info:
+    title: CMS API
+    version: 1.0.0
+    description: API для управления контентом и настройками CMS
+servers:
+    - url: http://localhost:3001/api/admin
+      description: Локальный сервер разработки
+tags:
+    - name: Auth
+      description: Аутентификация и авторизация
+    - name: Admin
+      description: Управление учетными данными администратора
+    - name: Text
+      description: Управление текстовым контентом
+    - name: Images
+      description: Управление изображениями
+    - name: Footer
+      description: Управление текстом подвала
+    - name: Socials
+      description: Управление социальными сетями
+    - name: Fonts
+      description: Управление шрифтами
+    - name: Colors
+      description: Управление цветами
+    - name: FontColors
+      description: Управление цветами шрифтов
+    - name: Navbar
+      description: Управление навигационной панелью
+    - name: Pages
+      description: Управление страницами
+paths:
+    /admin/checkAuth:
+        get:
+            summary: Проверить аутентификацию пользователя
+            description: Проверяет, авторизован ли пользователь, путем проверки JWT токена в cookie.
+            tags: [Auth]
+            security:
+                - cookieAuth: []
+            responses:
+                200:
+                    description: Пользователь авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+
+    /admin/login:
+        post:
+            summary: Аутентификация пользователя
+            description: Проверяет логин и пароль пользователя. Если данные верны, создает JWT токен и устанавливает его в cookie с именем `token`. Токен действителен в течение 1 часа.
+            tags: [Auth]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - username
+                                - password
+                            properties:
+                                username:
+                                    type: string
+                                    description: Логин администратора
+                                    example: "admin"
+                                password:
+                                    type: string
+                                    description: Пароль администратора
+                                    example: "password123"
+            responses:
+                200:
+                    description: Успешная аутентификация
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                    headers:
+                        Set-Cookie:
+                            schema:
+                                type: string
+                                description: JWT токен в cookie
+                                example: "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly"
+                401:
+                    description: Ошибка авторизации
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: false
+                                    message:
+                                        type: string
+                                        example: "Ошибка авторизации"
+
+    /admin/update_credentials:
+        post:
+            summary: Обновить учетные данные администратора
+            description: Обновляет логин и пароль администратора в файле `.env`. Требуется аутентификация через JWT токен.
+            tags: [Admin]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - login
+                                - password
+                            properties:
+                                login:
+                                    type: string
+                                    description: Новый логин администратора
+                                    example: "new_admin"
+                                password:
+                                    type: string
+                                    description: Новый пароль администратора
+                                    example: "new_password123"
+            responses:
+                200:
+                    description: Учетные данные успешно обновлены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Данные успешно обновлены"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+                500:
+                    description: Ошибка при обновлении учетных данных
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при обновлении .env файла"
+
+    /admin/load:
+        get:
+            summary: Загрузить текст из конфигурационного файла
+            description: Загружает текст из файла `config_cms.json`, который находится на клиенте. Возвращает текст, если он найден.
+            tags: [Text]
+            responses:
+                200:
+                    description: Текст успешно загружен
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    MainText:
+                                        type: string
+                                        description: Загруженный текст
+                                        example: "Это пример текста из конфигурационного файла."
+                404:
+                    description: Текст не найден
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Текст не найден"
+                500:
+                    description: Ошибка при загрузке текста
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Не удалось загрузить файл конфигурации!"
+
+    /admin/save:
+        post:
+            summary: Сохранить текст в конфигурационный файл
+            description: Сохраняет текст в файл `config_cms.json`, который находится на клиенте. Требуется аутентификация через JWT токен.
+            tags: [Text]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - text
+                            properties:
+                                text:
+                                    type: string
+                                    description: Текст для сохранения
+                                    example: "Это новый текст для сохранения."
+            responses:
+                200:
+                    description: Текст успешно сохранен
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Текст успешно сохранен"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+                500:
+                    description: Ошибка при сохранении текста
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при сохранении текста в файл"
+
+    /admin/images:
+        get:
+            summary: Получить список изображений
+            description: Возвращает список файлов из директории `uploads/carousel`.
+            tags: [Images]
+            responses:
+                200:
+                    description: Список изображений успешно получен
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+                                    example: "image1.jpg"
+                500:
+                    description: Ошибка при чтении директории
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при чтении директории"
+
+    /admin/upload_files:
+        post:
+            summary: Загрузить файлы
+            description: Загружает файлы на сервер. Требуется аутентификация через JWT токен.
+            tags: [Images]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                files:
+                                    type: array
+                                    items:
+                                        type: string
+                                        format: binary
+                                    description: Файлы для загрузки
+            responses:
+                200:
+                    description: Файлы успешно загружены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Файлы загружены успешно"
+                400:
+                    description: Нет файлов для загрузки
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Нет файлов"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+
+    /admin/images/{filename}:
+        delete:
+            summary: Удалить изображение
+            description: Удаляет изображение из директории `uploads/carousel`. Требуется аутентификация через JWT токен.
+            tags: [Images]
+            security:
+                - cookieAuth: []
+            parameters:
+                - in: path
+                  name: filename
+                  schema:
+                      type: string
+                  required: true
+                  description: Имя файла для удаления
+                  example: "image1.jpg"
+            responses:
+                200:
+                    description: Файл успешно удален
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Файл успешно удален"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+                500:
+                    description: Ошибка при удалении файла
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при удалении файла"
+
+    /admin/footer:
+        get:
+            summary: Загрузить текст подвала из конфигурационного файла
+            description: Загружает текст подвала из файла `config_cms.json`, который находится на клиенте. Возвращает текст, если он найден.
+            tags: [Footer]
+            responses:
+                200:
+                    description: Текст подвала успешно загружен
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    FooterText:
+                                        type: string
+                                        description: Загруженный текст подвала
+                                        example: "Это пример текста подвала из конфигурационного файла."
+                404:
+                    description: Текст подвала не найден
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Текст подвала не найден"
+                500:
+                    description: Ошибка при загрузке текста подвала
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Не удалось загрузить файл конфигурации!"
+
+    /admin/save_footer:
+        post:
+            summary: Сохранить текст подвала в конфигурационный файл
+            description: Сохраняет текст подвала в файл `config_cms.json`, который находится на клиенте. Требуется аутентификация через JWT токен.
+            tags: [Footer]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - footerText
+                            properties:
+                                footerText:
+                                    type: string
+                                    description: Текст подвала для сохранения
+                                    example: "Это новый текст подвала для сохранения."
+            responses:
+                200:
+                    description: Текст подвала успешно сохранен
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Текст подвала успешно сохранен"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+                500:
+                    description: Ошибка при сохранении текста подвала
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при сохранении текста подвала в файл"
+
+    /admin/socials:
+        get:
+            summary: Загрузить данные социальных сетей из конфигурационного файла
+            description: Загружает данные социальных сетей из файла `config_cms.json`, который находится на клиенте. Возвращает данные, если они найдены.
+            tags: [Socials]
+            responses:
+                200:
+                    description: Данные социальных сетей успешно загружены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    Socials:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                name:
+                                                    type: string
+                                                    example: "Facebook"
+                                                link:
+                                                    type: string
+                                                    example: "https://facebook.com"
+                404:
+                    description: Данные социальных сетей не найдены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Социальные сети не найдены"
+                500:
+                    description: Ошибка при загрузке данных социальных сетей
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Не удалось загрузить файл конфигурации!"
+
+    /admin/save_socials:
+        post:
+            summary: Сохранить данные социальных сетей в конфигурационный файл
+            description: Сохраняет данные социальных сетей в файл `config_cms.json`, который находится на клиенте. Требуется аутентификация через JWT токен.
+            tags: [Socials]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - socials
+                            properties:
+                                socials:
+                                    type: array
+                                    items:
+                                        type: object
+                                        properties:
+                                            name:
+                                                type: string
+                                                example: "Facebook"
+                                            link:
+                                                type: string
+                                                example: "https://facebook.com"
+            responses:
+                200:
+                    description: Данные социальных сетей успешно сохранены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Социальные сети успешно сохранены"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+                500:
+                    description: Ошибка при сохранении данных социальных сетей
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при сохранении социальных сетей в файл"
+
+    /admin/font:
+        get:
+            summary: Загрузить данные о шрифтах из конфигурационного файла
+            description: Загружает данные о шрифтах из файла `config_cms.json`, который находится на клиенте. Возвращает данные, если они найдены.
+            tags: [Fonts]
+            responses:
+                200:
+                    description: Данные о шрифтах успешно загружены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    Font:
+                                        type: object
+                                        properties:
+                                            selected_font:
+                                                type: string
+                                                example: "Roboto"
+                                            available_fonts:
+                                                type: array
+                                                items:
+                                                    type: string
+                                                example: ["Roboto", "Open Sans", "Lato"]
+                404:
+                    description: Шрифт не найден
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Шрифт не найден"
+                500:
+                    description: Ошибка при загрузке данных о шрифтах
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Не удалось загрузить файл конфигурации!"
+
+    /admin/save_font:
+        post:
+            summary: Сохранить данные о шрифтах в конфигурационный файл
+            description: Сохраняет данные о шрифтах в файл `config_cms.json`, который находится на клиенте. Требуется аутентификация через JWT токен.
+            tags: [Fonts]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - fonts
+                            properties:
+                                fonts:
+                                    type: object
+                                    properties:
+                                        selected_font:
+                                            type: string
+                                            example: "Roboto"
+                                        available_fonts:
+                                            type: array
+                                            items:
+                                                type: string
+                                            example: ["Roboto", "Open Sans", "Lato"]
+            responses:
+                200:
+                    description: Данные о шрифтах успешно сохранены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Шрифт успешно сохранен"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+                500:
+                    description: Ошибка при сохранении данных о шрифтах
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при сохранении шрифта в файл"
+
+    /admin/delete_font:
+        delete:
+            summary: Удалить шрифт из конфигурационного файла
+            description: Удаляет шрифт из списка доступных шрифтов в файле `config_cms.json`. Если удаляемый шрифт был выбранным, выбирается первый доступный шрифт. Требуется аутентификация через JWT токен.
+            tags: [Fonts]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - font
+                            properties:
+                                font:
+                                    type: string
+                                    description: Шрифт для удаления
+                                    example: "Roboto"
+            responses:
+                200:
+                    description: Шрифт успешно удален
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Шрифт успешно удален"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+                404:
+                    description: Шрифт не найден
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Шрифт не найден"
+                500:
+                    description: Ошибка при удалении шрифта
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при удалении шрифта из файла"
+
+    /admin/colors:
+        get:
+            summary: Загрузить основные цвета приложения
+            description: Загружает основные цвета из файла `config_cms.json`, который находится на клиенте. Возвращает цвета, если они найдены.
+            tags: [Colors]
+            responses:
+                200:
+                    description: Цвета успешно загружены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    Colors:
+                                        type: object
+                                        properties:
+                                            primary:
+                                                type: string
+                                                example: "#007bff"
+                                            secondary:
+                                                type: string
+                                                example: "#6c757d"
+                                            background:
+                                                type: string
+                                                example: "#f8f9fa"
+                                            text:
+                                                type: string
+                                                example: "#212529"
+                404:
+                    description: Цвета не найдены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Цвета не найдены"
+                500:
+                    description: Ошибка при загрузке цветов
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Не удалось загрузить файл конфигурации!"
+
+    /admin/save_colors:
+        post:
+            summary: Сохранить основные цвета приложения
+            description: Сохраняет основные цвета в файл `config_cms.json`, который находится на клиенте. Требуется аутентификация через JWT токен.
+            tags: [Colors]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - Colors
+                            properties:
+                                Colors:
+                                    type: object
+                                    properties:
+                                        primary:
+                                            type: string
+                                            example: "#007bff"
+                                        secondary:
+                                            type: string
+                                            example: "#6c757d"
+                                        background:
+                                            type: string
+                                            example: "#f8f9fa"
+                                        text:
+                                            type: string
+                                            example: "#212529"
+            responses:
+                200:
+                    description: Цвета успешно сохранены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Цвета успешно сохранены"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+                500:
+                    description: Ошибка при сохранении цветов
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при сохранении цветов в файл"
+
+    /admin/font_colors:
+        get:
+            summary: Загрузить цвета шрифтов приложения
+            description: Загружает цвета шрифтов из файла `config_cms.json`, который находится на клиенте. Возвращает цвета, если они найдены.
+            tags: [FontColors]
+            responses:
+                200:
+                    description: Цвета шрифтов успешно загружены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    FontColors:
+                                        type: object
+                                        properties:
+                                            primary:
+                                                type: string
+                                                example: "#000000"
+                                            secondary:
+                                                type: string
+                                                example: "#ffffff"
+                                            accent:
+                                                type: string
+                                                example: "#ff0000"
+                404:
+                    description: Цвета шрифтов не найдены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Цвета не найдены"
+                500:
+                    description: Ошибка при загрузке цветов шрифтов
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Не удалось загрузить файл конфигурации!"
+
+    /admin/save_font_colors:
+        post:
+            summary: Сохранить цвета шрифтов приложения
+            description: Сохраняет цвета шрифтов в файл `config_cms.json`, который находится на клиенте. Требуется аутентификация через JWT токен.
+            tags: [FontColors]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - FontColors
+                            properties:
+                                FontColors:
+                                    type: object
+                                    properties:
+                                        primary:
+                                            type: string
+                                            example: "#000000"
+                                        secondary:
+                                            type: string
+                                            example: "#ffffff"
+                                        accent:
+                                            type: string
+                                            example: "#ff0000"
+            responses:
+                200:
+                    description: Цвета шрифтов успешно сохранены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Цвета успешно сохранены"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Пользователь не авторизован"
+                500:
+                    description: Ошибка при сохранении цветов шрифтов
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при сохранении цветов в файл"
+
+    /admin/upload_logo:
+        post:
+            summary: Загрузить логотип
+            description: Загружает логотип на сервер. Требуется авторизация.
+            tags: [Images]
+            security:
+                - cookieAuth: []
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                logo:
+                                    type: string
+                                    format: binary
+            responses:
+                200:
+                    description: Логотип успешно загружен
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Логотип успешно загружен"
+                400:
+                    description: Ошибка при загрузке файла
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+                                example: "Ошибка при загрузке файла"
+
+    /admin/get_favicon:
+        get:
+            summary: Получить фавикон
+            description: Возвращает URL фавикона, если он существует.
+            tags: [Images]
+            responses:
+                200:
+                    description: Фавикон найден
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    faviconUrl:
+                                        type: string
+                                        example: "/favicon.ico"
+                404:
+                    description: Фавикон не найден
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Фавикон не найден"
+
+    /admin/save_favicon:
+        post:
+            summary: Сохранить фавикон
+            description: Загружает фавикон на сервер. Требуется авторизация.
+            tags: [Images]
+            security:
+                - cookieAuth: []
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                favicon:
+                                    type: string
+                                    format: binary
+            responses:
+                200:
+                    description: Фавикон успешно загружен
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Фавикон успешно загружен"
+                400:
+                    description: Ошибка при загрузке файла
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+                                example: "Ошибка при загрузке файла"
+
+    /admin/get_description:
+        get:
+            summary: Получить описание
+            description: Возвращает описание страницы из конфигурационного файла.
+            tags: [Text]
+            responses:
+                200:
+                    description: Описание найдено
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    description:
+                                        type: string
+                                        example: "Это описание страницы"
+                404:
+                    description: Описание не найдено
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Описание не найдено"
+
+    /admin/save_description:
+        post:
+            summary: Сохранить описание
+            description: Сохраняет описание страницы в конфигурационный файл. Требуется авторизация.
+            tags: [Text]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                description:
+                                    type: string
+                                    example: "Это новое описание страницы"
+                            required:
+                                - description
+            responses:
+                200:
+                    description: Описание успешно сохранено
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Описание успешно сохранено"
+                400:
+                    description: Ошибка при сохранении описания
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Описание не было отправлено"
+
+    /admin/get_title:
+        get:
+            summary: Получить название страницы
+            description: Возвращает название страницы из конфигурационного файла.
+            tags: [Text]
+            responses:
+                200:
+                    description: Название найдено
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    title:
+                                        type: string
+                                        example: "Название страницы"
+                404:
+                    description: Название не найдено
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Название не найдено"
+
+    /admin/save_title:
+        post:
+            summary: Сохранить название страницы
+            description: Сохраняет название страницы в конфигурационный файл. Требуется авторизация.
+            tags: [Text]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                title:
+                                    type: string
+                                    example: "Новое название страницы"
+                            required:
+                                - title
+            responses:
+                200:
+                    description: Название успешно сохранено
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Название успешно сохранено"
+                400:
+                    description: Ошибка при сохранении названия
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Название не было отправлено"
+
+    /admin/navbar_settings:
+        get:
+            summary: Получить настройки навигационной панели
+            description: Возвращает текущий режим отображения навигационной панели из конфигурационного файла.
+            tags: [Navbar]
+            responses:
+                200:
+                    description: Настройки успешно получены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    displayMode:
+                                        type: string
+                                        example: "auto"
+                500:
+                    description: Ошибка при получении настроек
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при получении данных"
+
+    /admin/save_navbar_settings:
+        post:
+            summary: Сохранить настройки навигационной панели
+            description: Сохраняет режим отображения навигационной панели в конфигурационный файл. Требуется авторизация.
+            tags: [Navbar]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                displayMode:
+                                    type: string
+                                    example: "auto"
+                            required:
+                                - displayMode
+            responses:
+                200:
+                    description: Настройки успешно сохранены
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Настройки навигационной панели успешно сохранены"
+                500:
+                    description: Ошибка при сохранении настроек
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при сохранении данных"
+
+    /admin/load_page/{pageName}:
+        get:
+            summary: Загрузить страницу
+            description: Возвращает данные страницы по её имени из конфигурационного файла.
+            tags: [Pages]
+            parameters:
+                - name: pageName
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                  description: Имя страницы
+            responses:
+                200:
+                    description: Данные страницы успешно загружены
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                400:
+                    description: Ошибка при отсутствии имени страницы
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Имя страницы обязательно"
+                500:
+                    description: Ошибка при загрузке страницы
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при чтении файла конфигурации"
+
+    /admin/save_page:
+        post:
+            summary: Сохранить страницу
+            description: Сохраняет данные страницы в конфигурационный файл. Требуется авторизация.
+            tags: [Pages]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                pageName:
+                                    type: string
+                                    example: "about"
+                                page:
+                                    type: array
+                                    items:
+                                        type: object
+                            required:
+                                - pageName
+                                - page
+            responses:
+                200:
+                    description: Страница успешно сохранена
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: string
+                                        example: "Страница успешно сохранена"
+                400:
+                    description: Ошибка при отсутствии обязательных данных
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Имя страницы и данные страницы обязательны"
+                500:
+                    description: Ошибка при сохранении страницы
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: "Ошибка при записи в файл конфигурации"
+
+components:
+    securitySchemes:
+        cookieAuth:
+            type: apiKey
+            in: cookie
+            name: token

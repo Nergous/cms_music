@@ -54,7 +54,7 @@ const TracksController = {
         const track = req.body;
         try {
             const newTrack = await tracks.create(track);
-            res.json(newTrack);
+            res.status(201).json(newTrack);
         } catch (error) {
             res.status(500).json({ error: "Ошибка при создании трека" });
         }

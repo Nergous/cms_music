@@ -1,0 +1,30 @@
+components:
+    schemas:
+        MusicAuthor:
+            type: object
+            required:
+                - id_track
+                - id_member
+            properties:
+                id:
+                    type: integer
+                    description: Автогенерируемый ID связи
+                    example: 1
+                id_track:
+                    type: integer
+                    description: ID трека
+                    example: 5
+                id_member:
+                    type: integer
+                    description: ID участника (автора музыки)
+                    example: 10
+                createdAt:
+                    type: string
+                    format: date-time
+                    description: Дата создания записи в таблице
+                    example: "2024-09-07T11:09:28.000Z"
+                updatedAt:
+                    type: string
+                    format: date-time
+                    description: Дата последнего обновления записи в таблице
+                    example: "2024-09-07T11:09:28.000Z"

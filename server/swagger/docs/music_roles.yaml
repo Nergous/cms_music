@@ -1,0 +1,200 @@
+openapi: 3.0.0
+info:
+    title: API для управления музыкальными ролями
+    version: 1.0.0
+    description: API для управления музыкальными ролями.
+servers:
+    - url: http://localhost:3001/api
+      description: Локальный сервер разработки
+tags:
+    - name: MusicRoles
+      description: Управление музыкальными ролями
+paths:
+    /music-roles:
+        get:
+            summary: Получить список всех музыкальных ролей
+            tags: [MusicRoles]
+            responses:
+                200:
+                    description: Список музыкальных ролей успешно получен
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/MusicRole"
+                500:
+                    description: Ошибка при получении списка ролей
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        post:
+            summary: Создать новую музыкальную роль
+            tags: [MusicRoles]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/MusicRole"
+            responses:
+                201:
+                    description: Музыкальная роль успешно создана
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Success"
+                400:
+                    description: Некорректные данные
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при создании роли
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+    /music-roles/{id}:
+        get:
+            summary: Получить музыкальную роль по ID
+            tags: [MusicRoles]
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID музыкальной роли
+            responses:
+                200:
+                    description: Музыкальная роль найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/MusicRole"
+                404:
+                    description: Роль не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при получении роли
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        put:
+            summary: Обновить музыкальную роль по ID
+            tags: [MusicRoles]
+            security:
+                - cookieAuth: []
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID музыкальной роли
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/MusicRole"
+            responses:
+                200:
+                    description: Музыкальная роль успешно обновлена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Success"
+                400:
+                    description: Некорректные данные
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                404:
+                    description: Роль не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при обновлении роли
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        delete:
+            summary: Удалить музыкальную роль по ID
+            tags: [MusicRoles]
+            security:
+                - cookieAuth: []
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID музыкальной роли
+            responses:
+                204:
+                    description: Музыкальная роль успешно удалена
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                404:
+                    description: Роль не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при удалении роли
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+components:
+    securitySchemes:
+        cookieAuth:
+            type: apiKey
+            in: cookie
+            name: token
+    schemas:
+        Error:
+            type: object
+            properties:
+                error:
+                    type: string
+                    example: "Произошла ошибка"
+        Success:
+            type: object
+            properties:
+                success:
+                    type: string
+                    example: "Операция выполнена успешно"

@@ -1,0 +1,59 @@
+components:
+    schemas:
+        Gig:
+            type: object
+            required:
+                - title
+                - link_to_social
+                - place
+                - date_of_gig
+                - gig_status
+                - path_to_poster
+            properties:
+                id:
+                    type: integer
+                    description: Автогенерируемый ID концерта
+                    example: 1
+                title:
+                    type: string
+                    maxLength: 50
+                    description: Название концерта
+                    example: "Summer Festival 2023"
+                link_to_social:
+                    type: string
+                    maxLength: 100
+                    description: Ссылка на социальные сети или страницу события
+                    example: "https://example.com/summer-festival"
+                place:
+                    type: string
+                    maxLength: 100
+                    description: Место проведения концерта
+                    example: "Central Park, New York"
+                date_of_gig:
+                    type: string
+                    format: date
+                    description: Дата проведения концерта
+                    example: "2023-07-15"
+                gig_status:
+                    type: string
+                    enum:
+                        - soon
+                        - completed
+                        - canceled
+                    description: Статус концерта
+                    example: "soon"
+                path_to_poster:
+                    type: string
+                    maxLength: 100
+                    description: Путь к постеру концерта
+                    example: "/uploads/summer-festival.jpg"
+                createdAt:
+                    type: string
+                    format: date-time
+                    description: Дата создания записи в таблице
+                    example: "2024-09-07T11:09:28.000Z"
+                updatedAt:
+                    type: string
+                    format: date-time
+                    description: Дата последнего обновления записи в таблице
+                    example: "2024-09-07T11:09:28.000Z"

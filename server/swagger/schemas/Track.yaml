@@ -1,0 +1,41 @@
+components:
+    schemas:
+        Track:
+            type: object
+            required:
+                - track_name
+                - path_to_file
+            properties:
+                id:
+                    type: integer
+                    description: Автогенерируемый ID трека
+                    example: 1
+                track_name:
+                    type: string
+                    maxLength: 50
+                    description: Название трека
+                    example: "Bohemian Rhapsody"
+                path_to_file:
+                    type: string
+                    maxLength: 100
+                    description: Путь к файлу трека
+                    example: "/uploads/bohemian_rhapsody.mp3"
+                lyrics_author:
+                    type: integer
+                    description: ID автора текста (ссылка на таблицу members)
+                    example: 2
+                createdAt:
+                    type: string
+                    format: date-time
+                    description: Дата создания
+                    example: "2024-08-06T21:36:22.000Z"
+                updatedAt:
+                    type: string
+                    format: date-time
+                    description: Дата последнего обновления
+                    example: "2024-08-06T21:36:22.000Z"
+                authors:
+                    type: array
+                    description: Список авторов музыки
+                    items:
+                        $ref: "#/components/schemas/Member"

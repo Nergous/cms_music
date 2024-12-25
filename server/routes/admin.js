@@ -1,18 +1,23 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const {
-    adminController, authController, 
-    colorController, fontController, 
-    textController, imageController,
-    footerController, htmlController,
-    navbarController, pagesController
+    adminController,
+    authController,
+    colorController,
+    fontController,
+    textController,
+    imageController,
+    footerController,
+    htmlController,
+    navbarController,
+    pagesController,
 } = require("../controllers/adminControllers");
 
 const authMiddleware = require("../middleware/authMiddleware");
 const { upload, uploadFavicon, deleteOldLogo, deleteOldFavicon } = require("../middleware/multer");
 
-// Проверка аутентификации администратора
 router.get("/checkAuth", authMiddleware, authController.checkAuth);
+
 router.post("/login", authController.authenticate);
 
 router.post("/update_credentials", authMiddleware, adminController.updateCredentials);
@@ -52,13 +57,14 @@ router.get("/icon_colors", colorController.getIconColors);
 router.post("/save_icon_colors", authMiddleware, colorController.saveIconColors);
 
 // Логотип в шапке
-router.post("/upload_logo",
+router.post(
+    "/upload_logo",
     authMiddleware,
     deleteOldLogo,
     (req, res, next) => {
         upload.single("logo")(req, res, (err) => {
             if (err) {
-                return res.status(400).contentType('text/plain').send(err.message);
+                return res.status(400).contentType("text/plain").send(err.message);
             }
             next();
         });
@@ -68,14 +74,19 @@ router.post("/upload_logo",
 
 // Favicon
 router.get("/get_favicon", imageController.getFavicon);
-router.post("/save_favicon", authMiddleware, (req, res, next) => {
-    uploadFavicon.single('favicon')(req, res, (err) => {
-        if (err) {
-            return res.status(400).contentType('text/plain').send(err.message);
-        }
-        next();
-    });
-}, imageController.saveFavicon);
+router.post(
+    "/save_favicon",
+    authMiddleware,
+    (req, res, next) => {
+        uploadFavicon.single("favicon")(req, res, (err) => {
+            if (err) {
+                return res.status(400).contentType("text/plain").send(err.message);
+            }
+            next();
+        });
+    },
+    imageController.saveFavicon
+);
 
 // Описание страницы
 router.get("/get_description", htmlController.getDescription);

@@ -1,0 +1,202 @@
+openapi: 3.0.0
+info:
+    title: API для управления связями участников и концертов
+    version: 1.0.0
+    description: API для управления связями участников и концертов.
+servers:
+    - url: http://localhost:3001/api
+      description: Локальный сервер разработки
+tags:
+    - name: GigMembers
+      description: Управление связями участников и концертов
+paths:
+    /gig-members:
+        get:
+            summary: Получить список всех связей участников и концертов
+            tags: [GigMembers]
+            responses:
+                200:
+                    description: Список связей успешно получен
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/GigMember"
+                500:
+                    description: Ошибка при получении списка связей
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        post:
+            summary: Создать новую связь участника и концерта
+            tags: [GigMembers]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/GigMember"
+            responses:
+                201:
+                    description: Связь успешно создана
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Success"
+                400:
+                    description: Некорректные данные
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при создании связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+    /gig-members/{id}:
+        get:
+            summary: Получить связи участников и концертов по ID концерта
+            tags: [GigMembers]
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID концерта
+            responses:
+                200:
+                    description: Связи найдены
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/GigMember"
+                404:
+                    description: Связи не найдены
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при получении связей
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        put:
+            summary: Обновить связь участника и концерта по ID
+            tags: [GigMembers]
+            security:
+                - cookieAuth: []
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID связи
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/GigMember"
+            responses:
+                200:
+                    description: Связь успешно обновлена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Success"
+                400:
+                    description: Некорректные данные
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                404:
+                    description: Связь не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при обновлении связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        delete:
+            summary: Удалить связь участника и концерта по ID
+            tags: [GigMembers]
+            security:
+                - cookieAuth: []
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID связи
+            responses:
+                204:
+                    description: Связь успешно удалена
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                404:
+                    description: Связь не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при удалении связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+components:
+    securitySchemes:
+        cookieAuth:
+            type: apiKey
+            in: cookie
+            name: token
+    schemas:
+        Error:
+            type: object
+            properties:
+                error:
+                    type: string
+                    example: "Произошла ошибка"
+        Success:
+            type: object
+            properties:
+                success:
+                    type: string
+                    example: "Операция выполнена успешно"

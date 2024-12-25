@@ -1,0 +1,30 @@
+components:
+    schemas:
+        GigMember:
+            type: object
+            required:
+                - id_member
+                - id_gig
+            properties:
+                id:
+                    type: integer
+                    description: Автогенерируемый ID связи
+                    example: 1
+                id_member:
+                    type: integer
+                    description: ID участника
+                    example: 5
+                id_gig:
+                    type: integer
+                    description: ID концерта
+                    example: 10
+                createdAt:
+                    type: string
+                    format: date-time
+                    description: Дата создания записи в таблице
+                    example: "2024-09-07T11:09:28.000Z"
+                updatedAt:
+                    type: string
+                    format: date-time
+                    description: Дата последнего обновления записи в таблице
+                    example: "2024-09-07T11:09:28.000Z"

@@ -2,7 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const path = require('path');
+const path = require("path");
+const swaggerSetup = require("./swagger/swagger");
 const app = express();
 
 const db = require("./models");
@@ -36,13 +37,14 @@ app.use("/api/music_roles", music_roleRouter);
 app.use("/api/admin", adminRouter);
 
 // Обслуживание статических файлов
-app.use('/api/uploads', express.static(path.join(__dirname, '../client/public/uploads')));
-app.use(express.static(path.join(__dirname, '../client/public/uploads')))
+app.use("/api/uploads", express.static(path.join(__dirname, "../client/public/uploads")));
+app.use(express.static(path.join(__dirname, "../client/public/uploads")));
 
-// Перенаправление всех запросов на index.html
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/public', 'index.html'));
+swaggerSetup(app);
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/public", "index.html"));
 });
+
 
 const PORT = process.env.PORT || 3001;
 

@@ -1,0 +1,200 @@
+openapi: 3.0.0
+info:
+    title: API для управления участниками
+    version: 1.0.0
+    description: API для управления участниками.
+servers:
+    - url: http://localhost:3001/api
+      description: Локальный сервер разработки
+tags:
+    - name: Members
+      description: Управление участниками
+paths:
+    /members:
+        get:
+            summary: Получить список всех участников
+            tags: [Members]
+            responses:
+                200:
+                    description: Список участников успешно получен
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Member"
+                500:
+                    description: Ошибка при получении списка участников
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        post:
+            summary: Создать нового участника
+            tags: [Members]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Member"
+            responses:
+                201:
+                    description: Участник успешно создан
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Success"
+                400:
+                    description: Некорректные данные
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при создании участника
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+    /members/{id}:
+        get:
+            summary: Получить участника по ID
+            tags: [Members]
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID участника
+            responses:
+                200:
+                    description: Участник найден
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Member"
+                404:
+                    description: Участник не найден
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при получении участника
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        put:
+            summary: Обновить участника по ID
+            tags: [Members]
+            security:
+                - cookieAuth: []
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID участника
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Member"
+            responses:
+                200:
+                    description: Участник успешно обновлен
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Success"
+                400:
+                    description: Некорректные данные
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                404:
+                    description: Участник не найден
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при обновлении участника
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        delete:
+            summary: Удалить участника по ID
+            tags: [Members]
+            security:
+                - cookieAuth: []
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID участника
+            responses:
+                204:
+                    description: Участник успешно удален
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                404:
+                    description: Участник не найден
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при удалении участника
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+components:
+    securitySchemes:
+        cookieAuth:
+            type: apiKey
+            in: cookie
+            name: token
+    schemas:
+        Error:
+            type: object
+            properties:
+                error:
+                    type: string
+                    example: "Произошла ошибка"
+        Success:
+            type: object
+            properties:
+                success:
+                    type: string
+                    example: "Операция выполнена успешно"

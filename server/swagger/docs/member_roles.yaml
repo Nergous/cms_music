@@ -1,0 +1,151 @@
+openapi: 3.0.0
+info:
+    title: API для управления связями участников и ролей
+    version: 1.0.0
+    description: API для управления связями участников и ролей.
+servers:
+    - url: http://localhost:3001/api
+      description: Локальный сервер разработки
+tags:
+    - name: MemberRoles
+      description: Управление связями участников и ролей
+paths:
+    /member-roles:
+        get:
+            summary: Получить список всех связей участников и ролей
+            tags: [MemberRoles]
+            responses:
+                200:
+                    description: Список связей успешно получен
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/MemberRole"
+                500:
+                    description: Ошибка при получении списка связей
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        post:
+            summary: Создать новую связь участника и роли
+            tags: [MemberRoles]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/MemberRole"
+            responses:
+                201:
+                    description: Связь успешно создана
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Success"
+                400:
+                    description: Некорректные данные
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при создании связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+    /member-roles/{id}:
+        get:
+            summary: Получить связь участника и роли по ID
+            tags: [MemberRoles]
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID связи
+            responses:
+                200:
+                    description: Связь найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/MemberRole"
+                404:
+                    description: Связь не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при получении связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        delete:
+            summary: Удалить связь участника и роли по ID
+            tags: [MemberRoles]
+            security:
+                - cookieAuth: []
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID связи
+            responses:
+                204:
+                    description: Связь успешно удалена
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                404:
+                    description: Связь не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при удалении связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+components:
+    securitySchemes:
+        cookieAuth:
+            type: apiKey
+            in: cookie
+            name: token
+    schemas:
+        Error:
+            type: object
+            properties:
+                error:
+                    type: string
+                    example: "Произошла ошибка"
+        Success:
+            type: object
+            properties:
+                success:
+                    type: string
+                    example: "Операция выполнена успешно"

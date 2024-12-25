@@ -104,7 +104,7 @@ const RecordsController = {
                 await Promise.all(authorPromise);
             }
 
-            res.status(200).json({ success: "Релиз успешно добавлен" });
+            res.status(201).json({ success: "Релиз успешно добавлен" });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Ошибка при добавлении релиза" });
@@ -317,7 +317,7 @@ const RecordsController = {
                 }
             }
 
-            res.status(200).json({ success: "Релиз успешно добавлен" });
+            res.status(201).json({ success: "Релиз успешно добавлен" });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Ошибка при добавлении релиза" });

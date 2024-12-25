@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+    title: API для управления связями треков и записей
+    version: 1.0.0
+    description: API для управления связями треков и записей (альбомов/плейлистов).
+servers:
+    - url: http://localhost:3001/api
+      description: Локальный сервер разработки
+tags:
+    - name: TracksInRecord
+      description: Управление связями треков и записей (альбомов/плейлистов)
+paths:
+    /tracks-in-record:
+        get:
+            summary: Получить список всех связей треков и записей
+            tags: [TracksInRecord]
+            responses:
+                200:
+                    description: Список связей треков и записей успешно получен
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/TracksInRecord"
+                500:
+                    description: Ошибка при получении списка связей
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        post:
+            summary: Создать новую связь трека и записи
+            tags: [TracksInRecord]
+            security:
+                - cookieAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/TracksInRecord"
+            responses:
+                201:
+                    description: Связь успешно создана
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Success"
+                400:
+                    description: Некорректные данные
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при создании связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+    /tracks-in-record/{id}:
+        get:
+            summary: Получить связь трека и записи по ID
+            tags: [TracksInRecord]
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID связи
+            responses:
+                200:
+                    description: Связь найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TracksInRecord"
+                404:
+                    description: Связь не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при получении связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        delete:
+            summary: Удалить связь трека и записи по ID
+            tags: [TracksInRecord]
+            security:
+                - cookieAuth: []
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+                  description: ID связи
+            responses:
+                200:
+                    description: Связь успешно удалена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Success"
+                401:
+                    description: Пользователь не авторизован
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                404:
+                    description: Связь не найдена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                500:
+                    description: Ошибка при удалении связи
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+components:
+    securitySchemes:
+        cookieAuth:
+            type: apiKey
+            in: cookie
+            name: token
+    schemas:
+        Error:
+            type: object
+            properties:
+                error:
+                    type: string
+                    example: "Произошла ошибка"
+        Success:
+            type: object
+            properties:
+                success:
+                    type: string
+                    example: "Операция выполнена успешно"

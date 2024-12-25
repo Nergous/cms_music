@@ -105,7 +105,7 @@ const MembersController = {
 
             res.status(200).json(newMember);
         } catch (_error) {
-            res.status(500).json({ error: "Ошибка при сохранении участника в базу данных: " + _error });
+            res.status(500).json({ error: "Ошибка при создании участника " + _error });
         }
     },
 
@@ -156,7 +156,7 @@ const MembersController = {
 
             res.status(200).json(member);
         } catch (error) {
-            res.status(500).json({ error: "Ошибка при обновлении участника в базе данных" + error });
+            res.status(500).json({ error: "Ошибка при обновлении участника: " + error });
         }
     },
 
