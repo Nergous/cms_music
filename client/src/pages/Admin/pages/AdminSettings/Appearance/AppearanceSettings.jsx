@@ -8,11 +8,13 @@ const AppeareanceSettings = forwardRef(({ api }, ref) => {
         <div ref={ref}>
             <h1 style={{ marginTop: "30px" }}>Настройки внешнего вида</h1>
             <h2 style={{ marginTop: "30px" }}></h2>
-            <Link to="/admin/editor">
-                <CButton color="primary" style={{ marginTop: "30px" }}>
-                    Визуальный редактор
-                </CButton>
-            </Link>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <Link to="/admin/editor">
+                    <CButton color="primary" style={{ width: "1000px" }}>
+                        Визуальный редактор
+                    </CButton>
+                </Link>
+            </div>
 
             <MainText id="mainText" label="Главный текст" api={api} />
             <FooterEdit id="footerEdit" label="Подвал" api={api} />
