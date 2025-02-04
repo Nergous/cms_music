@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect, useCallback, useContext, useRef, useMemo } from "react";
 import Modal from "../../components/Modal/Modal";
 import Member from "./Member/Member";
 import LazyLoad from "react-lazyload";
@@ -8,10 +8,10 @@ import Spinner from "../../components/Spinner/Spinner";
 import ApiContext from "../../ApiContext";
 import axios from "axios";
 import { loadBlockTypes } from "../../utils/loadBlockTypes";
+import _ from "lodash"; // Для debounce
 
-const Members = ({ pageName }) => {
+const Members = React.memo(({ pageName }) => {
     const apiUrl = useContext(ApiContext);
-
     const [modal, setModal] = useState(false);
     const [members, setMembers] = useState([]);
     const [selectedMember, setSelectedMember] = useState(null);
@@ -19,9 +19,15 @@ const Members = ({ pageName }) => {
     const [loading, setLoading] = useState(true);
     const [fontColor, setFontColor] = useState("#000000");
     const [pageStructure, setPageStructure] = useState([]);
-    const blockTypes = loadBlockTypes();
+    const [blockTypes, setBlockTypes] = useState({});
+    const blockComponents = useRef({});
 
+    // Загрузка типов блоков
     useEffect(() => {
+        const getBlockTypes = async () => {
+            const blocks = await loadBlockTypes();
+            setBlockTypes(blocks);
+        };
         const fetchFontColor = async () => {
             try {
                 const res = await axios.get(`${apiUrl}/admin/font_colors`);
@@ -30,12 +36,10 @@ const Members = ({ pageName }) => {
                 setFontColor("#000000");
             }
         };
-
         const fetchPageStructure = async () => {
             try {
                 const response = await axios.get(`${apiUrl}/admin/load_page/${pageName}`);
                 setPageStructure(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error("Ошибка при загрузке структуры страницы:", error);
             }
@@ -47,16 +51,18 @@ const Members = ({ pageName }) => {
                 const filteredData = data.filter((item) => item.is_member !== false);
                 setMembers(filteredData);
             } catch (error) {
+                console.error("Ошибка при загрузке участников:", error);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchFontColor();
         fetchPageStructure();
         fetchMembers();
-    }, []);
+        getBlockTypes();
+    }, [apiUrl, pageName]);
 
+    // Блокируем скролл при открытом модальном окне
     useEffect(() => {
         if (modal) {
             document.body.style.overflow = "hidden";
@@ -65,31 +71,46 @@ const Members = ({ pageName }) => {
         }
     }, [modal]);
 
+    // Мемоизация массива участников
+    const filteredMembers = useMemo(() => members.filter((item) => item.is_member !== false), [members]);
+
+    // Обработчики событий мыши с дебаунсированием
+    const debouncedHandleMouseEnter = useCallback(
+        _.debounce((id) => setHoveredId(id), 200),
+        []
+    );
+
+    const debouncedHandleMouseLeave = useCallback(
+        _.debounce(() => setHoveredId(null), 200),
+        []
+    );
+
     const handleMemberClick = useCallback((member) => {
         setSelectedMember(member);
         setModal(true);
     }, []);
 
-    const handleMouseEnter = useCallback((id) => {
-        setHoveredId(id);
-    }, []);
-
-    const handleMouseLeave = useCallback(() => {
-        setHoveredId(null);
-    }, []);
-
-    const renderBlock = (block) => {
-        const BlockComponent = blockTypes[block.type]?.component;
-        if (BlockComponent) {
-            const Block = React.lazy(() => import(`../../components/Blocks/${BlockComponent}`));
-            return (
-                <React.Suspense fallback={<div>Загрузка...</div>}>
-                    <Block id={block.id} content={block.content} />
-                </React.Suspense>
-            );
-        }
-        return null;
-    };
+    // Функция для рендера блоков
+    const renderBlock = useCallback(
+        (block) => {
+            if (Object.keys(blockTypes).length === 0) return null;
+            const BlockComponent = blockTypes[block.type]?.component;
+            if (BlockComponent) {
+                console.log("чмо");
+                if (!blockComponents.current[BlockComponent]) {
+                    blockComponents.current[BlockComponent] = React.lazy(() => import(`../../components/Blocks/${BlockComponent}`));
+                }
+                const Block = blockComponents.current[BlockComponent];
+                return (
+                    <React.Suspense fallback={<div>Загрузка...</div>}>
+                        <Block id={block.id} content={block.content} />
+                    </React.Suspense>
+                );
+            }
+            return null;
+        },
+        [blockTypes] // Убираем зависимость от blockTypes
+    );
 
     if (loading) {
         return <Spinner color={fontColor} />;
@@ -101,21 +122,21 @@ const Members = ({ pageName }) => {
                 Участники
             </h1>
             <div className={cl.main}>
-                {members.length === 0 && (
+                {filteredMembers.length === 0 && (
                     <h1 className={cl.title} style={{ textAlign: "center", margin: "0 auto", color: fontColor }}>
                         Похоже здесь нет участников
                     </h1>
                 )}
-                {members.length > 0 && (
+                {filteredMembers.length > 0 && (
                     <>
-                        {members.map((member) => (
+                        {filteredMembers.map((member) => (
                             <LazyLoad key={member.id} once>
                                 <MemberButton
                                     member={member}
                                     isHovered={hoveredId === member.id}
                                     onClick={() => handleMemberClick(member)}
-                                    onMouseEnter={() => handleMouseEnter(member.id)}
-                                    onMouseLeave={handleMouseLeave}
+                                    onMouseEnter={() => debouncedHandleMouseEnter(member.id)}
+                                    onMouseLeave={debouncedHandleMouseLeave}
                                 />
                             </LazyLoad>
                         ))}
@@ -134,6 +155,6 @@ const Members = ({ pageName }) => {
             </div>
         </>
     );
-};
+});
 
 export default Members;

@@ -1,7 +1,6 @@
 import React from "react";
 import { CCard, CCardBody, CCardTitle, CCardText, CCol, CRow, CButton } from "@coreui/react";
 import { Link } from "react-router-dom";
-import DefaultLayout from "../../layout/DefaultLayout";
 
 const AdminDashboard = () => {
     return (

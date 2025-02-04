@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { CForm, CFormInput, CCol, CButton, CFormSelect, CListGroupItem, CListGroup, CFormLabel, CImage, CAlert } from "@coreui/react";
+import { CForm, CFormInput, CCol, CFormTextarea, CButton, CFormSelect, CListGroupItem, CListGroup, CFormLabel, CImage, CAlert, CFormText } from "@coreui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -83,6 +83,7 @@ const CreateMusic = () => {
                 participants: [],
                 selectedParticipant: "",
                 audioPreview: null,
+                track_lyrics: "",
             },
         ]);
     };
@@ -131,6 +132,7 @@ const CreateMusic = () => {
                     participants: [],
                     selectedParticipant: "",
                     audioPreview: null,
+                    track_lyrics: "",
                 },
             ]);
         } else {
@@ -314,6 +316,14 @@ const CreateMusic = () => {
                                         Your browser does not support the audio element.
                                     </audio>
                                 )}
+                            </CCol>
+                            <CCol md={8}>
+                                <CFormTextarea
+                                    feedbackValid="Всё хорошо!"
+                                    value={track.track_lyrics}
+                                    onChange={(e) => handleTrackChange(trackIndex, "track_lyrics", e.target.value)}
+                                    label={`Текст трека ${trackIndex + 1}`}
+                                    placeholder="Текст трека"></CFormTextarea>
                             </CCol>
                             <CCol md={8}>
                                 <CFormSelect

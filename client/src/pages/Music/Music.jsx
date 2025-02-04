@@ -9,19 +9,24 @@ import ApiContext from "../../ApiContext";
 
 const Music = () => {
     const apiUrl = useContext(ApiContext);
-
     const [musicList, setMusicList] = useState([]);
     const [fontColor, setFontColor] = useState("#000000");
     const [selectedMusic, setSelectedMusic] = useState(null);
     const [modal, setModal] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [containerType, setContainerType] = useState("image"); // Тип контейнера (button или image)
 
     useEffect(() => {
         const fetchMusic = async () => {
             try {
                 const response = await axios.get(`${apiUrl}/record`);
                 setMusicList(response.data);
+
+                // Предположим, что тип контейнера приходит как поле в ответе сервера
+                if (response.data && response.data.containerType) {
+                    setContainerType(response.data.containerType || "image");
+                }
             } catch (err) {
                 setError(err);
             } finally {
@@ -69,16 +74,27 @@ const Music = () => {
 
     return (
         <div className={cl.music__container}>
+            {/* Заголовок остается независимым */}
             <h1 style={{ color: fontColor }} className={cl.music__title}>
                 Музыка
             </h1>
-            {musicList.length > 0 ? (
-                musicList.map((music) => <MusicButton key={music.id} music={music} handleMusicClick={handleMusicClick} />)
-            ) : (
-                <h1 style={{ color: fontColor }} className={cl.music__title}>
-                    Пока что здесь ничего нет
-                </h1>
-            )}
+
+            {/* Контейнер для кнопок */}
+            <div className={`${cl.music_buttons_container} ${containerType === "image" ? cl["image-grid"] : ""}`}>
+                {musicList.length > 0 ? (
+                    musicList.map((music) => (
+                        <MusicButton
+                            key={music.id}
+                            variant={containerType} // Используем тип контейнера для определения варианта
+                            music={music}
+                            handleMusicClick={handleMusicClick}
+                        />
+                    ))
+                ) : (
+                    <h1 style={{ color: fontColor, textAlign: "center" }}>Пока что здесь ничего нет</h1>
+                )}
+            </div>
+
             {selectedMusic && (
                 <Modal visible={modal} setVisible={setModal}>
                     <MusicPanel id={selectedMusic.id} />

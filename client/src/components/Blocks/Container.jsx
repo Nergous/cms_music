@@ -1,8 +1,9 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, memo } from "react";
 import { loadBlockTypes } from "../../utils/loadBlockTypes";
 
-const Container = ({ content: blockList }) => {
+const Container = memo(({ content: blockList }) => {
     const blockTypes = loadBlockTypes();
+    
     const renderBlock = (block) => {
         const BlockComponent = blockTypes[block.type]?.component;
         if (BlockComponent) {
@@ -17,7 +18,7 @@ const Container = ({ content: blockList }) => {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
             {blockList.map((block) => (
                 <div key={block.id} style={{ marginBottom: "20px" }}>
                     {renderBlock(block)}
@@ -25,6 +26,6 @@ const Container = ({ content: blockList }) => {
             ))}
         </div>
     );
-};
+});
 
 export default Container;

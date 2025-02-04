@@ -53,7 +53,6 @@ const Gig = ({ gig }) => {
                             {gig.gig_status === "canceled" && <h2 style={{ color: "red" }}>Отменен</h2>}
                             <p>{gig.place}</p>
                             <p>{formatDate(gig.date_of_gig)}</p>
-
                             {gigData && gigData.members && (
                                 <>
                                     <h3>Участники</h3>

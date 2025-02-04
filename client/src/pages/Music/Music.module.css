@@ -1,17 +1,40 @@
+/* Общий контейнер */
 .music__container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 800px;
-    margin: 0 auto;
+    width: 80%; /* Ширина основного контейнера */
+    margin: 0 auto; /* Центрируем контейнер на странице */
 }
 
-@media screen and (max-width: 800px) {
+/* Контейнер для кнопок */
+.music_buttons_container {
+    width: 100%; /* Занимает всю доступную ширину */
+    margin: 0 auto; /* Центрируем контейнер кнопок */
+}
+
+/* Добавляем грид для двух колонок при containerType="image" */
+.music_buttons_container.image-grid {
+    display: grid;
+    justify-content: space-around; /* Располагаем колонки с большим расстоянием */
+    grid-template-columns: repeat(2, minmax(200px, 1fr)); /* Две колонки с минимальной шириной 200px */
+    gap: 40px; /* Увеличиваем отступ между элементами */
+}
+
+/* Адаптивность для smaller экранов */
+@media screen and (max-width: 1050px) {
     .music__container {
-        width: 95vw;
+        width: 95vw; /* Уменьшаем ширину контейнера для маленьких экранов */
+    }
+
+    /* На маленьких экранах всегда одна колонка */
+    .music_buttons_container.image-grid {
+        grid-template-columns: 1fr; /* Одна колонка */
+        gap: 20px; /* Уменьшаем отступы */
     }
 }
 
+/* Стандартная кнопка */
 .music {
     margin: 30px;
     width: 100%;
@@ -21,6 +44,9 @@
     font-size: 25px;
     background-color: #fff;
     color: black;
+    border: none;
+    cursor: pointer;
+    outline: none;
 }
 
 .music:hover {
@@ -28,10 +54,32 @@
     box-shadow: 0px 0px 5px 5px rgba(78, 78, 78, 0.9);
 }
 
-.music__title {
-    color: white;
+/* Кнопка с изображением */
+.music_image {
+    margin: 0 auto; /* Убираем отступы, так как они будут управляться гридом */
+    width: 100%; /* Занимает всю ширину своей колонки */
+    height: 200px; /* Высота кнопки */
+    border-radius: 15px;
+    transition: all 0.5s ease-in;
+    font-size: 25px;
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный фон */
+    color: transparent; /* Текст невидимый по умолчанию */
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
+.music_image:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* Темнее при наведении */
+    color: white; /* Показываем текст */
+    background-blend-mode: overlay;
+}
+
+/* Ошибки */
 .error {
     color: white;
     font-size: 25px;

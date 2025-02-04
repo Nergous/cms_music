@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
                 key: "id",
             },
         },
+        track_lyrics: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        }
     });
     return tracks;
 };

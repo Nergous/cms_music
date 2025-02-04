@@ -82,6 +82,7 @@ const RecordsController = {
                     track_name: trackFile[i].name,
                     path_to_file: relativePath,
                     lyrics_author: trackFile[i].author,
+                    track_lyrics: trackFile[i].track_lyrics,
                 };
 
                 const track = await tracks.create(trackData);
@@ -213,6 +214,7 @@ const RecordsController = {
                         const trackData = {
                             track_name: tracksRecord[i].track_name,
                             lyrics_author: tracksRecord[i].lyrics_author,
+                            track_lyrics: tracksRecord[i].track_lyrics,
                         };
 
                         const filePath = trackFiles.find(
@@ -249,6 +251,7 @@ const RecordsController = {
                     );
                     existingTrack.track_name = tracksRecord[i].track_name;
                     existingTrack.lyrics_author = tracksRecord[i].lyrics_author;
+                    existingTrack.track_lyrics = tracksRecord[i].track_lyrics;
                     if (trackFiles) {
                         if (
                             trackFiles.find(

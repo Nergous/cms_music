@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { CForm, CFormInput, CCol, CButton, CFormSelect, CListGroup, CListGroupItem, CFormLabel, CImage } from "@coreui/react";
+import { CForm, CFormInput, CFormTextarea, CCol, CButton, CFormSelect, CListGroup, CListGroupItem, CFormLabel, CImage } from "@coreui/react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import ApiContext from "../../../../ApiContext";
@@ -200,9 +200,8 @@ const EditMusic = () => {
             });
 
             try {
-
                 // for (var pair of formData.entries()) {
-                //     console.log(pair[0]+ ', ' + pair[1]); 
+                //     console.log(pair[0]+ ', ' + pair[1]);
                 // }
                 // return;
                 const response = await axios.put(`${api}/record/${id}`, formData, { withCredentials: true });
@@ -321,6 +320,14 @@ const EditMusic = () => {
                                         Your browser does not support the audio element.
                                     </audio>
                                 )}
+                            </CCol>
+                            <CCol md={8}>
+                                <CFormTextarea
+                                    feedbackValid="Всё хорошо!"
+                                    value={track.track_lyrics}
+                                    onChange={(e) => handleTrackChange(trackIndex, "track_lyrics", e.target.value)}
+                                    label={`Текст трека ${trackIndex + 1}`}
+                                    placeholder="Текст трека"></CFormTextarea>
                             </CCol>
                             <CCol md={8}>
                                 <CFormSelect
