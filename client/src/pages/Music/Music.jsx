@@ -22,15 +22,19 @@ const Music = () => {
             try {
                 const response = await axios.get(`${apiUrl}/record`);
                 setMusicList(response.data);
-
-                // Предположим, что тип контейнера приходит как поле в ответе сервера
-                if (response.data && response.data.containerType) {
-                    setContainerType(response.data.containerType || "image");
-                }
             } catch (err) {
                 setError(err);
             } finally {
                 setLoading(false);
+            }
+        };
+
+        const fetchMusicDisplayMode = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/admin/get_music_display_mode`);
+                setContainerType(response.data.displayMode || "default");
+            } catch (err) {
+                setError(err);
             }
         };
 
@@ -45,6 +49,7 @@ const Music = () => {
 
         fetchFontColor();
         fetchMusic();
+        fetchMusicDisplayMode();
     }, []);
 
     useEffect(() => {

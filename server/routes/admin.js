@@ -11,6 +11,7 @@ const {
     htmlController,
     navbarController,
     pagesController,
+    musicDisplayModeController
 } = require("../controllers/adminControllers");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -99,6 +100,9 @@ router.post("/save_title", authMiddleware, htmlController.saveTitle);
 // Навигационная панель
 router.get("/navbar_settings", navbarController.getNavbarSettings);
 router.post("/save_navbar_settings", authMiddleware, navbarController.saveNavbarSettings);
+
+router.get("/get_music_display_mode", musicDisplayModeController.getMusicDisplayMode);
+router.post("/save_music_display_mode", authMiddleware, musicDisplayModeController.saveMusicDisplayMode);
 
 // Страница
 router.get("/load_page/:pageName", pagesController.loadPage);

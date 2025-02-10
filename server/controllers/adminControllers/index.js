@@ -8,6 +8,7 @@ const footerController = require("./footerController");
 const htmlController = require("./htmlController");
 const navbarController = require("./navbarController");
 const pagesController = require("./pagesController");
+const musicDisplayModeController = require("./musicDisplayModeController");
 
 module.exports = {
     adminController,
@@ -19,5 +20,6 @@ module.exports = {
     footerController,
     htmlController,
     navbarController,
-    pagesController
+    pagesController,
+    musicDisplayModeController
 };

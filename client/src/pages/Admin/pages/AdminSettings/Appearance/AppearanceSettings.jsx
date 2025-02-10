@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import { Link } from "react-router-dom";
-import { LogoEdit, CarouselEdit, MainText, FooterEdit, FontEdit, ColorEdit, FontColorEdit, IconColorEdit, NavbarEdit } from "./SettingsComponents";
+import { LogoEdit, CarouselEdit, FooterEdit, FontEdit, ColorEdit, FontColorEdit, IconColorEdit, NavbarEdit, MusicEdit } from "./SettingsComponents";
 import { CButton } from "@coreui/react";
 
 const AppeareanceSettings = forwardRef(({ api }, ref) => {
@@ -16,7 +16,6 @@ const AppeareanceSettings = forwardRef(({ api }, ref) => {
                 </Link>
             </div>
 
-            <MainText id="mainText" label="Главный текст" api={api} />
             <FooterEdit id="footerEdit" label="Подвал" api={api} />
             <CarouselEdit id="carouselEdit" label="Фото-Карусель" api={api} />
             <LogoEdit id="logoEdit" label="Логотип" api={api} />
@@ -25,6 +24,7 @@ const AppeareanceSettings = forwardRef(({ api }, ref) => {
             <FontColorEdit id="fontColorEdit" label="Цвета шрифта" api={api} />
             <IconColorEdit id="iconColorEdit" label="Цвета иконок" api={api} />
             <NavbarEdit id="navbarEdit" label="Вид навигационной панели" api={api} />
+            <MusicEdit id="musicEdit" label="Вид карточки музыки" api={api} />
         </div>
     );
 });
