@@ -51,7 +51,6 @@ const EditablePage = ({
 
     useEffect(() => {
         setEditableBlocks(structure);
-        console.log(structure);
     }, [structure]);
 
     const handleBlockChange = (updatedBlocks) => {

@@ -5,7 +5,6 @@ const {
     authController,
     colorController,
     fontController,
-    textController,
     imageController,
     footerController,
     htmlController,
@@ -15,17 +14,14 @@ const {
 } = require("../controllers/adminControllers");
 
 const authMiddleware = require("../middleware/authMiddleware");
-const { upload, uploadFavicon, deleteOldLogo, deleteOldFavicon } = require("../middleware/multer");
+const { upload, uploadFavicon, deleteOldLogo, deleteOldFavicon, uploadImg } = require("../middleware/multer");
+
 
 router.get("/checkAuth", authMiddleware, authController.checkAuth);
 
 router.post("/login", authController.authenticate);
 
 router.post("/update_credentials", authMiddleware, adminController.updateCredentials);
-
-// Текст на главной странице
-router.get("/load", textController.loadText);
-router.post("/save", authMiddleware, textController.saveText);
 
 // Изображения в каруселе на главной странице
 router.get("/images", imageController.getImages);
@@ -107,5 +103,7 @@ router.post("/save_music_display_mode", authMiddleware, musicDisplayModeControll
 // Страница
 router.get("/load_page/:pageName", pagesController.loadPage);
 router.post("/save_page", authMiddleware, pagesController.savePage);
+
+router.post('/upload', uploadImg.single('file'), pagesController.upload); 
 
 module.exports = router;

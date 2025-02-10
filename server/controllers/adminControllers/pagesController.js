@@ -1,6 +1,7 @@
 // server/controllers/pagesController.js
 const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
 
 const configPath = path.join(__dirname, "../../../client/config_cms.json");
 
@@ -30,6 +31,7 @@ exports.loadPage = (req, res) => {
 
 exports.savePage = (req, res) => {
     const { pageName, page } = req.body;
+    console.log(page);
 
     if (!pageName || !page) {
         return res.status(400).json({ error: "Имя страницы и данные страницы обязательны" });
@@ -60,4 +62,13 @@ exports.savePage = (req, res) => {
             res.status(500).json({ error: "Ошибка при парсинге JSON" });
         }
     });
+};
+
+exports.upload = (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: "Файл не был загружен." });
+    }
+
+    const filePath = `/uploads/${req.file.filename}`;
+    res.json({ path: filePath });
 };

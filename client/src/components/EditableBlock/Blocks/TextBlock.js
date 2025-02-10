@@ -42,7 +42,7 @@ const TextBlockComponent = ({ id, content, onEdit, onDelete }) => {
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
         ['blockquote', 'code-block'],
-        ['link', 'image', 'video', 'formula'],
+        ['link'],
 
         [{ 'header': 1 }, { 'header': 2 }],               // custom button values
         [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
@@ -77,7 +77,7 @@ const TextBlockComponent = ({ id, content, onEdit, onDelete }) => {
                                 value={text}
                                 onChange={setText}
                                 modules={{ toolbar: toolbarOptions }}
-                                style={{ height: 'auto' }}
+                                style={{ height: 'auto', backgroundColor: 'white', color: 'black' }}
                             />
                             <CButton color="primary" onClick={handleSave} className="mt-3">Сохранить</CButton>
                         </div>

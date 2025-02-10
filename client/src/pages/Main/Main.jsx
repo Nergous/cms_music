@@ -1,5 +1,5 @@
 // src/pages/Main/Main.jsx
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback, useRef } from "react";
 import axios from "axios";
 import HTMLReactParser from "html-react-parser/lib/index";
 import CarouselMy from "../../components/Carousel/CarouselMy";
@@ -16,6 +16,7 @@ const Main = ({ pageName }) => {
     const [fontColor, setFontColor] = useState("#000000");
     const [pageStructure, setPageStructure] = useState([]);
     const blockTypes = loadBlockTypes();
+    const blockComponents = useRef({});
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -26,13 +27,6 @@ const Main = ({ pageName }) => {
             } catch (error) {
                 setHasImages(false);
             }
-        };
-
-        const fetchText = async () => {
-            try {
-                const response = await axios.get(`${apiUrl}/admin/load`);
-                setText(response.data.MainText);
-            } catch (error) {}
         };
 
         const fetchFontColor = async () => {
@@ -55,28 +49,33 @@ const Main = ({ pageName }) => {
 
         fetchFontColor();
         fetchImages();
-        fetchText();
         fetchPageStructure();
     }, [apiUrl, pageName]);
 
-    const renderBlock = (block) => {
-        const BlockComponent = blockTypes[block.type]?.component;
-        if (BlockComponent) {
-            const Block = React.lazy(() => import(`../../components/Blocks/${BlockComponent}`));
-            return (
-                <React.Suspense fallback={<div>Загрузка...</div>}>
-                    <Block id={block.id} content={block.content} />
-                </React.Suspense>
-            );
-        }
-        return null;
-    };
+    const renderBlock = useCallback(
+        (block) => {
+            if (Object.keys(blockTypes).length === 0) return null;
+            const BlockComponent = blockTypes[block.type]?.component;
+            if (BlockComponent) {
+                if (!blockComponents.current[BlockComponent]) {
+                    blockComponents.current[BlockComponent] = React.lazy(() => import(`../../components/Blocks/${BlockComponent}`));
+                }
+                const Block = blockComponents.current[BlockComponent];
+                return (
+                    <React.Suspense fallback={<div>Загрузка...</div>}>
+                        <Block id={block.id} content={block.content} />
+                    </React.Suspense>
+                );
+            }
+            return null;
+        },
+        [blockTypes] 
+    );
 
     return (
-        <div style={{maxWidth: "80%", margin: "0 auto"}}>
+        <div style={{ maxWidth: "80%", margin: "0 auto" }}>
             <div>{hasImages && <CarouselMy imgs={images} />}</div>
-            <div style={{ color: fontColor }} className={cl.text}>{HTMLReactParser(text)}</div>
-            <div style={{ display: "flex", flexDirection: "column"}}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
                 {pageStructure.map((block) => (
                     <div key={block.id} style={{ marginBottom: "20px" }}>
                         {renderBlock(block)}

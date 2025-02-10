@@ -26,6 +26,19 @@ const storage = multer.diskStorage({
     },
 });
 
+
+const storageImg = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../client/public/uploads');
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + path.extname(file.originalname);
+        cb(null, uniqueSuffix);
+    },
+});
+
+const uploadImg = multer({ storage: storageImg });
+
 const imageFileFilter = (req, file, cb) => {
     const filetypes = /jpeg|jpg|png/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -79,4 +92,4 @@ const deleteOldFavicon = (req, res, next) => {
     }
 };
 
-module.exports = { upload, uploadFavicon, deleteOldLogo, deleteOldFavicon };
+module.exports = { upload, uploadFavicon, deleteOldLogo, deleteOldFavicon, uploadImg };

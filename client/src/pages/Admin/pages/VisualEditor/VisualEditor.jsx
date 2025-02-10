@@ -46,6 +46,7 @@ const VisualEditor = () => {
     };
 
     const savePageStructure = () => {
+        console.log(pageStructure);
         axios
             .post(
                 `${api}/admin/save_page`,

@@ -10,5 +10,9 @@
     "ContainerBlock": {
         "component": "Container",
         "isRecursive": false
+    },
+    "ImageBlock": {
+        "component": "Image",
+        "isRecursive": true
     }
 }

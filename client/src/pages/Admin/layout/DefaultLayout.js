@@ -1,5 +1,6 @@
 import React from "react";
 import { AppHeader, AppSidebar, AppFooter } from "../components";
+import '@coreui/coreui/dist/css/coreui.min.css'
 
 const DefaultLayout = ({ children }) => {
     return (
