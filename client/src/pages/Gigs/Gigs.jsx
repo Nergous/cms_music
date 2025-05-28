@@ -63,10 +63,7 @@ const Gigs = () => {
             {gigs.length > 0 ? (
                 <div className={cl.gig_block}>
                     {gigs.map((gig) => (
-                        <Gig gig={gig} key={gig.id} />
-                        // <button className={cl.gig__panel} key={gig.id} onClick={() => handleGigClick(gig)}>
-                        //     {gig.title}
-                        // </button>
+                        <Gig gig={gig} key={gig.id} index={gigs.indexOf(gig)} />
                     ))}
                 </div>
             ) : (

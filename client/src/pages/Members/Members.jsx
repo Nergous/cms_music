@@ -134,6 +134,7 @@ const Members = React.memo(({ pageName }) => {
                             <LazyLoad key={member.id} once>
                                 <MemberButton
                                     member={member}
+                                    index={filteredMembers.indexOf(member)}
                                     isHovered={hoveredId === member.id}
                                     onClick={() => handleMemberClick(member)}
                                     onMouseEnter={() => debouncedHandleMouseEnter(member.id)}

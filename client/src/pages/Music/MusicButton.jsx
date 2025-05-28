@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import cl from "./Music.module.css";
 
-const MusicButton = ({ music, handleMusicClick, variant = "default" }) => {
+const MusicButton = ({ music, handleMusicClick, index, variant = "default" }) => {
     const [animate, setAnimate] = useState(false);
 
     useEffect(() => {
@@ -26,6 +26,7 @@ const MusicButton = ({ music, handleMusicClick, variant = "default" }) => {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    animationDelay: `${index * 100}ms`,
                 }}>
                 <span>{music.record_name}</span>
             </button>

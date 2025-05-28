@@ -91,6 +91,7 @@ const Music = () => {
                     musicList.map((music) => (
                         <MusicButton
                             key={music.id}
+                            index={musicList.indexOf(music)}
                             variant={containerType} // Используем тип контейнера для определения варианта
                             music={music}
                             handleMusicClick={handleMusicClick}

@@ -3,7 +3,7 @@ import axios from "axios";
 import cl from "./Gig.module.css";
 import ApiContext from "../../../ApiContext";
 
-const Gig = ({ gig }) => {
+const Gig = ({ gig, index }) => {
     const api = useContext(ApiContext);
     const [gigData, setGigData] = useState(null);
     const [posterLoaded, setPosterLoaded] = useState(false);
@@ -39,7 +39,7 @@ const Gig = ({ gig }) => {
         }
     }, [gig, api]);
 
-    if (!gig || !posterLoaded) return null;
+    if (!gig) return null;
 
     const statusMap = {
         soon: { text: "Уже скоро", color: "#007bff", emoji: "⏳" },
@@ -50,7 +50,8 @@ const Gig = ({ gig }) => {
     const status = statusMap[gig.gig_status] || {};
 
     return (
-        <div className={`${cl.gig__page} ${animate ? cl.animateIn : ""}`}>
+        <div className={`${cl.gig__page} ${animate ? cl.animateIn : ""}`}
+            style={animate ? { animationDelay: `${index * 0.1}s` } : {opacity: 0}}>
             <h1 className={cl.title}>{gig.title}</h1>
 
             <div className={cl.gig__content}>

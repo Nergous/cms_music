@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from "react";
-import cl from "./Members.module.css";
+import cl from "./Members.module.css"; // или "../Members.module.css", если нужно
 
-const MemberButton = React.memo(({ member, isHovered, onClick, onMouseEnter, onMouseLeave }) => {
-    const [imageLoaded, setImageLoaded] = useState(false);
+const MemberButton = ({ member, isHovered, onClick, onMouseEnter, onMouseLeave, index }) => {
     const [animate, setAnimate] = useState(false);
 
     useEffect(() => {
         const img = new Image();
         img.src = member.path_to_photo;
         img.onload = () => {
-            setImageLoaded(true);
-            setTimeout(() => setAnimate(true), 10); // Небольшая задержка, чтобы сработала анимация
+            setTimeout(() => setAnimate(true), 10);
         };
     }, [member.path_to_photo]);
 
-    if (!imageLoaded) return null;
+    if (!animate) return null;
 
     return (
-        <button
+        <div
+            className={`${cl.member} ${cl.animateIn}`}
             onClick={onClick}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
-            className={`${cl.member} ${animate ? cl.animateIn : ""}`}
             style={{
                 backgroundImage: `url(${member.path_to_photo})`,
+                animationDelay: `${index * 100}ms`,
             }}>
-            <span>{member.name_of_member}</span>
-        </button>
+            <span>{member.name}</span>
+        </div>
     );
-});
+};
 
 export default MemberButton;
