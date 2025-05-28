@@ -2,26 +2,24 @@ import React, { useState, useEffect } from "react";
 import cl from "./Music.module.css";
 
 const MusicButton = ({ music, handleMusicClick, variant = "default" }) => {
-    const [imageLoaded, setImageLoaded] = useState(false);
     const [animate, setAnimate] = useState(false);
 
     useEffect(() => {
         if (variant === "image") {
             const img = new Image();
-            if (!animate) return null;
             img.src = music.path_to_cover;
             img.onload = () => {
-                setTimeout(() => setAnimate(true), 10); // запуск анимации
+                setTimeout(() => setAnimate(true), 10); // запускаем анимацию
             };
         }
     }, [music.path_to_cover, variant]);
 
     if (variant === "image") {
-        if (!imageLoaded) return null;
+        if (!animate) return null;
 
         return (
             <button
-                className={`${cl.music_image} ${animate ? cl.animateIn : ""}`}
+                className={`${cl.music_image} ${cl.animateIn}`}
                 onClick={() => handleMusicClick(music)}
                 style={{
                     backgroundImage: `url(${music.path_to_cover})`,
