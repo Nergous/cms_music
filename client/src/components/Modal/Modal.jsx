@@ -3,6 +3,8 @@ import cl from "./Modal.module.css";
 import CloseButton from "react-bootstrap/esm/CloseButton";
 
 const MyModal = ({ children, visible, setVisible }) => {
+
+    
     const rootClasses = [cl.myModal];
     if (visible) {
         rootClasses.push(cl.active);

@@ -67,6 +67,7 @@ function App() {
     },[])
 
     return (
+        
         <div className="App__main" style={{ fontFamily: `${font}, ${fonts}` }}>
             <BrowserRouter>
                 <Routes>

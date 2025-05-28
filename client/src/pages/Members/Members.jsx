@@ -6,6 +6,7 @@ import cl from "./Members.module.css";
 import MemberButton from "./MemberButton";
 import Spinner from "../../components/Spinner/Spinner";
 import ApiContext from "../../ApiContext";
+
 import axios from "axios";
 import { loadBlockTypes } from "../../utils/loadBlockTypes";
 import _ from "lodash"; // Для debounce
@@ -17,6 +18,7 @@ const Members = React.memo(({ pageName }) => {
     const [selectedMember, setSelectedMember] = useState(null);
     const [hoveredId, setHoveredId] = useState(null);
     const [loading, setLoading] = useState(true);
+
     const [fontColor, setFontColor] = useState("#000000");
     const [pageStructure, setPageStructure] = useState([]);
     const [blockTypes, setBlockTypes] = useState({});
