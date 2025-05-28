@@ -1,6 +1,6 @@
 .gig__page {
-    max-width: 850px;
-    margin: 40px auto;
+    max-width: 750px;
+    margin: 40px 40px;
     padding: 30px 35px;
     background: #f9f9fb;
     border-radius: 20px;
@@ -169,4 +169,19 @@ h3 {
     .data_right {
         font-size: 1rem;
     }
+}
+
+@keyframes flyIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.animateIn {
+    animation: flyIn 0.4s ease-out forwards;
 }

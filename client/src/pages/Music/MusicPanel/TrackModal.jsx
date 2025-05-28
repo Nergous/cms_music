@@ -71,6 +71,8 @@ const TrackModal = ({ track, onClose, isClosing }) => {
         setPlaybackRate(parseFloat(e.target.value));
     };
 
+    
+
     const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
     return (
@@ -87,7 +89,8 @@ const TrackModal = ({ track, onClose, isClosing }) => {
 
                 {track.authors.length > 0 && (
                     <p>
-                        Авторы музыки: {track.authors.map((author, index) => (
+                        Авторы музыки:{" "}
+                        {track.authors.map((author, index) => (
                             <span key={index}>
                                 <MemberLink member={author} />
                                 {index < track.authors.length - 1 ? ", " : ""}
@@ -111,19 +114,13 @@ const TrackModal = ({ track, onClose, isClosing }) => {
                 <div className={cl.customAudioPlayer}>
                     <audio ref={audioRef} src={track?.path_to_file} type="audio/mpeg" />
 
-                    <button
-                        className={`${cl.playButton} ${isPlaying ? cl.playing : ""}`}
-                        onClick={togglePlayback}
-                    >
+                    <button className={`${cl.playButton} ${isPlaying ? cl.playing : ""}`} onClick={togglePlayback}>
                         {isPlaying ? <FaPause /> : <FaPlay />}
                     </button>
 
                     <div className={cl.progressContainer}>
                         <div className={cl.progressBarWrapper}>
-                            <div
-                                className={cl.progressFill}
-                                style={{ width: `${progressPercent}%` }}
-                            ></div>
+                            <div className={cl.progressFill} style={{ width: `${progressPercent}%` }}></div>
                             <input
                                 type="range"
                                 min="0"
@@ -131,6 +128,9 @@ const TrackModal = ({ track, onClose, isClosing }) => {
                                 value={currentTime}
                                 onChange={handleProgressChange}
                                 className={cl.progressBar}
+                                style={{
+                                    background: `linear-gradient(to right, #007bff ${progressPercent}%, #ccc ${progressPercent}%)`,
+                                }}
                             />
                         </div>
                         <span className={cl.timeInfo}>
@@ -140,17 +140,7 @@ const TrackModal = ({ track, onClose, isClosing }) => {
 
                     <div className={cl.volumeControl}>
                         <FaVolumeUp />
-                        <input
-                            type="range"
-                            min="0"
-                            max="1"
-                            step="0.01"
-                            value={volume}
-                            onChange={handleVolumeChange}
-                            style={
-                                {backgroundColor: "#007bff"}
-                            }
-                        />
+                        <input type="range" min="0" max="1" step="0.01" value={volume} onChange={handleVolumeChange} className={cl.volumeSlider} />
                     </div>
 
                     <div className={cl.speedControl}>

@@ -96,7 +96,6 @@ const Members = React.memo(({ pageName }) => {
             if (Object.keys(blockTypes).length === 0) return null;
             const BlockComponent = blockTypes[block.type]?.component;
             if (BlockComponent) {
-                console.log("чмо");
                 if (!blockComponents.current[BlockComponent]) {
                     blockComponents.current[BlockComponent] = React.lazy(() => import(`../../components/Blocks/${BlockComponent}`));
                 }

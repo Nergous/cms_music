@@ -6,6 +6,8 @@ import ApiContext from "../../../ApiContext";
 const Gig = ({ gig }) => {
     const api = useContext(ApiContext);
     const [gigData, setGigData] = useState(null);
+    const [posterLoaded, setPosterLoaded] = useState(false);
+    const [animate, setAnimate] = useState(false);
 
     const formatDate = (dateString) => {
         const months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
@@ -27,10 +29,17 @@ const Gig = ({ gig }) => {
                 }
             };
             fetchMembers();
-        }
-    }, [gig]);
 
-    if (!gig) return null;
+            const img = new Image();
+            img.src = gig.path_to_poster;
+            img.onload = () => {
+                setPosterLoaded(true);
+                setTimeout(() => setAnimate(true), 10); // Плавный запуск анимации
+            };
+        }
+    }, [gig, api]);
+
+    if (!gig || !posterLoaded) return null;
 
     const statusMap = {
         soon: { text: "Уже скоро", color: "#007bff", emoji: "⏳" },
@@ -41,7 +50,7 @@ const Gig = ({ gig }) => {
     const status = statusMap[gig.gig_status] || {};
 
     return (
-        <div className={cl.gig__page}>
+        <div className={`${cl.gig__page} ${animate ? cl.animateIn : ""}`}>
             <h1 className={cl.title}>{gig.title}</h1>
 
             <div className={cl.gig__content}>

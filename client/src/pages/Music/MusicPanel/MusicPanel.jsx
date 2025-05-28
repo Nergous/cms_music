@@ -74,6 +74,15 @@ const MusicPanel = ({ id }) => {
         };
     }, [trackModalIsOpen]);
 
+    const formatReleaseDate = (isoDate) => {
+        const date = new Date(isoDate);
+        return date.toLocaleDateString("ru-RU", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        });
+    };
+
     if (!id) {
         return <></>;
     }
@@ -91,7 +100,7 @@ const MusicPanel = ({ id }) => {
                         <div className={cl.div2}>
                             <img className={cl.img} src={recordData.path_to_cover} alt="music"></img>
                         </div>
-                        <div className={cl.div4}>Дата выпуска - {recordData.year_of_publish}</div>
+                        <div className={cl.div4}>Дата выпуска - {formatReleaseDate(recordData.year_of_publish)}</div>
                         {recordData.tracks && <TrackList tracks={recordData.tracks} onTrackClick={openTrackModal} />}
                     </div>
                     {(trackModalIsOpen || selectedTrack !== null) && (

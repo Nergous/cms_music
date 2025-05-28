@@ -490,13 +490,17 @@
 }
 
 .progressBar {
-  width: 100%;
-  appearance: none;
-  height: 6px;
-  background: linear-gradient(to right, #007bff calc(var(--progress, 0%) * 1%), #ccc 0%);
-  border-radius: 3px;
-  outline: none;
+    width: 100%;
+    appearance: none;
+    height: 6px;
+    background: linear-gradient(to right, #007bff 0%, #ccc 0%); /* будем обновлять через style */
+    border-radius: 3px;
+    outline: none;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
 }
+
 
 .progressBar::-webkit-slider-thumb {
   appearance: none;
@@ -536,4 +540,51 @@
     width: 100%;
     appearance: none;
     background: transparent;
+}
+
+
+.volumeControl input[type="range"] {
+    appearance: none;
+    width: 100px;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Chrome, Safari, Edge */
+.volumeControl input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Firefox */
+.volumeControl input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: #007bff;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+}
+
+/* Track (Chrome, Safari, Edge) */
+.volumeControl input[type="range"]::-webkit-slider-runnable-track {
+    background: #e0e0e0;
+    height: 6px;
+    border-radius: 5px;
+}
+
+/* Track (Firefox) */
+.volumeControl input[type="range"]::-moz-range-track {
+    background: #e0e0e0;
+    height: 6px;
+    border-radius: 5px;
 }

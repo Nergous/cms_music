@@ -79,8 +79,9 @@
 .music_image::after {
     content: "";
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; 
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
@@ -106,9 +107,23 @@
     z-index: 2;
 }
 
-
 /* Ошибки */
 .error {
     color: white;
     font-size: 25px;
+}
+
+@keyframes flyIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.animateIn {
+    animation: flyIn 0.4s ease-out forwards;
 }
