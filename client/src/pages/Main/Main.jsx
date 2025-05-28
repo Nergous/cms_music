@@ -68,7 +68,7 @@ const Main = ({ pageName }) => {
                     <AnimatedBlock delay={(index + 1) * 100} key={block.id}>
                         <React.Suspense
                             fallback={
-                                <div style={{ height: minHeight, backgroundColor: rgba(0, 0, 0, 0.1) }}>
+                                <div style={{ height: minHeight, backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
                                 </div>
                             }>
                             <Block id={block.id} content={block.content} />
