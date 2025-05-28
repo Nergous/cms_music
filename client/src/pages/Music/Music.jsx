@@ -11,7 +11,6 @@ const Music = () => {
     const apiUrl = useContext(ApiContext);
     const [musicList, setMusicList] = useState([]);
 
-    
     const [fontColor, setFontColor] = useState("#000000");
     const [selectedMusic, setSelectedMusic] = useState(null);
     const [modal, setModal] = useState(false);
@@ -102,11 +101,9 @@ const Music = () => {
                 )}
             </div>
 
-            {selectedMusic && (
-                <Modal visible={modal} setVisible={setModal}>
-                    <MusicPanel id={selectedMusic.id} />
-                </Modal>
-            )}
+            <Modal visible={modal} setVisible={setModal}>
+                {selectedMusic && <MusicPanel id={selectedMusic.id} />}
+            </Modal>
         </div>
     );
 };
