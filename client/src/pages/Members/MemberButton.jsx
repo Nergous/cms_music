@@ -22,7 +22,7 @@ const MemberButton = ({ member, isHovered, onClick, onMouseEnter, onMouseLeave, 
                 backgroundImage: `url(${member.path_to_photo})`,
                 animationDelay: `${index * 0.1}s`,
             }}>
-            <span>{member.name}</span>
+            <span>{member.name_of_member}</span>
         </div>
     );
 };
