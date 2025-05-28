@@ -25,9 +25,10 @@
     cursor: pointer;
     overflow: hidden;
     position: relative;
+    opacity: 0;
 
-    transition: transform 0.2s ease-in-out;
     transform: scale(1);
+    transition: transform 0.2s ease-in-out;
 }
 
 /* Маска затемнения */
@@ -115,5 +116,11 @@
 }
 
 .animateIn {
+    visibility: visible;
     animation: flyIn 0.4s ease-out forwards;
+}
+
+.preload {
+    visibility: hidden;
+    transform: translateY(20px) scale(0.95);
 }

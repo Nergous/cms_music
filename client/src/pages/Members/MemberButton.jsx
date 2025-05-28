@@ -2,27 +2,25 @@ import React, { useState, useEffect } from "react";
 import cl from "./Members.module.css"; // или "../Members.module.css", если нужно
 
 const MemberButton = ({ member, isHovered, onClick, onMouseEnter, onMouseLeave, index }) => {
-    const [animate, setAnimate] = useState(false);
+    const [posterLoaded, setPosterLoaded] = useState(false);
 
     useEffect(() => {
         const img = new Image();
         img.src = member.path_to_photo;
         img.onload = () => {
-            setTimeout(() => setAnimate(true), 10);
+            setPosterLoaded(true);
         };
     }, [member.path_to_photo]);
 
-    if (!animate) return null;
-
     return (
         <div
-            className={`${cl.member} ${cl.animateIn}`}
+            className={`${cl.member} ${posterLoaded ? cl.animateIn : cl.preload}`}
             onClick={onClick}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             style={{
                 backgroundImage: `url(${member.path_to_photo})`,
-                animationDelay: `${index * 100}ms`,
+                animationDelay: `${index * 0.1}s`,
             }}>
             <span>{member.name}</span>
         </div>
