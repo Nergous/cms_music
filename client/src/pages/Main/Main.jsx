@@ -6,6 +6,7 @@ import CarouselMy from "../../components/Carousel/CarouselMy";
 import ApiContext from "../../ApiContext";
 import { loadBlockTypes } from "../../utils/loadBlockTypes";
 import cl from "./Main.module.css";
+import AnimatedBlock from "../../components/AnimatedBlock/AnimatedBlock";
 
 const Main = ({ pageName }) => {
     const apiUrl = useContext(ApiContext);
@@ -53,7 +54,7 @@ const Main = ({ pageName }) => {
     }, [apiUrl, pageName]);
 
     const renderBlock = useCallback(
-        (block) => {
+        (block, index) => {
             if (Object.keys(blockTypes).length === 0) return null;
             const BlockComponent = blockTypes[block.type]?.component;
             if (BlockComponent) {
@@ -62,26 +63,28 @@ const Main = ({ pageName }) => {
                 }
                 const Block = blockComponents.current[BlockComponent];
                 return (
-                    <React.Suspense fallback={<div>Загрузка...</div>}>
-                        <Block id={block.id} content={block.content} />
-                    </React.Suspense>
+                    <AnimatedBlock delay={index + 1 * 100} key={block.id}>
+                        <React.Suspense fallback={<div>Загрузка...</div>}>
+                            <Block id={block.id} content={block.content} />
+                        </React.Suspense>
+                    </AnimatedBlock>
                 );
             }
             return null;
         },
-        [blockTypes] 
+        [blockTypes]
     );
 
     return (
         <div style={{ maxWidth: "80%", margin: "0 auto" }}>
-            <div>{hasImages && <CarouselMy imgs={images} />}</div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-                {pageStructure.map((block) => (
-                    <div key={block.id} style={{ marginBottom: "20px" }}>
-                        {renderBlock(block)}
-                    </div>
-                ))}
+            <div>
+                {hasImages && (
+                    <AnimatedBlock delay={0}>
+                        <CarouselMy imgs={images} />
+                    </AnimatedBlock>
+                )}
             </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>{pageStructure.map((block, i) => renderBlock(block, i))}</div>
         </div>
     );
 };
