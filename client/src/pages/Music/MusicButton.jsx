@@ -8,9 +8,9 @@ const MusicButton = ({ music, handleMusicClick, variant = "default" }) => {
     useEffect(() => {
         if (variant === "image") {
             const img = new Image();
+            if (!animate) return null;
             img.src = music.path_to_cover;
             img.onload = () => {
-                setImageLoaded(true);
                 setTimeout(() => setAnimate(true), 10); // запуск анимации
             };
         }
