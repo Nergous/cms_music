@@ -113,7 +113,15 @@
 .music_image span {
     position: relative;
     z-index: 2;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
 }
+
+.music_image:hover span {
+    opacity: 1;
+}
+
 
 /* Ошибки */
 .error {
