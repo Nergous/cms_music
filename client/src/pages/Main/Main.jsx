@@ -57,14 +57,22 @@ const Main = ({ pageName }) => {
         (block, index) => {
             if (Object.keys(blockTypes).length === 0) return null;
             const BlockComponent = blockTypes[block.type]?.component;
+
             if (BlockComponent) {
                 if (!blockComponents.current[BlockComponent]) {
                     blockComponents.current[BlockComponent] = React.lazy(() => import(`../../components/Blocks/${BlockComponent}`));
                 }
                 const Block = blockComponents.current[BlockComponent];
+                const minHeight = "300px";
                 return (
                     <AnimatedBlock delay={(index + 1) * 100} key={block.id}>
-                        <React.Suspense fallback={<div>Загрузка...</div>}>
+                        <React.Suspense
+                            fallback={
+                                <div style={{ height: minHeight, backgroundColor: "#f0f0f0" }}>
+                                    {/* Можно добавить скелетон или просто серый фон */}
+                                    Загрузка...
+                                </div>
+                            }>
                             <Block id={block.id} content={block.content} />
                         </React.Suspense>
                     </AnimatedBlock>
