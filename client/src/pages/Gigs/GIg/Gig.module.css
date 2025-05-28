@@ -1,154 +1,172 @@
-/* Изображение афиши */
-.gig__poster {
-    width: 400px; /* Фиксированная ширина */
-    height: 400px; /* Фиксированная высота */
-    object-fit: cover; /* Растягиваем или обрезаем изображение, сохраняя пропорции */
-    border-radius: 15px;
-}
-
-/* Адаптивность для smaller экранов */
-@media screen and (max-width: 800px) {
-    .gig__poster {
-        width: 300px; /* Уменьшаем ширину на smaller экранах */
-        height: 300px; /* Уменьшаем высоту на smaller экранах */
-    }
-}
-
-/* Адаптивность для очень маленьких экранов */
-@media screen and (max-width: 500px) {
-    .gig__poster {
-        width: 200px; /* Дополнительно уменьшаем на очень маленьких экранах */
-        height: 200px;
-    }
-}
-
-/* Основной контейнер */
 .gig__page {
-    text-align: center;
-    display: block;
-    max-width: 800px;
-    color: black;
-    border: white 1px solid;
-    border-radius: 15px;
-    padding: 30px;
-    margin: 30px;
-    background-color: whitesmoke;
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 30px 35px;
+    background: #f9f9fb;
+    border-radius: 20px;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    color: #222;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
 }
 
-/* Стили для левой части таблицы (изображение) */
-.data_left {
-    padding-right: 20px;
-}
-
-/* Стили для правой части таблицы (текст) */
-.data_right {
-    padding: 20px;
-    font-size: 21px;
-    text-align: right;
-}
-
-/* Заголовок мероприятия */
 .title {
-    color: black;
-    font-size: 60px;
-    font-style: italic;
+    font-size: 3.2rem;
     font-weight: 700;
-    padding-bottom: 30px;
+    margin-bottom: 30px;
+    color: #003366;
+    text-shadow: 1px 1px 4px #c4d7f2;
+    font-style: italic;
+    text-align: center;
 }
 
-/* Таблица */
-table {
-    margin-bottom: 20px;
-    width: 100%; /* Занимает всю доступную ширину */
+.gig__content {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-/* Список участников */
+.data_left {
+    flex-shrink: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+    width: 400px;
+    height: 400px;
+}
+
+.data_left:hover {
+    transform: scale(1.05);
+}
+
+.gig__poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.data_right {
+    flex: 1;
+    max-width: 400px;
+    text-align: left;
+    font-size: 1.1rem;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    padding: 8px 18px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    width: fit-content;
+}
+
+.status_emoji {
+    font-size: 1.5rem;
+}
+
+.place,
+.date {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: #004080;
+}
+
 .list {
     list-style: none;
-    margin: 0;
-    padding: 0;
+    padding-left: 0;
+    margin: 0 0 20px 0;
+    color: #444;
 }
 
-/* Кнопка социальных сетей */
+.list li {
+    padding: 6px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 1.1rem;
+}
+
+.list li:last-child {
+    border-bottom: none;
+}
+
 .social_button {
-    margin: 10px 0;
-    display: inline-block;
-    text-align: center;
-    padding: 5px 10px;
-    background-color: #007bff;
+    align-self: flex-start;
+    padding: 10px 22px;
+    background-color: #0066cc;
     color: white;
-    border-radius: 20px;
+    font-weight: 600;
+    border-radius: 9999px;
     text-decoration: none;
-    transition: background-color 0.3s, color 0.3s, transform 0.3s;
-    border: 1px solid #007bff;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 10px rgba(0, 102, 204, 0.4);
+    user-select: none;
 }
 
 .social_button:hover {
     background-color: white;
-    color: #007bff;
-    border: 1px solid #007bff;
+    color: #0066cc;
+    border-color: #0066cc;
+    box-shadow: none;
+    transform: translateY(-3px);
+    cursor: pointer;
 }
 
+/* Адаптивность */
 
-@media screen and (max-width: 1100px) {
-
-
-    .gig__page {
-        padding: 20px; /* Уменьшаем отступы */
-        width: 90%;
-        margin: 20px auto;
-    }
-}
-
-/* Адаптивность для smaller экранов */
-@media screen and (max-width: 800px) {
-    .title {
-        font-size: 40px; /* Уменьшаем заголовок */
-    }
-
-    .gig__page {
-        padding: 20px; /* Уменьшаем отступы */
-        width: 90%;
-        margin: 20px auto;
-    }
-}
-
-@media screen and (max-height: 800px) {
-    .title {
-        font-size: 40px;
-    }
-    .gig__poster {
-        width: 300px; /* Уменьшаем ширину на smaller экранах */
-        height: 300px;
-    }
-    
-}
-
-@media screen and (max-height: 800px) and (max-width: 600px) {
-    .title {
-        font-size: 40px;
-    }
-    .gig__poster {
-        width: 200px; /* Уменьшаем ширину на smaller экранах */
-        height: 200px;
-    }
-    
-}
-
-/* Адаптивность для очень маленьких экранов */
-@media screen and (max-width: 500px) {
-    tr {
-        display: flex;
+@media screen and (max-width: 900px) {
+    .gig__content {
         flex-direction: column;
         align-items: center;
-        justify-content: center;
     }
 
     .data_left {
-        padding: 0; /* Убираем отступы слева */
+        width: 320px;
+        height: 320px;
+    }
+
+    .data_right {
+        max-width: 100%;
+        text-align: center;
     }
 
     .title {
-        font-size: 30px; /* Дополнительно уменьшаем заголовок */
+        font-size: 2.4rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .data_left {
+        width: 240px;
+        height: 240px;
+    }
+
+    .title {
+        font-size: 1.8rem;
+    }
+
+    .data_right {
+        font-size: 1rem;
     }
 }

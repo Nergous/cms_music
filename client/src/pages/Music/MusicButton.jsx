@@ -7,19 +7,13 @@ const MusicButton = ({ music, handleMusicClick, variant = "default" }) => {
             <button
                 className={cl.music_image}
                 onClick={() => handleMusicClick(music)}
-                onMouseEnter={(e) => (e.target.style.color = "white")}
-                onMouseLeave={(e) => (e.target.style.color = "transparent")}
                 style={{
                     backgroundImage: `url(${music.path_to_cover})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
-                    fontSize: "25px",
-                    width: "400px",
-                    height: "400px",
-                    color: "transparent",
                 }}>
-                {music.record_name}
+                <span>{music.record_name}</span>
             </button>
         );
     }

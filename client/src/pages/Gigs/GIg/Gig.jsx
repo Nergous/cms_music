@@ -30,48 +30,52 @@ const Gig = ({ gig }) => {
         }
     }, [gig]);
 
-    if (!gig) {
-        return <></>;
-    }
+    if (!gig) return null;
+
+    const statusMap = {
+        soon: { text: "Уже скоро", color: "#007bff", emoji: "⏳" },
+        completed: { text: "Завершен", color: "#28a745", emoji: "✅" },
+        canceled: { text: "Отменен", color: "#dc3545", emoji: "❌" },
+    };
+
+    const status = statusMap[gig.gig_status] || {};
 
     return (
         <div className={cl.gig__page}>
-            <table>
-                <tbody>
-                    <tr>
-                        <td colSpan={2} className={cl.title}>
-                            {gig.title}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className={cl.data_left}>
-                            <img className={cl.gig__poster} src={gig.path_to_poster} alt="poster" />
-                        </td>
-                        <td className={cl.data_right}>
-                            {gig.gig_status === "soon" && <h2 style={{ color: "blue" }}>Уже скоро</h2>}
-                            {gig.gig_status === "completed" && <h2 style={{ color: "green" }}>Завершен</h2>}
-                            {gig.gig_status === "canceled" && <h2 style={{ color: "red" }}>Отменен</h2>}
-                            <p>{gig.place}</p>
-                            <p>{formatDate(gig.date_of_gig)}</p>
-                            {gigData && gigData.members && (
-                                <>
-                                    <h3>Участники</h3>
-                                    <ul className={cl.list}>
-                                        {gigData.members.map((gm) => (
-                                            <li key={gm.id}>{gm.name_of_member}</li>
-                                        ))}
-                                    </ul>
-                                </>
-                            )}
-                            <p>
-                                <a href={gig.link_to_social} className={cl.social_button} target="_blank" rel="noopener noreferrer">
-                                    Ссылка на соц. сети
-                                </a>
-                            </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <h1 className={cl.title}>{gig.title}</h1>
+
+            <div className={cl.gig__content}>
+                <div className={cl.data_left}>
+                    <img className={cl.gig__poster} src={gig.path_to_poster} alt="poster" />
+                </div>
+
+                <div className={cl.data_right}>
+                    {gig.gig_status && (
+                        <div className={cl.status} style={{ backgroundColor: status.color + "22", color: status.color }} title={status.text}>
+                            <span className={cl.status_emoji}>{status.emoji}</span>
+                            <span>{status.text}</span>
+                        </div>
+                    )}
+
+                    <p className={cl.place}>{gig.place}</p>
+                    <p className={cl.date}>{formatDate(gig.date_of_gig)}</p>
+
+                    {gigData?.members?.length > 0 && (
+                        <>
+                            <h3>Участники</h3>
+                            <ul className={cl.list}>
+                                {gigData.members.map((gm) => (
+                                    <li key={gm.id}>{gm.name_of_member}</li>
+                                ))}
+                            </ul>
+                        </>
+                    )}
+
+                    <a href={gig.link_to_social} className={cl.social_button} target="_blank" rel="noopener noreferrer">
+                        Ссылка на соц. сети
+                    </a>
+                </div>
+            </div>
         </div>
     );
 };

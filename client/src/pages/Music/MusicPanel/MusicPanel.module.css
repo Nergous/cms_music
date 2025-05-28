@@ -463,3 +463,77 @@
         max-height: 200px;
     }
 }
+
+
+.customAudioPlayer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+
+.playButton.playing {
+  color: #007bff; /* Spotify green */
+}
+
+.playing:hover {
+    color: #ffffff;
+    background-color: #007bff;
+    transform: scale(1.1);
+}
+
+.progressContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressBar {
+  width: 100%;
+  appearance: none;
+  height: 6px;
+  background: linear-gradient(to right, #007bff calc(var(--progress, 0%) * 1%), #ccc 0%);
+  border-radius: 3px;
+  outline: none;
+}
+
+.progressBar::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.volumeControl,
+.speedControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressBarWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.progressFill {
+    position: absolute;
+    height: 5px;
+    background-color: #007bff;
+    top: 64%;
+    transform: translateY(-50%);
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 5px;
+}
+
+.progressBar {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    appearance: none;
+    background: transparent;
+}

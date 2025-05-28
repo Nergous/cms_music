@@ -2,15 +2,18 @@ import React, { useState, useRef, useEffect } from "react";
 import CloseButton from "react-bootstrap/esm/CloseButton";
 import cl from "./MusicPanel.module.css";
 import MemberLink from "../../../components/MemberLink/MemberLink";
+import { FaPlay, FaPause, FaVolumeUp } from "react-icons/fa";
+import { MdSpeed } from "react-icons/md";
 
 const TrackModal = ({ track, onClose, isClosing }) => {
     const audioRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [showLyrics, setShowLyrics] = useState(false); // State to toggle lyrics visibility
+    const [volume, setVolume] = useState(1);
+    const [playbackRate, setPlaybackRate] = useState(1);
+    const [showLyrics, setShowLyrics] = useState(false);
 
-    // Function to toggle playback
     const togglePlayback = () => {
         const audio = audioRef.current;
         if (audio) {
@@ -24,7 +27,6 @@ const TrackModal = ({ track, onClose, isClosing }) => {
         }
     };
 
-    // Format time for progress display
     const formatTime = (time) => {
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60)
@@ -33,25 +35,27 @@ const TrackModal = ({ track, onClose, isClosing }) => {
         return `${minutes}:${seconds}`;
     };
 
-    // Update state on audio events
     useEffect(() => {
         const audio = audioRef.current;
         if (audio) {
-            audio.addEventListener("timeupdate", () => setCurrentTime(audio.currentTime));
-            audio.addEventListener("loadedmetadata", () => setDuration(audio.duration));
-            audio.addEventListener("ended", () => setIsPlaying(false));
+            audio.volume = volume;
+            audio.playbackRate = playbackRate;
+            const updateTime = () => setCurrentTime(audio.currentTime);
+            const updateDuration = () => setDuration(audio.duration);
+            const handleEnd = () => setIsPlaying(false);
+
+            audio.addEventListener("timeupdate", updateTime);
+            audio.addEventListener("loadedmetadata", updateDuration);
+            audio.addEventListener("ended", handleEnd);
+
+            return () => {
+                audio.removeEventListener("timeupdate", updateTime);
+                audio.removeEventListener("loadedmetadata", updateDuration);
+                audio.removeEventListener("ended", handleEnd);
+            };
         }
+    }, [volume, playbackRate]);
 
-        return () => {
-            if (audio) {
-                audio.removeEventListener("timeupdate", () => {});
-                audio.removeEventListener("loadedmetadata", () => {});
-                audio.removeEventListener("ended", () => {});
-            }
-        };
-    }, []);
-
-    // Handle progress bar change
     const handleProgressChange = (e) => {
         const audio = audioRef.current;
         if (audio) {
@@ -59,54 +63,67 @@ const TrackModal = ({ track, onClose, isClosing }) => {
         }
     };
 
+    const handleVolumeChange = (e) => {
+        setVolume(parseFloat(e.target.value));
+    };
+
+    const handleRateChange = (e) => {
+        setPlaybackRate(parseFloat(e.target.value));
+    };
+
+    const progressPercent = duration ? (currentTime / duration) * 100 : 0;
+
     return (
-        <>
-            <div className={`${cl.modal} ${isClosing ? cl.closing : cl.active}`}>
-                <div className={cl.modalContent}>
-                    <CloseButton onClick={onClose} />
-                    <h2>{track.track_name}</h2>
-                    {track.lyrics_author && (
-                        <p>
-                            Автор слов: <MemberLink member={track.lyrics_authored} />
-                        </p>
-                    )}
-                    {track.authors.length > 0 && (
-                        <p>
-                            Авторы музыки:{" "}
-                            {track.authors.map((author, index) => (
-                                <span key={index}>
-                                    <MemberLink member={author} />
-                                    {index < track.authors.length - 1 ? ", " : ""}
-                                </span>
-                            ))}
-                        </p>
-                    )}
+        <div className={`${cl.modal} ${isClosing ? cl.closing : cl.active}`}>
+            <div className={cl.modalContent}>
+                <CloseButton onClick={onClose} />
+                <h2>{track.track_name}</h2>
 
-                    {/* Button to show/hide lyrics */}
-                    {track.track_lyrics && (
-                        <button className={cl.lyricsButton} onClick={() => setShowLyrics(!showLyrics)}>
-                            {showLyrics ? "Скрыть текст" : "Показать текст"}
-                        </button>
-                    )}
+                {track.lyrics_author && (
+                    <p>
+                        Автор слов: <MemberLink member={track.lyrics_authored} />
+                    </p>
+                )}
 
-                    {/* Display lyrics if showLyrics is true */}
-                    {showLyrics && (
-                        <div className={cl.lyricsContainer}>
-                            <pre className={cl.lyricsText}>{track.track_lyrics}</pre>
-                        </div>
-                    )}
+                {track.authors.length > 0 && (
+                    <p>
+                        Авторы музыки: {track.authors.map((author, index) => (
+                            <span key={index}>
+                                <MemberLink member={author} />
+                                {index < track.authors.length - 1 ? ", " : ""}
+                            </span>
+                        ))}
+                    </p>
+                )}
 
-                    {/* Custom audio player */}
-                    <div className={cl.customAudioPlayer}>
-                        <audio ref={audioRef} src={track?.path_to_file} type="audio/mpeg" />
+                {track.track_lyrics && (
+                    <button className={cl.lyricsButton} onClick={() => setShowLyrics(!showLyrics)}>
+                        {showLyrics ? "Скрыть текст" : "Показать текст"}
+                    </button>
+                )}
 
-                        {/* Play/Pause button */}
-                        <button className={cl.playButton} onClick={togglePlayback}>
-                            {isPlaying ? "⏸" : "▶"}
-                        </button>
+                {showLyrics && (
+                    <div className={cl.lyricsContainer}>
+                        <pre className={cl.lyricsText}>{track.track_lyrics}</pre>
+                    </div>
+                )}
 
-                        {/* Progress bar and time info */}
-                        <div className={cl.progressContainer}>
+                <div className={cl.customAudioPlayer}>
+                    <audio ref={audioRef} src={track?.path_to_file} type="audio/mpeg" />
+
+                    <button
+                        className={`${cl.playButton} ${isPlaying ? cl.playing : ""}`}
+                        onClick={togglePlayback}
+                    >
+                        {isPlaying ? <FaPause /> : <FaPlay />}
+                    </button>
+
+                    <div className={cl.progressContainer}>
+                        <div className={cl.progressBarWrapper}>
+                            <div
+                                className={cl.progressFill}
+                                style={{ width: `${progressPercent}%` }}
+                            ></div>
                             <input
                                 type="range"
                                 min="0"
@@ -115,14 +132,39 @@ const TrackModal = ({ track, onClose, isClosing }) => {
                                 onChange={handleProgressChange}
                                 className={cl.progressBar}
                             />
-                            <span className={cl.timeInfo}>
-                                {formatTime(currentTime)} / {duration ? formatTime(duration) : "0:00"}
-                            </span>
                         </div>
+                        <span className={cl.timeInfo}>
+                            {formatTime(currentTime)} / {duration ? formatTime(duration) : "0:00"}
+                        </span>
+                    </div>
+
+                    <div className={cl.volumeControl}>
+                        <FaVolumeUp />
+                        <input
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.01"
+                            value={volume}
+                            onChange={handleVolumeChange}
+                            style={
+                                {backgroundColor: "#007bff"}
+                            }
+                        />
+                    </div>
+
+                    <div className={cl.speedControl}>
+                        <MdSpeed />
+                        <select value={playbackRate} onChange={handleRateChange}>
+                            <option value="0.5">0.5x</option>
+                            <option value="1">1x</option>
+                            <option value="1.5">1.5x</option>
+                            <option value="2">2x</option>
+                        </select>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

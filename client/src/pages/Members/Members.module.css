@@ -19,11 +19,58 @@
     width: 250px;
     margin: 50px;
     background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     border: none;
     cursor: pointer;
     overflow: hidden;
-    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+    position: relative;
+
+    transition: transform 0.2s ease-in-out;
+    transform: scale(1);
 }
+
+/* Маска затемнения */
+.member::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.member:hover::after {
+    opacity: 1;
+}
+
+.member:hover {
+    transform: scale(1.05);
+}
+
+.member span {
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 25px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.member:hover span {
+    opacity: 1;
+}
+
 
 @media  screen and (max-width: 1390px) {
     .member {
