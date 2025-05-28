@@ -63,7 +63,7 @@ const Main = ({ pageName }) => {
                 }
                 const Block = blockComponents.current[BlockComponent];
                 return (
-                    <AnimatedBlock delay={index + 1 * 100} key={block.id}>
+                    <AnimatedBlock delay={(index + 1) * 100} key={block.id}>
                         <React.Suspense fallback={<div>Загрузка...</div>}>
                             <Block id={block.id} content={block.content} />
                         </React.Suspense>
