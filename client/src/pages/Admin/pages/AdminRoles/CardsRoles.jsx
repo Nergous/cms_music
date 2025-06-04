@@ -27,7 +27,6 @@ const CardsRoles = ({ item }) => {
                 pauseOnHover: true,
                 draggable: true,
             });
-            setTimeout(() => window.location.reload(true), 3000);
         } catch (error) {
             toast.error("Ошибка при удалении роли: " + error.response.data.error, {
                 position: "bottom-right",
@@ -55,11 +54,11 @@ const CardsRoles = ({ item }) => {
                     <hr />
                     <div className="mt-3">
                         <Link to={`/admin/roles/${item.id}/edit`}>
-                            <Button className="m-2" variant="info">
+                            <Button className="m-2" variant="info" style={{color: "white"}}>
                                 Редактировать
                             </Button>
                         </Link>
-                        <Button className="m-2" variant="danger" onClick={handleDelete}>
+                        <Button className="m-2" style={{color: "white"}} variant="danger" onClick={handleDelete}>
                             Удалить
                         </Button>
                     </div>
@@ -78,7 +77,7 @@ const CardsRoles = ({ item }) => {
                     <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
                         Отмена
                     </Button>
-                    <Button variant="danger" onClick={confirmDelete}>
+                    <Button variant="danger" style={{color: "white"}} onClick={confirmDelete}>
                         Удалить
                     </Button>
                 </CModalFooter>

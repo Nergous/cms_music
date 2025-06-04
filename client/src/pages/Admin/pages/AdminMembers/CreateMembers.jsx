@@ -108,7 +108,6 @@ function CreateMembers() {
                         pauseOnHover: true,
                         draggable: true,
                     });
-                    setTimeout(() => navigate("/admin/members"), 3000);
                 } catch (error) {
                     toast.error("Произошла ошибка при добавлении участника: " + error.response.data.error, {
                         position: "bottom-right",
@@ -143,7 +142,6 @@ function CreateMembers() {
                         pauseOnHover: true,
                         draggable: true,
                     });
-                    setTimeout(() => navigate("/admin/members"), 3000);
                 } catch (error) {
                     toast.error("Произошла ошибка при добавлении участника: " + error.response.data.error, {
                         position: "bottom-right",

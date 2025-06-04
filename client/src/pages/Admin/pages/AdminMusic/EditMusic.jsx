@@ -213,7 +213,6 @@ const EditMusic = () => {
                     pauseOnHover: true,
                     draggable: true,
                 });
-                setTimeout(() => navigate("/admin/music"), 2000);
             } catch (error) {
                 toast.error("Произошла ошибка при обновлении релиза: " + error.response.data.error, {
                     position: "bottom-right",

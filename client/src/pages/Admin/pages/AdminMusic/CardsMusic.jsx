@@ -29,7 +29,6 @@ const CardsMusic = ({ item }) => {
                 pauseOnHover: true,
                 draggable: true,
             });
-            setTimeout(() => window.location.reload(true), 3000);
         } catch (error) {
             toast.error("Ошибка при удалении релиза: " + error.response.data.error, {
                 position: "bottom-right",
@@ -61,11 +60,11 @@ const CardsMusic = ({ item }) => {
                     <CardImg src={item.path_to_cover} alt="Card image cap" style={{ width: "250px" }} />
                     <div style={{ marginTop: "30px" }}>
                         <Link to={`/admin/music/${item.id}/edit`}>
-                            <Button style={{ marginRight: "10px" }} variant="info">
+                            <Button style={{ marginRight: "10px", color: "white" }} variant="info">
                                 Редактировать
                             </Button>
                         </Link>
-                        <Button style={{ marginRight: "10px" }} variant="danger" onClick={handleDelete}>
+                        <Button style={{ marginRight: "10px", color: "white" }} variant="danger" onClick={handleDelete}>
                             Удалить
                         </Button>
                     </div>

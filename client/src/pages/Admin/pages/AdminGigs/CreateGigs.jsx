@@ -119,7 +119,6 @@ const CreateGigs = () => {
                         pauseOnHover: true,
                         draggable: true,
                     });
-                    setTimeout(() => navigate("/admin/gigs"), 2000);
                 })
                 .catch((error) => {
                     toast.error("Произошла ошибка при добавлении выступления: " + error.response.data.error, {

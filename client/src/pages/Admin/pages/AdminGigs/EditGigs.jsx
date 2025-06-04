@@ -123,7 +123,6 @@ const EditGigs = () => {
                         pauseOnHover: true,
                         draggable: true,
                     });
-                    setTimeout(() => navigate("/admin/gigs"), 2000);
                 })
                 .catch((error) => {
                     toast.error("Ошибка при обновлении выступления: " + error.response.data.error, {

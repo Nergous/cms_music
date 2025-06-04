@@ -201,7 +201,6 @@ const CreateMusic = () => {
                     pauseOnHover: true,
                     draggable: true,
                 });
-                setTimeout(() => navigate("/admin/music"), 3000);
             } catch (error) {
                 toast.error("Произошла ошибка при добавлении релиза: " + error.response.data.error, {
                     position: "bottom-right",

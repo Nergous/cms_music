@@ -29,7 +29,6 @@ const CardsGigs = ({ item }) => {
                 pauseOnHover: true,
                 draggable: true,
             });
-            setTimeout(() => window.location.reload(), 3000);
         } catch (error) {
             toast.error("Произошла ошибка при удалении выступления", {
                 position: "bottom-right",
@@ -67,11 +66,11 @@ const CardsGigs = ({ item }) => {
                     <Card.Img variant="top" src={item.path_to_poster} style={{ width: "300px" }} />
                     <div style={{ marginTop: "30px" }}>
                         <Link to={`/admin/gigs/${item.id}/edit`}>
-                            <Button style={{ marginRight: "10px" }} variant="info">
+                            <Button style={{ marginRight: "10px", color: "white" }} variant="info">
                                 Редактировать
                             </Button>
                         </Link>
-                        <Button style={{ marginRight: "10px" }} variant="danger" onClick={handleDelete}>
+                        <Button style={{ marginRight: "10px", color: "white" }} variant="danger" onClick={handleDelete}>
                             Удалить
                         </Button>
                     </div>

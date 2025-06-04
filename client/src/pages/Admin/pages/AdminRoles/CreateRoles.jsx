@@ -33,7 +33,6 @@ function CreateRole() {
                     pauseOnHover: true,
                     draggable: true,
                 });
-                setTimeout(() => navigate("/admin/roles"), 3000);
                 
             } catch (error) {
                 toast.error("Произошла ошибка при добавлении роли: " + error.response.data.error, {
