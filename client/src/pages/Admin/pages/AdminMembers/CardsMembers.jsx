@@ -28,7 +28,6 @@ const CardsMembers = ({ item }) => {
                 pauseOnHover: true,
                 draggable: true,
             });
-            setTimeout(() => window.location.reload(true), 3000);
         } catch (error) {
             toast.error("Ошибка при удалении участника: " + error.response.data.error, {
                 position: "bottom-right",
@@ -61,11 +60,11 @@ const CardsMembers = ({ item }) => {
                     ) : null}
                     <div style={{ marginTop: "30px" }}>
                         <Link to={`/admin/members/${item.id}/edit`}>
-                            <Button style={{ marginRight: "10px" }} variant="info">
+                            <Button style={{ marginRight: "10px", color: "white", width: "100%" }} variant="info">
                                 Редактировать
                             </Button>
                         </Link>
-                        <Button style={{ marginRight: "10px" }} variant="danger" onClick={handleDelete}>
+                        <Button style={{ marginRight: "10px", marginTop: "10px", color: "white", width: "100%" }} variant="danger" onClick={handleDelete}>
                             Удалить
                         </Button>
                     </div>
